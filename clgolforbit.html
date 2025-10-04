@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<html lang="en-us">
+  <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@5b629b623e4bda43d0ea9671da8301b2bebfd3d7/golf%20orbit/">
+  <head>
+    <script>
+      // ts true 💔😭✌
+      window.gnMathIsTheBestGameSiteEver = {
+        "ancestorOrigins": {},
+        "href": "https://html5.gamedistribution.com/rvvASMiM/02ff01e6e9f7451ba28d889a2a55eec9/index.html?gd_sdk_referrer_url=https%3A%2F%2Fgamedistribution.com%2Fgames%2Fgolf-orbit%2F&gd_zone_config=eyJwYXJlbnRVUkwiOiJodHRwczovL2h0bWw1LmdhbWVkaXN0cmlidXRpb24uY29tLzAyZmYwMWU2ZTlmNzQ1MWJhMjhkODg5YTJhNTVlZWM5Lz9nZF9zZGtfcmVmZXJyZXJfdXJsPWh0dHBzOi8vZ2FtZWRpc3RyaWJ1dGlvbi5jb20vZ2FtZXMvZ29sZi1vcmJpdC8iLCJwYXJlbnREb21haW4iOiJnYW1lZGlzdHJpYnV0aW9uLmNvbSIsInRvcERvbWFpbiI6ImdhbWVkaXN0cmlidXRpb24uY29tIiwiaGFzSW1wcmVzc2lvbiI6ZmFsc2UsImxvYWRlckVuYWJsZWQiOnRydWUsImhvc3QiOiJodG1sNS5nYW1lZGlzdHJpYnV0aW9uLmNvbSIsInZlcnNpb24iOiIxLjUuMTcifQ%253D%253D",
+        "origin": "https://html5.gamedistribution.com",
+        "protocol": "https:",
+        "host": "html5.gamedistribution.com",
+        "hostname": "html5.gamedistribution.com",
+        "port": "",
+        "pathname": "/rvvASMiM/02ff01e6e9f7451ba28d889a2a55eec9/index.html",
+        "search": "?gd_sdk_referrer_url=https%3A%2F%2Fgamedistribution.com%2Fgames%2Fitalian-brainrot-obby-parkour%2F&gd_zone_config=eyJwYXJlbnRVUkwiOiJodHRwczovL2dhbWVkaXN0cmlidXRpb24uY29tL2dhbWVzL2l0YWxpYW4tYnJhaW5yb3Qtb2JieS1wYXJrb3VyLyIsInBhcmVudERvbWFpbiI6ImdhbWVkaXN0cmlidXRpb24uY29tIiwidG9wRG9tYWluIjoiZ2FtZWRpc3RyaWJ1dGlvbi5jb20iLCJoYXNJbXByZXNzaW9uIjpmYWxzZSwibG9hZGVyRW5hYmxlZCI6dHJ1ZSwiaG9zdCI6Imh0bWw1LmdhbWVkaXN0cmlidXRpb24uY29tIiwidmVyc2lvbiI6IjEuNS4xNyJ9",
+        "hash": ""
+      }
+
+      const originalFetch = window.fetch;
+      window.fetch = function (...args) {
+        if (args[0].includes("html5.api.gamedistribution.com/main.min.js")) {
+          args[0] = "main.min.js";
+        }
+        return originalFetch.apply(this, args);
+      };
+
+      const originalOpen = XMLHttpRequest.prototype.open;
+      XMLHttpRequest.prototype.open = function (method, url, ...rest) {
+        if (url.includes("html5.api.gamedistribution.com/main.min.js")) {
+          url = "main.min.js";
+        }
+        return originalOpen.call(this, method, url, ...rest);
+      };
+
+      const originalCreateElement = document.createElement.bind(document);
+
+      document.createElement = function(tagName) {
+        const element = originalCreateElement(tagName);
+        if (tagName.toLowerCase() === "script") {
+          let srcValue = "";
+          Object.defineProperty(element, "src", {
+            get() {
+              return srcValue;
+            },
+            set(newSrc) {
+              let newUrl = newSrc;
+              if (newSrc.includes("html5.api.gamedistribution.com/main.min.js")) {
+                newUrl = "main.min.js";
+              }
+              srcValue = newUrl;
+              element.setAttribute("src", newUrl);
+            },
+            configurable: true,
+            enumerable: true,
+          });
+        }
+        return element;
+      };
+  </script>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Golf Orbit</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+  </head>
+  <body>
+    <div id="unity-container" class="unity-desktop">
+      <!-- <button id="unity-fullscreen-button" onclick="toggleFullscreen()"></button> -->
+      <canvas id="unity-canvas"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+    </div>
+    <script>
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
+      var warningBanner = document.querySelector("#unity-warning");
+      
+      function isFullscreen()
+      {
+        return document.fullscreenElement !== null && document.fullscreenElement
+          || document.webkitFullscreenElement !== null && document.webkitFullscreenElement
+          || document.msFullscreenElement !== null && document.msFullscreenElement;
+      }
+      
+      function rebuildFullscreenGUI()
+      {
+        if (isFullscreen()) {
+          document.getElementById("unity-fullscreen-button").style.backgroundImage="url('TemplateData/fullscreen-button-in.png')";
+        }
+        else {
+          document.getElementById("unity-fullscreen-button").style.backgroundImage="url('TemplateData/fullscreen-button-out.png')";
+        }
+      }
+      
+      function unityShowBanner(msg, type) {
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+      
+      function toggleFullscreen() {
+         if (isFullscreen()) {
+            if (document.exitFullscreen) {
+              document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+              document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+              document.msExitFullscreen();
+            } else {
+              alert("Full screen is not supported by this browser.");
+            }
+         }
+         else {
+           var element = document.getElementById("unity-container");
+            if (element.requestFullscreen) {
+              element.requestFullscreen();
+            } else if (element.webkitRequestFullscreen) {
+              element.webkitRequestFullscreen();
+            } else if (element.msRequestFullscreen) {
+              element.msRequestFullscreen();
+            } else {
+              alert("Full screen is not supported by this browser.");
+            }
+         }
+      }
+
+      function confirmUnload(event) {
+        return confirm("All unsaved progress will be lost.");
+      }
+      
+      var buildUrl = "Build";
+      var loaderUrl = buildUrl + "/9853637125e801e9aae48e78dbbdcfca.loader.js";
+      var config = {
+        dataUrl: buildUrl + "/9a30b6242e7f18d264ca8c327ef2350b.data.unityweb",
+        frameworkUrl: buildUrl + "/9ca2adfd1e19ab4bf19ed2aaad55f61c.framework.js.unityweb",
+        codeUrl: buildUrl + "/7082aea4fd1efd9f378e9b64abf5dc0c.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "PinpinTeam",
+        productName: "Golf Orbit",
+        productVersion: "1.25.39",
+        showBanner: unityShowBanner,
+      };
+      
+      // By default Unity keeps WebGL canvas render target size matched with
+      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
+      // Set this to false if you want to decouple this synchronization from
+      // happening inside the engine, and you would instead like to size up
+      // the canvas DOM size and WebGL render target sizes yourself.
+      //config.matchWebGLToCanvasSize = false;
+      
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+        container.className = "unity-mobile";
+      
+        // To lower canvas resolution on mobile devices to gain some
+        // performance, uncomment the following line:
+        //config.devicePixelRatio = 1;
+      }
+      
+      loadingBar.style.display = "block";
+      
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          loadingBar.style.display = "none";
+
+          // If you want to warn the player before they close the tab,
+          // uncomment the following:
+          //window.onbeforeunload = confirmUnload;
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+      
+      document.onfullscreenchange = rebuildFullscreenGUI;
+    </script>
+  </body>
+</html>

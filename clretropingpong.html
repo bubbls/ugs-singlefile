@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+<!-- Made by Weirdnessworld-->
+
+
+<html>
+
+<head>
+    <base href = "https://cdn.jsdelivr.net/gh/cooldude2349/everything@main/retropingpong/">
+    
+	<title>Retro-Ping-Pong</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		#game_container {
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+
+	<script type="text/javascript">
+		let isAdBreakActive = false;
+		let wasMuted = false;
+
+		window["GD_OPTIONS"] = {
+			"gameId": "7a673308bc3b4585b9f70436462c2051", // REPLACE WITH CORRECT ONE!
+			"onEvent": function (event) {
+				switch (event.name) {
+
+					case "SDK_GAME_START":
+						// advertisement done, resume game logic and unmute audio
+						console.log("adBreak Complete")
+
+						isAdBreakActive = false;
+						try {
+							NORD.audioManager.setMute(wasMuted);
+							TweenMax.resumeAll();
+						} catch (e) { }
+
+						break;
+
+					case "SDK_GAME_PAUSE":
+						// pause game logic / mute audio
+						console.log("AdBreak Started")
+
+						isAdBreakActive = false;
+						try {
+							wasMuted = NORD.audioManager.isMute;
+							NORD.audioManager.setMute(true);
+							TweenMax.pauseAll();
+							setTimeout(() => {
+								if (isAdBreakActive) TweenMax.pauseAll();
+							}, 1000);
+						} catch (e) { }
+
+						break;
+				}
+			}
+		};
+
+		function showAd() {
+			console.log('showAd call!');
+			try {
+				if (typeof gdsdk !== 'undefined' && gdsdk.showAd !== 'undefined') {
+				
+				}
+			} catch (e) { }
+		}
+	</script>
+	<script src=""></script>
+
+	<script src="assets/libs/tween_max/easing/EasePack.min.js"></script>
+	<script src="assets/libs/tween_max/plugins/PixiPlugin.min.js"></script>
+	<script src="assets/libs/tween_max/plugins/ColorPropsPlugin.js"></script>
+	<script src="assets/libs/tween_max/TweenMax.min.js"></script>
+	<script src="assets/libs/p2.min.js"></script>
+	<script src="assets/libs/matter.min.js"></script>
+	<script src="assets/libs/decomp.min.js"></script>
+	<script src="assets/libs/FileSaver.js"></script>
+	<script src="assets/libs/bezier.js"></script>
+
+	<script src="assets/libs/event_emitter/EventEmitter.min.js"></script>
+	<script src="assets/libs/event_emitter/EventEmitter.min.js"></script>
+
+	<script src="assets/libs/pixi/pixi.min.js"></script>
+	<script src="assets/libs/audio/howler.min.js"></script>
+
+	<script src="assets/scripts/Core.js" type="text/javascript"></script>
+
+	<script src="assets/scripts/Managers.js" type="text/javascript"></script>
+	<script src="assets/scripts/Gui.js" type="text/javascript"></script>
+	<script src="assets/scripts/Util.js" type="text/javascript"></script>
+
+	<script src="assets/scripts/Field.js" type="text/javascript"></script>
+	<script src="assets/scripts/FieldObjects.js" type="text/javascript"></script>
+	<script src="assets/scripts/FieldBonuses.js" type="text/javascript"></script>
+	<script src="assets/scripts/ScreenPreloader.js" type="text/javascript"></script>
+	<script src="assets/scripts/ScreenMainMenu.js" type="text/javascript"></script>
+	<script src="assets/scripts/ScreenGame.js" type="text/javascript"></script>
+	<script src="assets/scripts/PanelSettings.js" type="text/javascript"></script>
+	<script src="assets/scripts/Robo.js" type="text/javascript"></script>
+
+	<script src="assets/scripts/App.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+	<div id="game_container"> </div>
+</body>

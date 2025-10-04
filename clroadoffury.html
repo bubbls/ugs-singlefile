@@ -1,0 +1,48 @@
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+<!-- Made by genizy --> 
+
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset='utf8'>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        #ruffle {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='ruffle'></div>
+    <script src='https://unpkg.com/@ruffle-rs/ruffle'></script>
+    <script>
+        var ruffle = window.RufflePlayer.newest();
+        var container = document.getElementById('ruffle');
+        var player = ruffle.createPlayer();
+        container.appendChild(player);
+        player.load({
+            url: 'https://cdn.jsdelivr.net/gh/genizy/google-class@main/swf/roadoffury.swf'
+        });
+        const resizePlayer = () => {
+            container.style.width = window.innerWidth + 'px';
+            container.style.height = window.innerHeight + 'px';
+            player.style.width = '100%';
+            player.style.height = '100%';
+        };
+        resizePlayer();
+        window.addEventListener('resize', resizePlayer);
+    </script>
+</body>
+
+</html>

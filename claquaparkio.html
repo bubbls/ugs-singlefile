@@ -1,0 +1,77 @@
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+<!-- Made by Genizy--> 
+
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <base href="https://cdn.jsdelivr.net/gh/genizy/braybray/aquapark-io/">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Aquapark IO Unblocked</title>
+  <link rel="stylesheet" href="TemplateData/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="author" content="igroutka.ru" />
+  <link rel="canonical" href="https://igroutka.ru/" />
+  <script src="Build/UnityLoader.js"></script>
+  <script src="TemplateData/load.js"></script>
+</head>
+
+<body>
+  <div class="keepRatio">
+    <div class="webgl-content">
+      <button class="icon-resize-full" id="fullScreenButton" onclick="ToggleFullScreen()"></button>
+      <a id="logoname" style="display:none;" href="https://igroutka.ru/" target="_blank">igroutka.ru</a>
+      <div id="gameContainer"></div>
+    </div>
+    <div id="loadingBlock">
+      <h1 class="subtitle">Aquapark.io</h1>
+      <script type="text/javascript" style="display:none">
+        window.__mirage2 = {
+          petok: "aCj.QNwGUOfLrCmu67eagpL0xPleX_OUL2kyVMsyHGk-31536000-0"
+        };
+      </script>
+      <script type="text/javascript" src="patch/cdn/mirage2.min.js"></script>
+      <img class="logo-game" data-cfsrc="Aquaparkio512.jpg" style="display:none;visibility:hidden;" /><noscript><img class="logo-game" src="Aquaparkio512.jpg" /></noscript>
+      <div id="progressBar">
+        <div style="margin-bottom:5px">Loading ...</div>
+        <div class="centered emptyBarbg">
+          <div id="emptyBar"></div>
+          <div id="fullBar"></div>
+        </div>
+      </div>
+      <div id="warningBrowserBlock" style="display:none;">
+        <div class="warningBrowserText"> Your browser may not be compatible with this website. For an optimal experience, we suggest you to download one of this popular web browsers. </div>
+        <div class="browserIcons">
+          <span>Firefox browser</span>
+          <span>Chrome browser</span>
+          <span>Safari browser</span>
+        </div>
+      </div>
+      <div id="warningMobileBlock" style="display:none;">
+      </div>
+      <div class="cover" style="background-image: url(Aquaparkio512.jpg)"></div>
+    </div>
+    <div id="errorBrowserBlock" style="display:none;">
+      <div id="errorContent">
+        <div id="errorBrowserText"> Your browser does not support WebGL. <br> You can download one of this popular web browsers. </div>
+        <div class="browserIcons">
+          <span>Firefox browser</span>
+          <span>Chrome browser</span>
+          <span>Safari browser</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function(a, b, c) {
+      var d = a.getElementsByTagName(b)[0];
+      a.getElementById(c) || (a = a.createElement(b), a.id = c, a.src = "patch/js/gm-sdk-preload.js?v=" + Date.now(), d.parentNode.insertBefore(a, d))
+    })(document, "script", "gamemonetize-preload-api");
+  </script>
+  <script src="js/analytics_ubg_v1_4.js"></script>
+  <script src="js/ubg235_client_v1_1.js"></script>
+</body>
+
+</html>

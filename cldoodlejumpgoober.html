@@ -1,0 +1,874 @@
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<html lang="en"><head><script type="text/javascript" async="" src="https://www.googletagmanager.com/gtag/js?id=G-F32JC4N3VY&amp;cx=c&amp;_slc=1"></script><script src="https://s0.2mdn.net/instream/video/client.js" async="" type="text/javascript"></script><script async="" src="https://www.google-analytics.com/analytics.js"></script><script type="text/javascript" id="analytics" async="" src="https://cdn.jsdelivr.net/gh/st39/sdk@main/ga.js"></script><script type="text/javascript" async="" src="https://imasdk.googleapis.com/js/sdkloader/ima3.js"></script><script id="gamemonetize-sdk" src="https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js"></script><script src="//www.google.com/jsapi"></script><script>window.parent.maeExportApis_();</script>
+
+
+  <meta charset="UTF-8">
+  <title>CodePen - A Pen by bound20</title>
+  <style>
+
+@import url(https://fonts.googleapis.com/css?family=Gloria+Hallelujah);
+
+*{box-sizing: border-box;}
+
+body {
+	margin: 0; padding: 0;
+  background-color: #000;
+  overflow: hidden;
+	font-family: 'Gloria Hallelujah', cursive;
+}
+
+.container {
+	height: 552px;
+	width: 422px;
+	position: relative;
+	margin: 0px auto 0; 
+	overflow: hidden;
+}
+
+canvas {
+	height: 552px;
+	width: 422px;
+	display: block;
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABOCAIAAAA4rwYRAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA01pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOjdEMTAwMTU3RURFQjExRTE4QUNBQzdGNjYwQ0YyQkI2IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOjdEMTAwMTU4RURFQjExRTE4QUNBQzdGNjYwQ0YyQkI2Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6N0QxMDAxNTVFREVCMTFFMThBQ0FDN0Y2NjBDRjJCQjYiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6N0QxMDAxNTZFREVCMTFFMThBQ0FDN0Y2NjBDRjJCQjYiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1l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) top left;
+}
+
+#scoreBoard {
+	width: 420px;
+	height: 50px;
+	background: rgba(182, 200, 220, 0.7);
+	position: absolute;
+	top: -3px;
+	left: 0;
+	z-index: -1;	
+	border-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAAAFCAMAAACElLmZAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA01pVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMy1jMDExIDY2LjE0NTY2MSwgMjAxMi8wMi8wNi0xNDo1NjoyNyAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNiAoMTMuMCAyMDEyMDMwNS5tLjQxNSAyMDEyLzAzLzA1OjIxOjAwOjAwKSAgKFdpbmRvd3MpIiB4bXBNTTpJbnN0YW5jZUlEPSJ4bXAuaWlkOkNCN0YwRkE5RUQ0NzExRTE4OTY2OTMzQ0NCNDlEQzQ0IiB4bXBNTTpEb2N1bWVudElEPSJ4bXAuZGlkOkNCN0YwRkFBRUQ0NzExRTE4OTY2OTMzQ0NCNDlEQzQ0Ij4gPHhtcE1NOkRlcml2ZWRGcm9tIHN0UmVmOmluc3RhbmNlSUQ9InhtcC5paWQ6Q0I3RjBGQTdFRDQ3MTFFMTg5NjY5MzNDQ0I0OURDNDQiIHN0UmVmOmRvY3VtZW50SUQ9InhtcC5kaWQ6Q0I3RjBGQThFRDQ3MTFFMTg5NjY5MzNDQ0I0OURDNDQiLz4gPC9yZGY6RGVzY3JpcHRpb24+IDwvcmRmOlJERj4gPC94OnhtcG1ldGE+IDw/eHBhY2tldCBlbmQ9InIiPz4S/NPbAAAAGFBMVEXu7u7FxcJgYVkuMCVGSD6Ki4U3OS/////SfL7aAAAACHRSTlP/////////AN6DvVkAAACgSURBVHjajFGLDsQgCAOE+v9/fC06b7lHssZFKNRhNXe3OY1fwwRxa/OqiGLGLQFkFCE+MkmMDQZBtKyVaqOCjA5jI9S85BXobCBxO6JiPAJVHCYDbyrJ2kP1Dy4r+3qMeMP8Lp/JDH+H+tTJLAJX/fJmo6p/iJQnXDRKttDVoH+1jGqzdVdCoU2Wlv2NZuT36vTzjPM8p+/HvBGdvQQYAAy2BjpIldqEAAAAAElFTkSuQmCC) 100 5 round;
+}
+
+#scoreBoard p {
+	font-size: 20px;
+	padding: 0;
+	line-height: 47px;
+	margin: 0px 0 0 5px;
+}
+
+img {display: none}
+
+#mainMenu, #gameOverMenu {
+	height: 100%;
+	width: 100%;
+	text-align: center;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 2;
+}
+
+#gameOverMenu {
+	visibility: hidden;
+}
+
+h2, h3, h1 {font-weight: normal}
+h1 {
+	font-size: 60px; 
+	color: #5a5816; 
+	transform: rotate(-10deg);
+	margin: 0px;
+}
+
+h3 {text-align: right; margin: -10px 20px 0 0; color: #5e96be}
+h3 a {color: #5a5816}
+
+.button {
+	width: 105px;
+	height: 31px;
+	background: url(https://lh6.googleusercontent.com/TrOzetdBcu82PPCF3bK84m2NkcIuaiG8T9d0MXpt3v_mMeGi0nEbGB2hQhO09ME5iootOVS1_oN3PT3c28htIecdpodcx9i_oBU8dTLiVkPPgPwQ63pyIwlVetTSkeZZmqoS-6xxQTeZF-6bgiqzGTo) 0 0 no-repeat;
+	display: block;
+	color:  #000;
+	font-size: 12px;
+	line-height: 31px;
+	text-decoration: none;
+	position: absolute;
+	left: 50%;
+	bottom: 50px;
+	margin-left: -53px;
+}
+
+.button.tweet {bottom: 100px; background-position: 0 -90px}
+.button.fb {bottom: 150px; background-position: 0 -60px}
+
+.info {position: absolute; right: 20px; bottom: 00px; margin: 0; color: green}
+
+.info .key {
+	width: 16px;
+	height: 16px;
+	background: url(https://lh6.googleusercontent.com/TrOzetdBcu82PPCF3bK84m2NkcIuaiG8T9d0MXpt3v_mMeGi0nEbGB2hQhO09ME5iootOVS1_oN3PT3c28htIecdpodcx9i_oBU8dTLiVkPPgPwQ63pyIwlVetTSkeZZmqoS-6xxQTeZF-6bgiqzGTo) no-repeat;
+	text-indent: -9999px;
+	display: inline-block;
+}
+
+.info .key.left {background-position: -92px -621px;}
+.info .key.right {background-position: -92px -641px;}
+</style>
+<style type="text/css">#button {
+  display:none;
+}
+.imgb_vis {
+  animation: imgb-animation 7s linear;
+}
+@keyframes imgb-animation {
+  10% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(100px);
+  }
+  90% {
+    transform: translateX(100px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}</style><meta http-equiv="origin-trial" content="A9AxgGSwmnfgzzkyJHILUr3H8nJ/3D+57oAsL4DBt4USlng4jZ0weq+fZtHC/Qwwn6gd4QSa5DzT3OBif+kXVA0AAAB4eyJvcmlnaW4iOiJodHRwczovL2ltYXNkay5nb29nbGVhcGlzLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjk1MTY3OTk5LCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="AlK2UR5SkAlj8jjdEc9p3F3xuFYlF6LYjAML3EOqw1g26eCwWPjdmecULvBH5MVPoqKYrOfPhYVL71xAXI1IBQoAAAB8eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3NTgwNjcxOTksImlzU3ViZG9tYWluIjp0cnVlfQ=="></head>
+<body>
+
+
+
+
+	<title>Jump</title>
+
+
+	<div class="container">
+		<canvas id="canvas" width="422" height="552">
+			Aww, your browser doesn't support HTML5!
+		</canvas>
+
+		<div id="mainMenu">
+			<h1>doodle jump</h1>
+
+			<p class="info">
+				use
+				<span class="key left">←</span>
+				<span class="key right">→</span>
+				to move and space to (re) start...
+			</p>
+			<a class="button" href="javascript:init()">Play</a>
+		</div>
+		
+		<div id="gameOverMenu">
+			<h1>game over!</h1>
+			<h3 id="go_score">you scored 0 points</h3>
+
+			<a class="button" href="javascript:reset()">Restart</a>
+			<a id="tweetBtn" target="_blank" class="button tweet" href="#">Tweet score</a>
+
+			<a id="fbBtn" target="_blank" class="button fb" href="#">Post on FB</a>
+		</div>
+		
+		
+		
+		<img id="sprite" src="https://lh6.googleusercontent.com/TrOzetdBcu82PPCF3bK84m2NkcIuaiG8T9d0MXpt3v_mMeGi0nEbGB2hQhO09ME5iootOVS1_oN3PT3c28htIecdpodcx9i_oBU8dTLiVkPPgPwQ63pyIwlVetTSkeZZmqoS-6xxQTeZF-6bgiqzGTo">
+
+		<div id="scoreBoard">
+			<p id="score">0</p>
+		</div>
+
+	</div>
+
+
+
+  <script>
+
+
+window.requestAnimFrame = (function() {
+	return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+	function(callback) {
+		window.setTimeout(callback, 1000 / 60);
+	};
+})();
+
+var canvas = document.getElementById('canvas'),
+	ctx = canvas.getContext('2d');
+
+var width = 422,
+	height = 552;
+
+canvas.width = width;
+canvas.height = height;
+
+
+var platforms = [],
+	image = document.getElementById("sprite"),
+	player, platformCount = 10,
+	position = 0,
+	gravity = 0.2,
+	animloop,
+	flag = 0,
+	menuloop, broken = 0,
+	dir, score = 0, firstRun = true;
+
+
+var Base = function() {
+	this.height = 5;
+	this.width = width;
+
+	
+	this.cx = 0;
+	this.cy = 614;
+	this.cwidth = 100;
+	this.cheight = 5;
+
+	this.moved = 0;
+
+	this.x = 0;
+	this.y = height - this.height;
+
+	this.draw = function() {
+		try {
+			ctx.drawImage(image, this.cx, this.cy, this.cwidth, this.cheight, this.x, this.y, this.width, this.height);
+		} catch (e) {}
+	};
+};
+
+var base = new Base();
+
+
+var Player = function() {
+	this.vy = 11;
+	this.vx = 0;
+
+	this.isMovingLeft = false;
+	this.isMovingRight = false;
+	this.isDead = false;
+
+	this.width = 55;
+	this.height = 40;
+
+	
+	this.cx = 0;
+	this.cy = 0;
+	this.cwidth = 110;
+	this.cheight = 80;
+
+	this.dir = "left";
+
+	this.x = width / 2 - this.width / 2;
+	this.y = height;
+
+	
+	this.draw = function() {
+		try {
+			if (this.dir == "right") this.cy = 121;
+			else if (this.dir == "left") this.cy = 201;
+			else if (this.dir == "right_land") this.cy = 289;
+			else if (this.dir == "left_land") this.cy = 371;
+
+			ctx.drawImage(image, this.cx, this.cy, this.cwidth, this.cheight, this.x, this.y, this.width, this.height);
+		} catch (e) {}
+	};
+
+	this.jump = function() {
+		this.vy = -8;
+	};
+
+	this.jumpHigh = function() {
+		this.vy = -16;
+	};
+
+};
+
+player = new Player();
+
+
+
+function Platform() {
+	this.width = 70;
+	this.height = 17;
+
+	this.x = Math.random() * (width - this.width);
+	this.y = position;
+
+	position += (height / platformCount);
+
+	this.flag = 0;
+	this.state = 0;
+
+	
+	this.cx = 0;
+	this.cy = 0;
+	this.cwidth = 105;
+	this.cheight = 31;
+
+	
+	this.draw = function() {
+		try {
+
+			if (this.type == 1) this.cy = 0;
+			else if (this.type == 2) this.cy = 61;
+			else if (this.type == 3 && this.flag === 0) this.cy = 31;
+			else if (this.type == 3 && this.flag == 1) this.cy = 1000;
+			else if (this.type == 4 && this.state === 0) this.cy = 90;
+			else if (this.type == 4 && this.state == 1) this.cy = 1000;
+
+			ctx.drawImage(image, this.cx, this.cy, this.cwidth, this.cheight, this.x, this.y, this.width, this.height);
+		} catch (e) {}
+	};
+
+	
+	
+	
+	
+	
+	
+	if (score >= 5000) this.types = [2, 3, 3, 3, 4, 4, 4, 4];
+	else if (score >= 2000 && score < 5000) this.types = [2, 2, 2, 3, 3, 3, 3, 4, 4, 4, 4];
+	else if (score >= 1000 && score < 2000) this.types = [2, 2, 2, 3, 3, 3, 3, 3];
+	else if (score >= 500 && score < 1000) this.types = [1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3];
+	else if (score >= 100 && score < 500) this.types = [1, 1, 1, 1, 2, 2];
+	else this.types = [1];
+
+	this.type = this.types[Math.floor(Math.random() * this.types.length)];
+
+	
+	if (this.type == 3 && broken < 1) {
+		broken++;
+	} else if (this.type == 3 && broken >= 1) {
+		this.type = 1;
+		broken = 0;
+	}
+
+	this.moved = 0;
+	this.vx = 1;
+}
+
+for (var i = 0; i < platformCount; i++) {
+	platforms.push(new Platform());
+}
+
+
+var Platform_broken_substitute = function() {
+	this.height = 30;
+	this.width = 70;
+
+	this.x = 0;
+	this.y = 0;
+
+	
+	this.cx = 0;
+	this.cy = 554;
+	this.cwidth = 105;
+	this.cheight = 60;
+
+	this.appearance = false;
+
+	this.draw = function() {
+		try {
+			if (this.appearance === true) ctx.drawImage(image, this.cx, this.cy, this.cwidth, this.cheight, this.x, this.y, this.width, this.height);
+			else return;
+		} catch (e) {}
+	};
+};
+
+var platform_broken_substitute = new Platform_broken_substitute();
+
+
+var spring = function() {
+	this.x = 0;
+	this.y = 0;
+
+	this.width = 26;
+	this.height = 30;
+
+	
+	this.cx = 0;
+	this.cy = 0;
+	this.cwidth = 45;
+	this.cheight = 53;
+
+	this.state = 0;
+
+	this.draw = function() {
+		try {
+			if (this.state === 0) this.cy = 445;
+			else if (this.state == 1) this.cy = 501;
+
+			ctx.drawImage(image, this.cx, this.cy, this.cwidth, this.cheight, this.x, this.y, this.width, this.height);
+		} catch (e) {}
+	};
+};
+
+var Spring = new spring();
+
+function init() {
+	
+	var	dir = "left",
+		jumpCount = 0;
+	
+	firstRun = false;
+
+	
+
+	function paintCanvas() {
+		ctx.clearRect(0, 0, width, height);
+	}
+
+	
+
+	function playerCalc() {
+		if (dir == "left") {
+			player.dir = "left";
+			if (player.vy < -7 && player.vy > -15) player.dir = "left_land";
+		} else if (dir == "right") {
+			player.dir = "right";
+			if (player.vy < -7 && player.vy > -15) player.dir = "right_land";
+		}
+
+		
+		document.onkeydown = function(e) {
+			var key = e.keyCode;
+			
+			if (key == 37) {
+				dir = "left";
+				player.isMovingLeft = true;
+			} else if (key == 39) {
+				dir = "right";
+				player.isMovingRight = true;
+			}
+			
+			if(key == 32) {
+				if(firstRun === true)
+					init();
+				else 
+					reset();
+			}
+		};
+
+		document.onkeyup = function(e) {
+			var key = e.keyCode;
+		
+			if (key == 37) {
+				dir = "left";
+				player.isMovingLeft = false;
+			} else if (key == 39) {
+				dir = "right";
+				player.isMovingRight = false;
+			}
+		};
+
+		
+		if (player.isMovingLeft === true) {
+			player.x += player.vx;
+			player.vx -= 0.15;
+		} else {
+			player.x += player.vx;
+			if (player.vx < 0) player.vx += 0.1;
+		}
+
+		if (player.isMovingRight === true) {
+			player.x += player.vx;
+			player.vx += 0.15;
+		} else {
+			player.x += player.vx;
+			if (player.vx > 0) player.vx -= 0.1;
+		}
+
+		
+		if(player.vx > 8)
+			player.vx = 8;
+		else if(player.vx < -8)
+			player.vx = -8;
+
+		
+		
+		
+		if ((player.y + player.height) > base.y && base.y < height) player.jump();
+
+		
+		if (base.y > height && (player.y + player.height) > height && player.isDead != "lol") player.isDead = true;
+
+		
+		if (player.x > width) player.x = 0 - player.width;
+		else if (player.x < 0 - player.width) player.x = width;
+
+		
+		if (player.y >= (height / 2) - (player.height / 2)) {
+			player.y += player.vy;
+			player.vy += gravity;
+		}
+
+		
+		else {
+			platforms.forEach(function(p, i) {
+
+				if (player.vy < 0) {
+					p.y -= player.vy;
+				}
+
+				if (p.y > height) {
+					platforms[i] = new Platform();
+					platforms[i].y = p.y - height;
+				}
+
+			});
+
+			base.y -= player.vy;
+			player.vy += gravity;
+
+			if (player.vy >= 0) {
+				player.y += player.vy;
+				player.vy += gravity;
+			}
+
+			score++;
+		}
+
+		
+		collides();
+
+		if (player.isDead === true) gameOver();
+	}
+
+	
+
+	function springCalc() {
+		var s = Spring;
+		var p = platforms[0];
+
+		if (p.type == 1 || p.type == 2) {
+			s.x = p.x + p.width / 2 - s.width / 2;
+			s.y = p.y - p.height - 10;
+
+			if (s.y > height / 1.1) s.state = 0;
+
+			s.draw();
+		} else {
+			s.x = 0 - s.width;
+			s.y = 0 - s.height;
+		}
+	}
+
+	
+
+	function platformCalc() {
+		var subs = platform_broken_substitute;
+
+		platforms.forEach(function(p, i) {
+			if (p.type == 2) {
+				if (p.x < 0 || p.x + p.width > width) p.vx *= -1;
+
+				p.x += p.vx;
+			}
+
+			if (p.flag == 1 && subs.appearance === false && jumpCount === 0) {
+				subs.x = p.x;
+				subs.y = p.y;
+				subs.appearance = true;
+
+				jumpCount++;
+			}
+
+			p.draw();
+		});
+
+		if (subs.appearance === true) {
+			subs.draw();
+			subs.y += 8;
+		}
+
+		if (subs.y > height) subs.appearance = false;
+	}
+
+	function collides() {
+		
+		platforms.forEach(function(p, i) {
+			if (player.vy > 0 && p.state === 0 && (player.x + 15 < p.x + p.width) && (player.x + player.width - 15 > p.x) && (player.y + player.height > p.y) && (player.y + player.height < p.y + p.height)) {
+
+				if (p.type == 3 && p.flag === 0) {
+					p.flag = 1;
+					jumpCount = 0;
+					return;
+				} else if (p.type == 4 && p.state === 0) {
+					player.jump();
+					p.state = 1;
+				} else if (p.flag == 1) return;
+				else {
+					player.jump();
+				}
+			}
+		});
+
+		
+		var s = Spring;
+		if (player.vy > 0 && (s.state === 0) && 
+			(player.x + 15 < s.x + s.width) && 
+				(player.x + player.width - 15 > s.x) && 
+					(player.y + player.height > s.y) && 
+						(player.y + player.height < s.y + s.height)) {
+			s.state = 1;
+			player.jumpHigh();
+		}
+
+	}
+
+	function updateScore() {
+		var scoreText = document.getElementById("score");
+		scoreText.innerHTML = score;
+	}
+
+	function gameOver() {
+		platforms.forEach(function(p, i) {
+			p.y -= 12;
+		});
+
+		if(player.y > height/2 && flag === 0) {
+			player.y -= 8;
+			player.vy = 0;
+		} 
+		else if(player.y < height / 2) flag = 1;
+		else if(player.y + player.height > height) {
+			showGoMenu();
+			hideScore();
+			player.isDead = "lol";
+
+			var tweet = document.getElementById("tweetBtn");
+			tweet.href='https://twitter.com/share?url=http://is.gd/PnFFzu&text=I just scored ' +score+ ' points in the HTML5 Doodle Jump game!&count=horiztonal&via=cssdeck&related=solitarydesigns';
+		
+			var facebook = document.getElementById("fbBtn");
+			facebook.href='8&p[title]=I just scored ' +score+ ' points in the HTML5 Doodle Jump game!&p[summary]=Can you beat me in this awesome recreation of Doodle Jump created in HTML5?';
+
+		}
+	}
+
+	
+
+	function update() {
+		paintCanvas();
+		platformCalc();
+
+		springCalc();
+
+		playerCalc();
+		player.draw();
+
+		base.draw();
+
+		updateScore();
+	}
+
+	menuLoop = function(){return;};
+	animloop = function() {
+		update();
+		requestAnimFrame(animloop);
+	};
+
+	animloop();
+
+	hideMenu();
+	showScore();
+}
+
+function reset() {
+	hideGoMenu();
+	showScore();
+	player.isDead = false;
+	
+	flag = 0;
+	position = 0;
+	score = 0;
+
+	base = new Base();
+	player = new Player();
+	Spring = new spring();
+	platform_broken_substitute = new Platform_broken_substitute();
+
+	platforms = [];
+	for (var i = 0; i < platformCount; i++) {
+		platforms.push(new Platform());
+	}
+}
+
+
+function hideMenu() {
+	var menu = document.getElementById("mainMenu");
+	menu.style.zIndex = -1;
+}
+
+
+function showGoMenu() {
+	var menu = document.getElementById("gameOverMenu");
+	menu.style.zIndex = 1;
+	menu.style.visibility = "visible";
+
+	var scoreText = document.getElementById("go_score");
+	scoreText.innerHTML = "You scored " + score + " points!";
+}
+
+
+function hideGoMenu() {
+	var menu = document.getElementById("gameOverMenu");
+	menu.style.zIndex = -1;
+	menu.style.visibility = "hidden";
+}
+
+
+function showScore() {
+	var menu = document.getElementById("scoreBoard");
+	menu.style.zIndex = 1;
+}
+
+
+function hideScore() {
+	var menu = document.getElementById("scoreBoard");
+	menu.style.zIndex = -1;
+}
+
+function playerJump() {
+	player.y += player.vy;
+	player.vy += gravity;
+
+	if (player.vy > 0 && 
+		(player.x + 15 < 260) && 
+		(player.x + player.width - 15 > 155) && 
+		(player.y + player.height > 475) && 
+		(player.y + player.height < 500))
+		player.jump();
+
+	if (dir == "left") {
+		player.dir = "left";
+		if (player.vy < -7 && player.vy > -15) player.dir = "left_land";
+	} else if (dir == "right") {
+		player.dir = "right";
+		if (player.vy < -7 && player.vy > -15) player.dir = "right_land";
+	}
+
+	
+	document.onkeydown = function(e) {
+		var key = e.keyCode;
+
+		if (key == 37) {
+			dir = "left";
+			player.isMovingLeft = true;
+		} else if (key == 39) {
+			dir = "right";
+			player.isMovingRight = true;
+		}
+	
+		if(key == 32) {
+			if(firstRun === true) {
+				init();
+				firstRun = false;
+			}
+			else 
+				reset();
+		}
+	};
+
+	document.onkeyup = function(e) {
+		var key = e.keyCode;
+
+		if (key == 37) {
+			dir = "left";
+			player.isMovingLeft = false;
+		} else if (key == 39) {
+			dir = "right";
+			player.isMovingRight = false;
+		}
+	};
+
+	
+	if (player.isMovingLeft === true) {
+		player.x += player.vx;
+		player.vx -= 0.15;
+	} else {
+		player.x += player.vx;
+		if (player.vx < 0) player.vx += 0.1;
+	}
+
+	if (player.isMovingRight === true) {
+		player.x += player.vx;
+		player.vx += 0.15;
+	} else {
+		player.x += player.vx;
+		if (player.vx > 0) player.vx -= 0.1;
+	}
+
+	
+	if ((player.y + player.height) > base.y && base.y < height) player.jump();
+
+	
+	if (player.x > width) player.x = 0 - player.width;
+	else if (player.x < 0 - player.width) player.x = width;
+
+	player.draw();
+}
+
+function update() {
+	ctx.clearRect(0, 0, width, height);
+	playerJump();
+}		
+
+menuLoop = function() {
+	update();
+	requestAnimFrame(menuLoop);
+};
+
+menuLoop();
+
+</script><script src="https://cdn.jsdelivr.net/gh/st39/sdk@main/api.js"></script>
+
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+<script type="text/javascript">
+    window.SDK_OPTIONS = {
+        gameId: "r2tzpy9cgrn2u4xgzc9z0zbtvxm16mby",
+        onEvent: function(a) {
+            switch (a.name) {
+                case "SDK_GAME_PAUSE":
+                    // pause game logic / mute audio
+                    break;
+                case "SDK_GAME_START":
+                    // advertisement done, resume game logic and unmute audio
+                    break;
+                case "SDK_READY":
+                    // when sdk is ready
+                    break;
+            }
+        }
+    };
+    (function(a, b, c) {
+        var d = a.getElementsByTagName(b)[0];
+        a.getElementById(c) || (a = a.createElement(b), a.id = c, a.src = "https://cdn.jsdelivr.net/gh/st39/sdk@main/sdkjs.js", d.parentNode.insertBefore(a, d))
+    })(document, "script", "gamemonetize-sdk");
+</script>
+
+<script type="text/javascript">
+    let isAdShown = false;
+
+    function onClick(e) {
+        if (!isAdShown && typeof sdk !== 'undefined' && typeof sdk.showBanner === 'function') {
+            sdk.showBanner(); 
+            isAdShown = true; 
+        }
+
+        window.removeEventListener("click", onClick); 
+        init(); 
+    }
+
+    window.addEventListener("click", onClick);
+</script>
+
+
+
+
+
+
+
+
+<div id="imaContainer" style="position: absolute; z-index: 10000; top: 0px; left: 0px; width: 100%; height: 100%; background-color: rgb(0, 0, 0); visibility: hidden; overflow: hidden;"><video id="imaVideo"></video></div><div id="imaContainer_new" style="position: absolute; z-index: 10000; top: 0px; left: 0px; width: 100%; height: 100%; background-color: rgb(0, 0, 0); visibility: hidden; overflow: hidden;"><video2 id="imaVideo2"></video2></div><div id="sdk__advertisement" style="position: fixed; z-index: 0; top: 0px; left: 0px; width: 100%; height: 100%; transform: translateX(-9999px); background-color: rgba(0, 0, 0, 0.8); opacity: 0; transition: opacity 300ms cubic-bezier(0.55, 0, 0.1, 1);"><div id="sdk__advertisement_slot" style="position: absolute; background-color: rgb(0, 0, 0); top: 0px; left: 0px; width: 356px; height: 838px;"><div style="position: absolute;"><div style="display: none;"><lima-video webkit-playsinline="true" playsinline="true" style="background-color: rgb(0, 0, 0); height: 100%; width: 100%; position: absolute; left: 0px; top: 0px;"></lima-video><div style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px;"></div></div><div style="display: none;"><lima-video webkit-playsinline="true" playsinline="true" style="background-color: rgb(0, 0, 0); height: 100%; width: 100%; position: absolute; left: 0px; top: 0px;"></lima-video><div style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px;"></div></div><iframe src="" allowfullscreen="" allow="autoplay;attribution-reporting" id="goog_1095445838" title="Advertisement" style="border: 0px; opacity: 0; margin: 0px; padding: 0px; position: relative; color-scheme: light;"></iframe><iframe title="Advertisement" style="display: none;"></iframe></div></div></div><iframe name="google_video_inner_static_iframe" id="google_video_inner_static_iframe" src="about:blank" style="height: 0px; width: 0px; display:none"></iframe></body></html>

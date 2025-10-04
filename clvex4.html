@@ -1,0 +1,8 @@
+<Module>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+ <!DOCTYPE html> <html lang="en"> <head> <meta charset="utf-8" /> <meta http-equiv="x-ua-compatible" content="ie=edge" /> <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" /> <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/CFiltered/Matt@50f9c1bd0d376b40cb8545519b147a4030598724/other/vex4/assets/css/app.css" type="text/css" /> <link rel="icon" href="https://cdn.jsdelivr.net/gh/CFiltered/Matt@50f9c1bd0d376b40cb8545519b147a4030598724/other/vex4/vex4.png" /> </head> <body> <div id="content"></div> <div id="loader">Loading...</div> <script type="text/javascript"> var gameName = "https://cdn.jsdelivr.net/gh/bobydob/JSEngine@0f8467a67ec67e4119180e5d2bef3946fe223c8c/build/v4/v4.min.js";  function addScript(src, buster, callback) { var s = document.createElement("script"); s.setAttribute("src", src + "?v=" + buster); if (typeof callback === "function") { s.onload = callback; } document.body.appendChild(s); } addScript("https://cdn.jsdelivr.net/gh/bobydob/JSEngine@0f8467a67ec67e4119180e5d2bef3946fe223c8c/build/v4/version.js", Date.now(), function () { addScript(gameName, version, function () { var game = new Vex4.Game(); }); }); </script> <script src=""></script> </body> </html>

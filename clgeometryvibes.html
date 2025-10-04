@@ -1,0 +1,264 @@
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+<!--this is a geometry dash clone. Uses jsdelivr--!>
+
+<!DOCTYPE html>
+<html lang="en-us">
+<!--created using genizy's cracked htmlgamedistribution sdk https://github.com/genizy/htmlgamedistributiontesting/ --!>
+<head>
+	<script>
+	      window.gnMathIsGoodButNotTheBestEver = {
+        "ancestorOrigins": {},
+        "href": "https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/geometryvibes/",
+        "origin": "hello world",
+        "protocol": "https:",
+        "host": "hello world",
+        "hostname": "hello world",
+        "port": "",
+        "pathname": "index.html",
+        "search": "hello world",
+        "hash": ""
+      }
+
+      const originalFetch = window.fetch;
+      window.fetch = function (...args) {
+        if (args[0].includes("html5.api.gamedistribution.com/main.min.js")) {
+          args[0] = "main.min.js";
+        }
+        return originalFetch.apply(this, args);
+      };
+
+      const originalOpen = XMLHttpRequest.prototype.open;
+      XMLHttpRequest.prototype.open = function (method, url, ...rest) {
+        if (url.includes("html5.api.gamedistribution.com/main.min.js")) {
+          url = "main.min.js";
+        }
+        return originalOpen.call(this, method, url, ...rest);
+      };
+
+      const originalCreateElement = document.createElement.bind(document);
+
+      document.createElement = function(tagName) {
+        const element = originalCreateElement(tagName);
+        if (tagName.toLowerCase() === "script") {
+          let srcValue = "";
+          Object.defineProperty(element, "src", {
+            get() {
+              return srcValue;
+            },
+            set(newSrc) {
+              let newUrl = newSrc;
+              if (newSrc.includes("html5.api.gamedistribution.com/main.min.js")) {
+                newUrl = "https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/geometryvibes/main_min.js";
+              }
+              srcValue = newUrl;
+              element.setAttribute("src", newUrl);
+            },
+            configurable: true,
+            enumerable: true,
+          });
+        }
+        return element;
+      };
+	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Geometry Vibes</title>
+    <style>
+        html,
+        body {
+            background-image: url("Build/Build.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+            padding: 0;
+            margin: 0;
+            background-color: black;
+        }
+
+        div#gameContainer {
+            background: transparent !important;
+            position: absolute;
+            top: 0px !important;
+            width: 100% !important;
+            height: 100% !important;
+            left: 0px !important;
+        }
+
+        div#gameContainer canvas {
+            position: absolute;
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        div#gameContainer canvas[data-pixel-art="true"] {
+            position: absolute;
+            image-rendering: optimizeSpeed;
+            image-rendering: -webkit-crisp-edges;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: -o-crisp-edges;
+            image-rendering: crisp-edges;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: optimize-contrast;
+            image-rendering: pixelated;
+            -ms-interpolation-mode: nearest-neighbor;
+        }
+
+        .loadingOut {
+            width: 250px;
+            position: fixed;
+            left: 50%;
+            top: calc(50% - 8px);
+            transform: translate(-50%);
+            border: 2px solid white;
+            height: 14px;
+            background: transparent;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, white, white 0%, transparent 0%, transparent);
+        }
+
+        .centered {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: -150px;
+            margin-left: -250px;
+            width: 500px;
+        }
+
+        #orientation-warning {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: red;
+            color: white;
+            padding: 20px;
+            border: 2px solid white;
+            text-align: center;
+            z-index: 1000;
+        }
+
+         #orientation-image {
+            width: 125px;
+            height: 125px;
+            margin-top: 10px;
+            display: none;
+            position: fixed;
+            top: calc(50% - 150px);
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    </style>
+</head>
+
+<body>
+	 <img id="orientation-image" src="https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/geometryvibes/TemplateData/Orientation/orientation.png" alt="Orientation">
+    <div id="orientation-warning">
+        <div>Please rotate your device to the correct mode.</div>
+       
+    </div>
+    <div id="gameContainer">
+        <img src="https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/geometryvibes/TemplateData/logo.png" class="centered">
+        <div class="loadingOut">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+        <canvas id="unity-canvas" data-pixel-art=""></canvas>
+        <script src="https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/geometryvibes/Build/GeometryVibes_GD_V6.loader.js"></script>
+        <script>
+            var canvas = document.querySelector("#unity-canvas");
+            var progressBar = document.querySelector("#progress-bar");
+            var gameContainer = document.querySelector("#gameContainer");
+            var orientationWarning = document.querySelector("#orientation-warning");
+            var orientationImage = document.querySelector("#orientation-image");
+            var config = {
+                dataUrl: "https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/geometryvibes/Build/GeometryVibes_GD_V6.data.unityweb",
+                frameworkUrl: "https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/geometryvibes/Build/GeometryVibes_GD_V6.framework.js.unityweb",
+                codeUrl: "https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/geometryvibes/Build/GeometryVibes_GD_V6.wasm.unityweb",
+                streamingAssetsUrl: "StreamingAssets",
+                companyName: "GameVGames",
+                productName: "Geometry Vibes",
+                productVersion: "1.0",
+            };
+            var scaleToFit;
+            try {
+                scaleToFit = !!JSON.parse("");
+            } catch (e) {
+                scaleToFit = true;
+            }
+
+            function progressHandler(progress) {
+                var percent = progress * 100 + '%';
+                progressBar.style.background = 'linear-gradient(to right, white, white ' + percent + ', transparent ' + percent + ', transparent)';
+            }
+
+            function onResize() {
+                var container = canvas.parentElement;
+                var w;
+                var h;
+
+                if (scaleToFit) {
+                    w = window.innerWidth;
+                    h = window.innerHeight;
+
+                    var r = 600 / 960;
+
+                    if (w * r > window.innerHeight) {
+                        w = Math.min(w, Math.ceil(h / r));
+                    }
+                    h = Math.floor(w * r);
+                } else {
+                    w = 960;
+                    h = 600;
+                }
+
+                container.style.width = canvas.style.width = w + "px";
+                container.style.height = canvas.style.height = h + "px";
+                container.style.top = Math.floor((window.innerHeight - h) / 2) + "px";
+                container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
+            }
+
+           function checkOrientation(orientation) {
+               
+                    orientationWarning.style.display = 'none';
+                    gameContainer.style.display = 'block';
+                    orientationImage.style.display = 'none';  // Hide the image when not needed
+                
+            }
+
+            function loadTemplateConfig() {
+                var request = new XMLHttpRequest();
+                request.open('GET', 'https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/geometryvibes/TemplateData/Orientation/template.json', true);
+                request.onreadystatechange = function() {
+                    if (request.readyState === 4 && request.status === 200) {
+                        var config = JSON.parse(request.responseText);
+                        var orientation = config.customOptions.find(option => option.name === "orientation").default;
+                        checkOrientation(orientation);
+                    }
+                };
+                request.send();
+            }
+
+            createUnityInstance(canvas, config, progressHandler).then(function(instance) {
+                canvas = instance.Module.canvas;
+                onResize();
+            });
+
+            window.addEventListener('resize', function() {
+                onResize();
+                loadTemplateConfig();
+            });
+
+            loadTemplateConfig();
+        </script>
+    </div>
+</body>
+
+</html>

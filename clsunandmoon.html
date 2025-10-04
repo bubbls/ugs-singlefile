@@ -1,0 +1,92 @@
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+<!--its a platformer where you go through the floor. Uses jsdelivr--!>
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+	<base href="https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/MISC/sunandmoon/">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta http-equiv="pragma" content="no-cache"/>
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name ="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta charset="utf-8"/>
+
+        <!-- Set the title bar of the page -->
+        <title>The Sun And Moon by Daniel Linssen</title>
+
+        <!-- Set the background colour of the document -->
+        <style>
+            body {
+              background: #222;
+              color:#eff8d9;
+              margin: 0px;
+              padding: 0px;
+              border: 0px;
+            }
+            canvas {
+                      image-rendering: optimizeSpeed;
+                      -webkit-interpolation-mode: nearest-neighbor;
+                      margin: 0px;
+                      padding: 0px;
+                      border: 0px;
+            }
+            :-webkit-full-screen #canvas {
+                 width: 100%;
+                 height: 100%;
+            }
+            div.gm4html5_div_class
+            {
+              position: fixed;
+              top: 50%;
+              left: 50%;
+              margin-left: -360px;
+              margin-top: -360px;
+              padding: 0px;
+              border: 0px;
+            }
+            /* START - Login Dialog Box */
+            div.gm4html5_login
+            {
+                 padding: 20px;
+                 position: absolute;
+                 border: solid 2px #eff8d9;
+                 background-color: #415e54;
+                 color:#00ff00;
+                 border-radius: 15px;
+                 box-shadow: #242b33 20px 20px 40px;
+            }
+            div.gm4html5_cancel_button
+            {
+                 float: right;
+            }
+            div.gm4html5_login_button
+            {
+                 float: left;
+            }
+            div.gm4html5_login_header
+            {
+                 text-align: center;
+            }
+            /* END - Login Dialog Box */
+            :-webkit-full-screen {
+               width: 100%;
+               height: 100%;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="gm4html5_div_class" id="gm4html5_div_id">
+            <!-- Create the canvas element the game draws to -->
+            <canvas id="canvas" width="720" height="720">
+               <p>Your browser doesn't support HTML5 canvas.</p>
+            </canvas>
+        </div>
+
+        <!-- Run the game code -->
+        <script type="text/javascript" src="html5game/The Sun And Moon WEB.js?ICYZB=2112341512"></script>
+    </body>
+</html>
+<script defer src="https://static.itch.io/htmlgame.js" type="text/javascript"></script>

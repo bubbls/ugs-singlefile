@@ -1,0 +1,46 @@
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+
+<!doctype html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Счастливая Комната</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@378e4f8f0603c1e9e9241ebce0c1e454ae7a0400/happy%20room/TemplateData/style.css">
+<link rel="shortcut icon" href="TemplateData/favicon.ico" />
+<script src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@378e4f8f0603c1e9e9241ebce0c1e454ae7a0400/happy%20room/TemplateData/UnityProgress.js"></script>
+
+</head>
+<body class="template">
+<div class="template-wrap clear">
+<canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" width="100%" height="100%"></canvas>
+</div>
+<script type="text/javascript">
+  var Module = {
+    TOTAL_MEMORY: 268435456,
+    errorhandler: null,			// arguments: err, url, line. This function must return 'true' if the error is handled, otherwise 'false'
+    compatibilitycheck: null,
+    backgroundColor: "#000000",
+    splashStyle: "Light",
+    dataUrl: "https://rawcdn.githack.com/bubbls/UGS-Assets/378e4f8f0603c1e9e9241ebce0c1e454ae7a0400/happy%20room/Release/build_web.data",
+    codeUrl: "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@378e4f8f0603c1e9e9241ebce0c1e454ae7a0400/happy%20room/Release/build_web.js",
+    asmUrl: "https://rawcdn.githack.com/bubbls/UGS-Assets/378e4f8f0603c1e9e9241ebce0c1e454ae7a0400/happy%20room/Release/build_web.asm.js",
+    memUrl: "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@378e4f8f0603c1e9e9241ebce0c1e454ae7a0400/happy%20room/Release/build_web.mem",
+  };
+  const canvas2 = document.getElementById("canvas");
+	// Function to resize the canvas to fit the window
+	function resizeCanvas() {
+		canvas2.width = window.innerWidth-50;
+		canvas2.height = window.innerHeight-50;
+	}
+	resizeCanvas();
+</script>
+<script src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@378e4f8f0603c1e9e9241ebce0c1e454ae7a0400/happy%20room/Release/UnityLoader.js"></script>
+</body>
+</html>

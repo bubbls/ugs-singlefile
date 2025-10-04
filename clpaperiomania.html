@@ -1,0 +1,59 @@
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="description" content="">
+	<meta name="viewport" content="user-scalable=no">
+	<style type="text/css">
+		body {
+			margin: 0;
+			background-color: #102b07;
+		}
+
+		@font-face {
+			font-family: 'gameFont';
+			font-style: normal;
+			font-weight: 400;
+			src: url('https://cdn.jsdelivr.net/gh/bessiegasbarro/papman@01527b751e7c26a0579a01fb2fe1d303703a4d7f/assets/fnt/Square.ttf');
+		}
+	</style>
+	<link rel="stylesheet"
+		href="https://cdn.jsdelivr.net/gh/bessiegasbarro/papman@01527b751e7c26a0579a01fb2fe1d303703a4d7f/normalize.css"
+		type="text/css">
+	<link rel="stylesheet"
+		href="https://cdn.jsdelivr.net/gh/bessiegasbarro/papman@01527b751e7c26a0579a01fb2fe1d303703a4d7f/gm.css"
+		type="text/css">
+	<script>
+		window.addEventListener("keydown", function(e) { if(["Space","ArrowUp","ArrowDown","ArrowLeft","ArrowRight"].indexOf(e.code) > -1) { e.preventDefault(); } }, false); 
+	</script>
+</head>
+
+<body style="background-color: #000000">
+	<div id="wrongRotation">
+		<img src="https://cdn.jsdelivr.net/gh/bessiegasbarro/papman@01527b751e7c26a0579a01fb2fe1d303703a4d7f/assets/img_480/rotate_screen.png" alt=""/> </div>
+		<div id="game">
+			<script
+				src="https://cdn.jsdelivr.net/gh/bessiegasbarro/papman@01527b751e7c26a0579a01fb2fe1d303703a4d7f/papers.js">
+			</script>
+			<script>
+				document.addEventListener("deviceready", function () { document.addEventListener("backbutton", function () { // quit // lost progress if (grpSceneInfoDialog.visible) { SceneInfoDialog.instance.OnPressedNo(); } else // pause if (grpScenePause.visible) { ScenePause.instance.OnPressedCloseDialog(); } else // game if (grpSceneCamera.visible) { SceneCamera.instance.OnPressedPause(); } else // settings if (grpSceneSettings.visible) { SceneSettings.instance.OnPressedCloseDialog(); } else // instructions if (grpSceneInstruction.visible) { SceneInstruction.instance.cancelInstruction(); } else // about if (grpSceneAbout.visible) { SceneAbout.instance.cancelAbout(); } else // menu // result if (grpSceneBasic.visible && !gameRunning) { quitAppDialog(); } }, false); }, false); 
+			</script>
+		</div>
+		<div class="font_preload" style="opacity: 0"> <span style="font-family: 'gameFont', Arial, normal;"></span>
+		</div>
+		<div id="ads"></div>
+		<script
+			src="https://s3.amazonaws.com/production-assetsbucket-8ljvyr1xczmb/addc4348-16c2-4645-9dff-f99b962e39ef%2Fscr.js">
+		</script>
+</body>
+
+</html>

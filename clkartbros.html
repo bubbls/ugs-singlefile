@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<html lang="en-us">
+<base href="https://rawcdn.githack.com/bubbls/UGS-Assets/f56396b3862859bcbbacd67155b7d44743783156/kart%20bros/"
+<head>
+  <meta charset="utf-8">
+  <title>KART BROS! - Free Online .io Kart Racing Game</title> 
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <link rel="canonical" href="https://kartbros.io/">
+  <meta name="description" content="Kart Bros is a free kart racing game that's packed with wild antics! Whether you're hugging the turns, drifting around tracks or hurling powerups with friends, Kart Bros is an io racing game that delivers non‑stop thrills in every race.">
+
+  <meta property="og:title" content="Kart Bros!">
+  <meta property="og:description" content="Kart Bros is a free kart racing game that's packed with wild antics! Whether you're hugging the turns, drifting around tracks or hurling powerups with friends, Kart Bros is an io racing game that delivers non‑stop thrills in every race.">
+  <meta property="og:image" content="https://kartbros.io/TemplateData/kartbros_embed.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://kartbros.io">
+
+  <!-- Twitter Card meta tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@BlueWizardGames">
+  <meta name="twitter:creator" content="@BlueWizardGames">
+  <meta name="twitter:title" content="Kart Bros!">
+  <meta name="twitter:description" content="Kart Bros is a free kart racing game that's packed with wild antics! Whether you're hugging the turns, drifting around tracks or hurling powerups with friends, Kart Bros is an io racing game that delivers non‑stop thrills in every race.">
+  <meta name="twitter:image" content="https://kartbros.io/TemplateData/kartbros_embed.jpg">
+
+  <meta id="viewport" name="viewport" content="width=device-width,
+                     initial-scale=1,
+                     maximum-scale=1,
+                     user-scalable=no,
+                     viewport-fit=cover">
+
+  <!-- <script>
+      // window.addEventListener("touchmove", function (event) { event.preventDefault(); }, { capture: false, passive: false });
+      if (typeof window.devicePixelRatio != 'undefined' && window.devicePixelRatio > 2) {
+        var meta = document.getElementById("viewport");
+        meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no');
+      }
+    </script> -->
+
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "VideoGame",
+      "name": "Kart Bros!",
+      "url": "https://kartbros.io",
+      "image": "https://kartbros.io/TemplateData/kartbros_embed.jpg",
+      "description": "Kart Bros is a free kart racing game that's packed with wild antics! Whether you're hugging the turns, drifting around tracks or hurling powerups with friends, Kart Bros is an io racing game that delivers non‑stop thrills in every race.",
+      "gamePlatform": "PC",
+      "applicationCategory": "Game",
+      "applicationSubCategory": "Racing",
+      "operatingSystem": "ChromeOS, Windows, MACOS, Linux",
+      "author": {
+        "@type": "Organization",
+        "name": "Blue Wizard Digital"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Blue Wizard Digital"
+      },
+      "playMode": "MultiPlayer"
+    }
+  </script>
+  <script>
+    function fit() {
+      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+    }
+
+    // 1st run
+    fit();
+
+    // instant reaction to orientation / classic resizes
+    addEventListener('resize', fit, {
+      passive: true
+    });
+
+    // extra pass once the URL bar has fully hidden (iOS/Chrome-Android quirk)
+    addEventListener('orientationchange', () => {
+      setTimeout(fit, 450); // tweak if you still see a gap
+    });
+
+    // visual-viewport change (iOS 15+ / Chrome 108+)
+    if (window.visualViewport) {
+      visualViewport.addEventListener('resize', fit, {
+        passive: true
+      });
+    }
+  </script>
+
+  <style>
+    /* Basic styling */
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000000;
+      color: #000;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .body::-webkit-scrollbar {
+      /* WebKit */
+      width: 0px;
+    }
+
+    /* Layout structure - main wrapper */
+    /* .page-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    } */
+
+    /* Fix for scrolling when mouse is over canvas - removed pointer-events: none */
+    /* Game section - made to respect pointer events */
+    .game-section {
+      width: 100%;
+      height: 100%;
+      /* aspect-ratio: 16 / 9; */
+      background: #000;
+      position: relative;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Loading screen */
+    #unity-loading-bar {
+      background: #000;
+      position: absolute;
+      top: 60%;
+      align-items: center;
+      justify-content: center;
+      z-index: 15;
+    }
+
+    /* Info section */
+    .info-section {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      position: relative;
+      padding: 20px 0;
+    }
+
+    #unity-canvas {
+      background: #000;
+      width: calc(100%);
+      float: left;
+      /* display: block; */
+      /* Add object-fit-like behavior for canvas */
+      /* position: relative; */
+    }
+
+
+    #unity-warning {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #fff;
+      pointer-events: none;
+      max-width: 90%;
+      text-align: center;
+      display: none;
+    }
+
+    html,
+    body,
+    .game-section,
+    #unity-canvas {
+      /* width: 100vw; */
+      height: calc(var(--vh, 1vh)*100);
+      /* replaces 100 vh */
+      overscroll-behavior: none;
+      /* avoids rubber-band scroll */
+    }
+
+    /* Container for game info */
+    .container {
+      width: calc(100% - 420px);
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    /* Content styling */
+    p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+
+    h1 {
+      color: #d32f2f;
+      text-align: center;
+    }
+
+    h2 {
+      color: #1976d2;
+    }
+
+    .changelog {
+      background: #e3f2fd;
+      padding: 10px;
+      border-left: 5px solid #1976d2;
+    }
+
+    .faq {
+      margin-top: 20px;
+    }
+
+    .faq-item {
+      margin-bottom: 15px;
+    }
+
+    .faq-item h3 {
+      margin: 0;
+      color: #d32f2f;
+    }
+
+    .social {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    /* Social links */
+    .social-links {
+      margin-top: 40px;
+      text-align: center;
+    }
+
+    .social-links a {
+      margin: 0 10px;
+      display: inline-block;
+    }
+
+    .social-links img {
+      width: 30px;
+      height: 30px;
+    }
+
+    a {
+      color: hotpink;
+    }
+
+    #adContainerMainMenu {
+      position: absolute;
+      /* no longer fixed */
+      top: 50%;
+      /* center vertically in game-section */
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    #adContainerMainMenu>div {
+      pointer-events: auto;
+    }
+
+    /* Individual ad elements should receive clicks */
+    #kartbros-io_300x250,
+    #kartbros-io_300x250_2 {
+      pointer-events: auto;
+      /* Only the actual ad elements get clicks */
+    }
+
+    #adContainerBottom {
+      position: absolute;
+      bottom: 1px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      text-align: center;
+      display: none;
+      /* Initially hidden like other ad containers */
+      pointer-events: none;
+    }
+
+    #adContainerBottom>div {
+      pointer-events: auto;
+    }
+
+    #adContainerTop {
+      position: absolute;
+      top: 10px;
+      /* center vertically in game-section */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: none;
+      /* Initially hidden like main menu ads */
+      pointer-events: none;
+    }
+
+    #adContainerTop>div {
+      pointer-events: auto;
+    }
+
+    /* Individual ad elements should receive clicks */
+    #kartbros-io_728x90 {
+      pointer-events: auto;
+    }
+
+    /* Pillar ad containers for character/track select screens */
+    #adContainerPillars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1000;
+      pointer-events: none;
+      display: none;
+      /* Initially hidden */
+    }
+
+    #adContainerPillars>div {
+      pointer-events: auto;
+    }
+
+    /* Individual pillar ad elements */
+    #kartbros-io_160x600 {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 160px;
+      height: 600px;
+      pointer-events: auto;
+      z-index: 1001;
+    }
+
+    #kartbros-io_160x600_2 {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 160px;
+      height: 600px;
+      pointer-events: auto;
+      z-index: 1001;
+    }
+
+    /* Video ad overlay */
+    #videoAdOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #videoad {
+      width: 960px;
+      height: 540px;
+      background: #000;
+    }
+
+    /* Spinning wheel animation */
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .spinning-wheel {
+      display: inline-block;
+      transform-origin: center;
+      animation: spin 1s linear infinite;
+    }
+  </style>
+
+  <!-- AdinPlay Ads Snippet Integration -->
+  <script>
+    window.aiptag = window.aiptag || {
+      cmd: []
+    };
+    aiptag.cmd.display = aiptag.cmd.display || [];
+    aiptag.cmd.player = aiptag.cmd.player || [];
+
+    // CMP tool settings
+    aiptag.cmp = {
+      show: true,
+      button: true,
+      buttonText: "Privacy settings",
+      buttonPosition: "bottom-left"
+    };
+
+    // Initialize the video ad player
+    aiptag.cmd.player.push(function() {
+      aiptag.adplayer = new aipPlayer({
+        AD_WIDTH: 960,
+        AD_HEIGHT: 540,
+        AD_DISPLAY: 'default', // default, fullscreen, fill, center, modal-center
+        LOADING_TEXT: 'loading advertisement',
+        PREROLL_ELEM: function() {
+          return document.getElementById('videoad');
+        },
+        AIP_COMPLETE: function(state) {
+          console.log("Video Ad Completed: " + state);
+        }
+      });
+    });
+
+    // function show_videoad() {
+    //   if (typeof aiptag.adplayer !== 'undefined') {
+    //     aiptag.cmd.player.push(function () { aiptag.adplayer.startVideoAd(); });
+    //   } else {
+    //     console.log("Ad could not be loaded, load your content here");
+    //     if (aiptag.adplayer && aiptag.adplayer.aipConfig && typeof aiptag.adplayer.aipConfig.AIP_COMPLETE === "function")
+    //       aiptag.adplayer.aipConfig.AIP_COMPLETE();
+    //   }
+    // }
+  </script>
+  <script async src="//api.adinplay.com/libs/aiptag/pub/SSK/kartbros.io/tag.min.js"></script>
+  <!-- End AdinPlay Snippet -->
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1BSXC3Y865"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+    gtag('js', new Date());
+
+    gtag('config', 'G-1BSXC3Y865', {
+      cookie_flags: 'secure;samesite=none'
+    });
+  </script>
+
+  <!-- Analytics Functions -->
+  <script>
+    // Generate unique session ID
+    function generateSessionId() {
+      const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < 25; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+
+    // Session ID for tracking
+    var sid = generateSessionId();
+
+    // Status update function that records session activity
+    function updateStatus(fromEvent = false) {
+      const req = new XMLHttpRequest();
+      var aStr = "recordsession.php?s=" + sid;
+      if (fromEvent == true) aStr = aStr + "&e=1"
+      req.open("GET", aStr);
+      req.send();
+    }
+
+    function SendEvent(theEvent, theAction, theParms = '') {
+      if (theParms == '') {
+        gtag(theEvent, theAction);
+      } else {
+        gtag(theEvent, theAction, theParms);
+      }
+      updateStatus(true);
+    }
+
+    function GA4_SendEvent(eventName, paramsJson) {
+      // Parse parameters if provided
+      var parsedParams;
+      if (paramsJson && paramsJson.length > 0) {
+        try {
+          parsedParams = JSON.parse(paramsJson);
+        } catch (e) {
+          parsedParams = undefined;
+        }
+      }
+
+      // Call SendEvent function
+      if (parsedParams === undefined) {
+        SendEvent('event', eventName);
+      } else {
+        SendEvent('event', eventName, parsedParams);
+      }
+    }
+
+    updateStatus(false);
+  </script>
+</head>
+
+<body>
+  <noscript>
+    <div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:1.4;z-index:9999;text-align:center;padding:24px">
+      Enable JavaScript bro!
+    </div>
+  </noscript>
+  <!-- Add a scroll helper that sits behind the game but allows scrolling -->
+  <!-- <div class="page-wrapper"> -->
+  <!-- Game section (full height of viewport) -->
+  <div class="game-section">
+    <canvas id="unity-canvas" tabindex="-1" onblur="window.focus(); window.scrollTo(0, 0);"></canvas>
+
+    <!-- <div id="unity-loading-bar">
+        <div id="loading-text">YOUR BROS GAME IS LOADING</div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div> -->
+
+    <div id="unity-loading-bar">
+      <center>
+        <img src="TemplateData/kart_wheel.png" class="spinning-wheel" alt="Spinning kart wheel loading indicator">
+        <br>
+        <img src="TemplateData/loading4.png" alt="Loading game">
+        <br>
+        <img src="TemplateData/fbro.png" alt="Football Bros character icon">
+        <img src="TemplateData/bbbro.png" alt="Basket Bros character icon">
+        <img src="TemplateData/sbro.png" alt="Soccer Bros character icon">
+        <img src="TemplateData/wbro.png" alt="Wrestle Bros character icon">
+        <img src="TemplateData/kbro.png" alt="Kart Bros character icon">
+        <img src="TemplateData/bbro.png" alt="Baseball Bros character icon">
+        <img src="TemplateData/kartbro.png" alt="Kart Bros character icon">
+      </center>
+    </div>
+
+    <div id="unity-warning"></div>
+
+    <div id="adContainerMainMenu">
+      <div id="kartbros-io_300x250" style="width: 336px; height: 280px; visibility: visible; position: absolute; left: 50%; transform: translateX(calc(-100% - 320px)); overflow: hidden; display: block; pointer-events: auto;">
+      </div>
+      <div id="kartbros-io_300x250_2" style="width: 336px; height: 280px; visibility: visible; position: absolute; left: 50%; transform: translateX(calc(320px + 36px)); overflow: hidden; display: block; pointer-events: auto;">
+      </div>
+    </div>
+    <div id="adContainerTop">
+      <div id="kartbros-io_728x90"></div>
+    </div>
+
+    <div id="adContainerBottom">
+      <div id="kartbros-io_970x250"></div>
+    </div>
+
+    <!-- Pillar ads for character/track select screens -->
+    <div id="adContainerPillars">
+      <div id="kartbros-io_160x600"></div>
+      <div id="kartbros-io_160x600_2"></div>
+    </div>
+  </div>
+
+  <!-- Information section (scrolls below game) -->
+  <div class="info-section">
+    <!-- Main content container -->
+
+
+      <div class="social">
+        <p>To keep up to date, sign up for our email newsletter <a href="https://bluewizard.com/subscribe-to-bwd/">right
+            here!</a></p>
+
+        <p>Follow us on social media to stay updated with the latest news and features!</p>
+        <p>v1.33</p>
+      </div>
+    </div>
+
+    <!-- Social links -->
+    <div class="social-links">
+      <a href="https://discord.com/invite/bluewizard"><img src="https://zuckvmusk.com/img/discord.png" alt="Discord"></a>
+      <a href="https://www.facebook.com/bluewizarddigital"><img src="https://zuckvmusk.com/img/facebook.png" alt="Facebook"></a>
+      <a href="https://www.tiktok.com/@bluewizarddigital"><img src="https://zuckvmusk.com/img/tiktok.png" alt="TikTok"></a>
+      <a href="https://twitter.com/bluewizardgames"><img src="https://zuckvmusk.com/img/twitter.png" alt="Twitter"></a>
+      <a href="https://www.instagram.com/bluewizardgames/"><img src="https://zuckvmusk.com/img/instagram.png" alt="Instagram"></a>
+      <a href="https://www.youtube.com/bluewizarddigital"><img src="https://zuckvmusk.com/img/youtube.png" alt="Youtube"></a>
+      <a href="/cdn-cgi/l/email-protection#a7cec9c1c8e7c5cbd2c2d0ceddc6d5c389c4c8ca"><img src="https://zuckvmusk.com/img/email.png" alt="Email"></a>
+    </div>
+
+    <!-- Ad containers moved out of info-section to be in global scope -->
+  </div>
+  <!-- </div> -->
+
+  <!-- Video ad overlay -->
+  <div id="videoAdOverlay">
+    <div id="videoad">
+      <!-- The AdinPlay video ad will be injected here -->
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+  <script src="TemplateData/pleaserotate.min.js"></script>
+
+  <script>
+    // Toggle pointer events for scrolling
+    document.addEventListener('wheel', onScroll, false);
+    document.addEventListener('mousemove', onMouse, false);
+
+    function onMouse() {
+      const gameSection = document.querySelector('.game-section');
+      if (gameSection) {
+        gameSection.style['pointer-events'] = 'auto';
+      }
+    }
+
+    function onScroll() {
+      const gameSection = document.querySelector('.game-section');
+      if (gameSection) {
+        gameSection.style['pointer-events'] = 'none';
+
+        // Re-enable pointer events after a short delay to allow for smooth scrolling
+        setTimeout(function() {
+          gameSection.style['pointer-events'] = 'auto';
+        }, 500);
+      }
+    }
+
+    // Force exit out off fullscreen mode when the device is rotated to portrait
+    window.addEventListener('orientationchange', () => {
+      if (window.screen.orientation && window.screen.orientation.type.startsWith('portrait')) {
+        if (document.fullscreenElement) {
+          document.exitFullscreen();
+        }
+      }
+    });
+
+    let canvas = document.getElementById("unity-canvas");
+
+    function unityShowBanner(msg, type) {
+      let warningBanner = document.getElementById("unity-warning");
+
+      function updateBannerVisibility() {
+        warningBanner.style.display = warningBanner.children.length ? "block" : "none";
+      }
+      let div = document.createElement("div");
+      div.innerHTML = msg;
+      warningBanner.appendChild(div);
+
+      if (type === "error") {
+        div.style = "background: red; padding: 10px;";
+      } else if (type === "warning") {
+        div.style = "background: yellow; padding: 10px;";
+        setTimeout(() => {
+          warningBanner.removeChild(div);
+          updateBannerVisibility();
+        }, 5000);
+      }
+      updateBannerVisibility();
+    }
+
+    var buildUrl = "Build";
+    var loaderUrl = buildUrl + "/6017c527e1984a3d73b0c56d1a2c6519.loader.js";
+    var config = {
+      arguments: [],
+      dataUrl: buildUrl + "/a0ce5d132edccecbb0d5be585ec1cb9b.data.unityweb",
+      frameworkUrl: buildUrl + "/1a1fc1c709352d3e8cfea1a5ff718893.framework.js.unityweb",
+      codeUrl: buildUrl + "/61e2ebfd69b7e9566aaecd4c7e80e14e.wasm.unityweb",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "BlueWizard",
+      productName: "KART BROS!",
+      productVersion: "1.33",
+      showBanner: unityShowBanner,
+    };
+
+    document.getElementById("unity-loading-bar").style.display = "block";
+
+    let script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = () => {
+      createUnityInstance(canvas, config, (progress) => {
+        //document.getElementById("unity-progress-bar-full").style.width = (100 * progress) + "%";
+      }).then((unityInstance) => {
+        window.unityInstance = unityInstance;
+        document.getElementById("unity-loading-bar").style.display = "none";
+      }).catch((message) => {
+        alert(message);
+      });
+    };
+    document.body.appendChild(script);
+  </script>
+</body>
+
+</html>

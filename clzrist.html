@@ -1,0 +1,92 @@
+<Module>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<style><style type="text/css">#button {
+  display:none;
+}
+.imgb_vis {
+  animation: imgb-animation 7s linear;
+}
+@keyframes imgb-animation {
+  10% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(100px);
+  }
+  90% {
+    transform: translateX(100px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}</style><meta http-equiv="origin-trial" content="A9AxgGSwmnfgzzkyJHILUr3H8nJ/3D+57oAsL4DBt4USlng4jZ0weq+fZtHC/Qwwn6gd4QSa5DzT3OBif+kXVA0AAAB4eyJvcmlnaW4iOiJodHRwczovL2ltYXNkay5nb29nbGVhcGlzLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjk1MTY3OTk5LCJpc1RoaXJkUGFydHkiOnRydWV9"><meta http-equiv="origin-trial" content="As0hBNJ8h++fNYlkq8cTye2qDLyom8NddByiVytXGGD0YVE+2CEuTCpqXMDxdhOMILKoaiaYifwEvCRlJ/9GcQ8AAAB8eyJvcmlnaW4iOiJodHRwczovL2RvdWJsZWNsaWNrLm5ldDo0NDMiLCJmZWF0dXJlIjoiV2ViVmlld1hSZXF1ZXN0ZWRXaXRoRGVwcmVjYXRpb24iLCJleHBpcnkiOjE3MTk1MzI3OTksImlzU3ViZG9tYWluIjp0cnVlfQ=="><meta http-equiv="origin-trial" content="AymqwRC7u88Y4JPvfIF2F37QKylC04248hLCdJAsh8xgOfe/dVJPV3XS3wLFca1ZMVOtnBfVjaCMTVudWM//5g4AAAB7eyJvcmlnaW4iOiJodHRwczovL3d3dy5nb29nbGV0YWdtYW5hZ2VyLmNvbTo0NDMiLCJmZWF0dXJlIjoiUHJpdmFjeVNhbmRib3hBZHNBUElzIiwiZXhwaXJ5IjoxNjk1MTY3OTk5LCJpc1RoaXJkUGFydHkiOnRydWV9"></head><body dir="ltr" oncontextmenu="return false;"><script src=""></script><script type="text/javascript">
+           window.SDK_OPTIONS = {
+              gameId: "iyq1x3g396ik7vhf71czo9ubmjrimzd4",
+              onEvent: function (a) {
+                 switch (a.name) {
+                    case "SDK_GAME_PAUSE":
+                       // pause game logic / mute audio
+                       break;
+                    case "SDK_GAME_START":
+                       // advertisement done, resume game logic and unmute audio
+                       break;
+                    case "SDK_READY":
+                       // when sdk is ready
+                       break;
+                 }
+              }
+           };
+        (function (a, b, c) {
+           var d = a.getElementsByTagName(b)[0];
+           a.getElementById(c) || (a = a.createElement(b), a.id = c, a.src = "", d.parentNode.insertBefore(a, d))
+        })(document, "script", "gamemonetize-sdk");
+
+		$(document).ready(function() {
+		 var strVar = '<div style="position:fixed;top:0;right:0;bottom:0;left:0;z-index:999;" id="nec">';
+		 $(document.body).append(strVar);
+		 $("#nec").click(function () {
+		      if (typeof sdk !== 'undefined' && sdk.showBanner !== 'undefined') {
+		            sdk.showBanner();
+		        }
+		            $('#nec').hide();
+		   });
+		});
+		window.setInterval(function(){
+		        $('#nec').show();
+		}, 300000);
+        </script>
+        <canvas height="931" id="gameCanvas" style="background-color: rgb(255, 255, 255); top: 0px; position: absolute; left: 0px; display: block; width: 100%; height: 100%; cursor: default;" width="987">Your browser requires Canvas support to play this game.</canvas>
+        <script>
+
+            function __Zrist__Game__Start__(){
+
+                if(window.location.href.indexOf("Zrist") >= 0){
+                    kongregateAPI.loadAPI(function(){
+                        Engine.System.run();
+                    });
+                }
+                else{
+                    Engine.System.run();
+                }
+            }
+        </script>
+        <script onload="__Zrist__Game__Start__()" src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@ebc504a7c93b0354c4ede41286251533238d4b11/zrist.js" type="text/javascript"></script>
+		<script src=""></script>
+
+		
+    
+
+<div style="position:fixed;top:0;right:0;bottom:0;left:0;z-index:999;" id="nec"></div><div id="imaContainer" style="position: absolute; z-index: 10000; top: 0px; left: 0px; width: 100%; height: 100%; background-color: rgb(0, 0, 0); visibility: hidden; overflow: hidden;"><video id="imaVideo"></video></div><div id="imaContainer_new" style="position: absolute; z-index: 10000; top: 0px; left: 0px; width: 100%; height: 100%; background-color: rgb(0, 0, 0); visibility: hidden; overflow: hidden;"><video2 id="imaVideo2"></video2></div><div id="sdk__advertisement" style="position: fixed; z-index: 0; top: 0px; left: 0px; width: 100%; height: 100%; transform: translateX(-9999px); background-color: rgba(0, 0, 0, 0.8); opacity: 0; transition: opacity 300ms cubic-bezier(0.55, 0, 0.1, 1) 0s;"><div id="sdk__advertisement_slot" style="position: absolute; background-color: rgb(0, 0, 0); top: 0px; left: 0px; width: 987px; height: 931px;"><div style="position: absolute;"><div style="display: none;"><video title="Advertisement" webkit-playsinline="true" playsinline="true" style="background-color: rgb(0, 0, 0); position: absolute; width: 100%; height: 100%; left: 0px; top: 0px;"></video><div style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px;"></div></div><div style="display: none;"><video title="Advertisement" webkit-playsinline="true" playsinline="true" style="background-color: rgb(0, 0, 0); position: absolute; width: 100%; height: 100%; left: 0px; top: 0px;"></video><div style="position: absolute; width: 100%; height: 100%; left: 0px; top: 0px;"></div></div><iframe src="https://imasdk.googleapis.com/js/core/bridge3.627.0_en.html#goog_150752450" allowfullscreen="" allow="autoplay" id="goog_150752450" title="Advertisement" style="border: 0px; opacity: 0; margin: 0px; padding: 0px; position: relative; color-scheme: light;"></iframe><iframe title="Advertisement" style="display: none;"></iframe></div></div></div></body></html>
+</script>
+        <title>Zrist</title>
+
+        <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+        <meta content="utf-8" http-equiv="encoding">
+		
+ 
+    <script>

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<html lang="en">
+<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@3fd4770c44c7de90d99d09b31d8cc0d4fb1ebcb5/slot%20or%20not/">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0">
+  <title>Slot or Not</title>
+  <style>
+    html,
+    body,
+    #canvas {
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    body {
+      background-image: url(data:image/png;base64,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);
+      background-repeat: repeat;
+      color: white;
+      /* background-color: black; */
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    #canvas {
+      display: block;
+    }
+
+    #canvas:focus {
+      outline: none;
+    }
+
+    #status,
+    #status-splash,
+    #status-progress {
+      position: absolute;
+      left: 0;
+      right: 0;
+    }
+
+    #status,
+    #status-splash {
+      top: 0;
+      bottom: 0;
+    }
+
+    #status {
+      background-color: index.png_COLOR;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      visibility: hidden;
+    }
+
+    #status-splash {
+      max-height: 100%;
+      max-width: 100%;
+      margin: auto;
+    }
+
+    #status-splash.show-image--false {
+      display: none;
+    }
+
+    #status-splash.fullsize--true {
+      height: 100%;
+      width: 100%;
+      object-fit: contain;
+    }
+
+    #status-splash.use-filter--false {
+      image-rendering: pixelated;
+    }
+
+    #status-progress,
+    #status-notice {
+      display: none;
+    }
+
+    progress {
+      border: 0;
+      border-radius: 20px;
+    }
+
+    progress::-webkit-progress-bar {
+      border: 0;
+      background: #060913;
+      border-radius: 20px;
+    }
+
+    progress::-webkit-progress-value {
+      background: #00c8ff;
+      border: 0;
+      border-radius: 20px;
+    }
+
+    progress::-moz-progress-bar {
+      border: 0;
+      border-radius: 20px;
+    }
+
+    #status-progress {
+      bottom: 10%;
+      width: 50%;
+      margin: 0 auto;
+    }
+
+    #status-notice {
+      background-color: #5b3943;
+      border-radius: 0.5rem;
+      border: 1px solid #9b3943;
+      color: #e0e0e0;
+      font-family: 'Noto Sans', 'Droid Sans', Arial, sans-serif;
+      line-height: 1.3;
+      margin: 0 2rem;
+      overflow: hidden;
+      padding: 1rem;
+      text-align: center;
+      z-index: 1;
+    }
+  </style>
+  <link id="-gd-engine-icon" rel="icon" type="image/png" href="index.icon.png" />
+  <link rel="apple-touch-icon" href="index.apple-touch-icon.png" />
+
+</head>
+
+<body>
+  <canvas id="canvas">
+    Your browser does not support the canvas tag.
+  </canvas>
+
+  <noscript>
+    Your browser does not support JavaScript.
+  </noscript>
+
+  <div id="status">
+    <img id="status-splash" class="index.png_CLASSES" src="index.png" alt="">
+    <progress id="status-progress"></progress>
+    <div id="status-notice"></div>
+  </div>
+  <script src="main.js"></script>
+  <script src="index.js"></script>
+  <script>
+    const GODOT_CONFIG = {
+      "args": [],
+      "canvasResizePolicy": 2,
+      "ensureCrossOriginIsolationHeaders": true,
+      "executable": "index",
+      "experimentalVK": false,
+      "fileSizes": {
+        "index.pck": 13480896,
+        "index.wasm": 35376909
+      },
+      "focusCanvas": true,
+      "gdextensionLibs": []
+    };
+    const GODOT_THREADS_ENABLED = false;
+    const engine = new Engine(GODOT_CONFIG);
+
+    (function() {
+      const statusOverlay = document.getElementById('status');
+      const statusProgress = document.getElementById('status-progress');
+      const statusNotice = document.getElementById('status-notice');
+
+      let initializing = true;
+      let statusMode = '';
+
+      function setStatusMode(mode) {
+        if (statusMode === mode || !initializing) {
+          return;
+        }
+        if (mode === 'hidden') {
+          statusOverlay.remove();
+          initializing = false;
+          return;
+        }
+        statusOverlay.style.visibility = 'visible';
+        statusProgress.style.display = mode === 'progress' ? 'block' : 'none';
+        statusNotice.style.display = mode === 'notice' ? 'block' : 'none';
+        statusMode = mode;
+      }
+
+      function setStatusNotice(text) {
+        while (statusNotice.lastChild) {
+          statusNotice.removeChild(statusNotice.lastChild);
+        }
+        const lines = text.split('\n');
+        lines.forEach((line) => {
+          statusNotice.appendChild(document.createTextNode(line));
+          statusNotice.appendChild(document.createElement('br'));
+        });
+      }
+
+      function displayFailureNotice(err) {
+        console.error(err);
+        if (err instanceof Error) {
+          setStatusNotice(err.message);
+        } else if (typeof err === 'string') {
+          setStatusNotice(err);
+        } else {
+          setStatusNotice('An unknown error occurred.');
+        }
+        setStatusMode('notice');
+        initializing = false;
+      }
+
+      const missing = Engine.getMissingFeatures({
+        threads: GODOT_THREADS_ENABLED,
+      });
+
+      if (missing.length !== 0) {
+        if (GODOT_CONFIG['serviceWorker'] && GODOT_CONFIG['ensureCrossOriginIsolationHeaders'] && 'serviceWorker' in navigator) {
+          let serviceWorkerRegistrationPromise;
+          try {
+            serviceWorkerRegistrationPromise = navigator.serviceWorker.getRegistration();
+          } catch (err) {
+            serviceWorkerRegistrationPromise = Promise.reject(new Error('Service worker registration failed.'));
+          }
+          // There's a chance that installing the service worker would fix the issue
+          Promise.race([
+            serviceWorkerRegistrationPromise.then((registration) => {
+              if (registration != null) {
+                return Promise.reject(new Error('Service worker already exists.'));
+              }
+              return registration;
+            }).then(() => engine.installServiceWorker()),
+            // For some reason, `getRegistration()` can stall
+            new Promise((resolve) => {
+              setTimeout(() => resolve(), 2000);
+            }),
+          ]).then(() => {
+            // Reload if there was no error.
+            window.location.reload();
+          }).catch((err) => {
+            console.error('Error while registering service worker:', err);
+          });
+        } else {
+          // Display the message as usual
+          const missingMsg = 'Error\nThe following features required to run Godot projects on the Web are missing:\n';
+          displayFailureNotice(missingMsg + missing.join('\n'));
+        }
+      } else {
+        setStatusMode('progress');
+        engine.startGame({
+          'onProgress': function(current, total) {
+            if (current > 0 && total > 0) {
+              statusProgress.value = current;
+              statusProgress.max = total;
+            } else {
+              statusProgress.removeAttribute('value');
+              statusProgress.removeAttribute('max');
+            }
+          },
+        }).then(() => {
+          setStatusMode('hidden');
+        }, displayFailureNotice);
+      }
+    }());
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <base href="https://rawcdn.githack.com/bubbls/UGS-Assets/105eb091182e5148e7e53d9f85b24b84a82174cd/orb%20of%20creation/"
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | Orb Of Creation</title>
+  <style>
+    body {
+      overflow: hidden;
+      margin: 0;
+    }
+
+    #unity-fullscreen {
+      padding: 5px 10px;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 100%);
+      transition: transform 0.2s;
+    }
+
+    html:hover #unity-fullscreen {
+      transform: translate(-50%, 0);
+    }
+  </style>
+</head>
+
+<body style="text-align: center">
+  <button id="unity-fullscreen">Fullscreen</button>
+  <canvas id="unity-canvas" width=1280 height=720 style="width: 1280px; height: 720px; background: #231F20"></canvas>
+  <script src="Build/v0.5.0 WebGL.loader.js"></script>
+  <script>
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      // Mobile device style: fill the whole browser client area with the game canvas:
+      var meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+    }
+
+    createUnityInstance(document.querySelector("#unity-canvas"), {
+      dataUrl: "Build/v0.5.0 WebGL.data.gz",
+      frameworkUrl: "Build/v0.5.0 WebGL.framework.js.gz",
+      codeUrl: "Build/v0.5.0 WebGL.wasm.gz",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "MarpleGames",
+      productName: "Orb Of Creation",
+      productVersion: "0.5",
+      // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+      // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+    }).then((unityInstance) => {
+      document.getElementById("unity-fullscreen").addEventListener("click", () => {
+        unityInstance.SetFullscreen(1);
+      });
+    });
+  </script>
+</body>
+
+</html>

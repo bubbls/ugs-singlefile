@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<html>
+<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@f417ff6594e3b48319bc28c35b2f4335f31bc3b7/jet%20rush/">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Jet Rush</title>
+  <link rel="shortcut icon" href="style/favicon.ico">
+  <link rel="stylesheet" href="style/style.css">
+  <script src="/adinLoader.js"></script>
+  <script src="UnityLoader.js"></script>
+  <script src="UnityProgress.js"></script>
+  <script>
+    var gameInstance = UnityLoader.instantiate("gameContainer", "build.json", {
+      onProgress: UnityProgress,
+      Module: {
+        onRuntimeInitialized: function() {
+          UnityProgress(gameInstance, "complete")
+        }
+      }
+    });
+  </script>
+</head>
+
+<body>
+  <div class="webgl-content">
+    <div id="gameContainer" style="width: 100%; height: 95%; margin: auto;"></div>
+    <div class="footer">
+      <div class="webgl-logo"></div>
+      <div class="fullscreen" onclick="gameInstance.SetFullscreen(1)"></div>
+      <div class="title">Jet Rush</div>
+    </div>
+  </div>
+  <script>
+    if (typeof getAdinDomain !== 'undefined') {
+      const bodyTag = document.getElementsByTagName('body')[0];
+
+      let addAdinPreroll = document.createElement('script');
+      addAdinPreroll.src = getAdinDomain;
+      bodyTag.appendChild(addAdinPreroll);
+    }
+  </script>
+</body>
+
+</html>

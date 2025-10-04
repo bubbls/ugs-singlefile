@@ -1,0 +1,54 @@
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+<!-- Made by Genizy--> 
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <base href="https://rawcdn.githack.com/genizy/braybray/2fca5187ab8cf3646bcfa5fc8bf90fbf9bd04df1/fnas-hotel2/">
+    <title>Five Nights at Shrek's Hotel</title>
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+</head>
+<body>
+
+<div id="unity-container">
+    <canvas id="unity-canvas"></canvas>
+    <div id="unity-loading-bar">
+        <div id="unity-progress-bar-empty">
+            <div id="unity-progress-bar-full"></div>
+        </div>
+    </div>
+</div>
+
+<script src="Build/SREK.loader.js"></script>
+<script>
+    const canvas = document.querySelector("#unity-canvas");
+    const loadingBar = document.querySelector("#unity-loading-bar");
+    const progressBarFull = document.querySelector("#unity-progress-bar-full");
+    const buildUrl = "Build";
+    const config = {
+        dataUrl: buildUrl + "/SREK.data.unityweb",
+        frameworkUrl: buildUrl + "/SREK.framework.js.unityweb",
+        codeUrl: buildUrl + "/SREK.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Evony Games",
+        productName: "Five Nights at Shrek's Hotel",
+        productVersion: "1.0",
+    };
+    loadingBar.style.display = "block";
+
+    createUnityInstance(canvas, config, (progress) => {
+        progressBarFull.style.width = (progress * 100) + "%";
+    }).then(() => {
+        loadingBar.style.display = "none";
+    }).catch((message) => {
+        alert("Failed to load game: " + message);
+    });
+    canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+</script>
+
+</body>
+</html>

@@ -1,0 +1,92 @@
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<html lang="en-us"><head><script src="//www.google.com/jsapi"></script><script>window.parent.maeExportApis_();</script>
+
+  
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <link rel="stylesheet" href="https://rawcdn.githack.com/IdkDwij/The-Hamster-Calculator/5e20012b9adc78dd9ba97d90b0c556eafcf7562d/public/mcm-webgl/mcm-webgl/TemplateData/style.css">
+  <style type="text/css">#button {
+  display:none;
+}
+.imgb_vis {
+  animation: imgb-animation 7s linear;
+}
+@keyframes imgb-animation {
+  10% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(100px);
+  }
+  90% {
+    transform: translateX(100px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}</style></head>
+  <body>
+    <div id="unity-container" class="unity-desktop" style="width: 100%; height: 100%; overflow: hidden">
+      <canvas id="unity-canvas" style="width: 100%; height: 100%; overflow: hidden; background: url(&quot;https://rawcdn.githack.com/IdkDwij/The-Hamster-Calculator/5e20012b9adc78dd9ba97d90b0c556eafcf7562d/public/mcm-webgl/mcm-webgl/Build/821652a7ba86ba5731dc5409d399d903.jpg&quot;) center center / cover;"></canvas>
+      <div id="unity-loading-bar" style="display: block;">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full" style="width: 25.3025%;"></div>
+        </div>
+      </div>
+      <div id="unity-mobile-warning">
+        WebGL builds are not supported on mobile devices.
+      </div>
+    </div>
+    <script>
+      var buildUrl = "https://rawcdn.githack.com/IdkDwij/The-Hamster-Calculator/5e20012b9adc78dd9ba97d90b0c556eafcf7562d/public/mcm-webgl/mcm-webgl/Build";
+      var loaderUrl = buildUrl + "/304bc71d77b7acd6469bb5cc0730073b.js";
+      var config = {
+        dataUrl: buildUrl + "/97a54d9b4b7525d0f2328e0cbb512980.data",
+        frameworkUrl: buildUrl + "/4e20d7eb8e868230cafe4baff2e177d4.js",
+        codeUrl: buildUrl + "/03cde5b9e5b1a5b23fbab20d045d4958.wasm",
+        streamingAssetsUrl: "https://rawcdn.githack.com/IdkDwij/The-Hamster-Calculator/5e20012b9adc78dd9ba97d90b0c556eafcf7562d/public/mcm-webgl/mcm-webgl/StreamingAssets",
+        companyName: "Madalin Games",
+        productName: "Madalin Cars Multiplayer",
+        productVersion: "2.0.0",
+      };
+
+      var container = document.querySelector("#unity-container");
+      var canvas = document.querySelector("#unity-canvas");
+      var loadingBar = document.querySelector("#unity-loading-bar");
+      var progressBarFull = document.querySelector("#unity-progress-bar-full");
+      var mobileWarning = document.querySelector("#unity-mobile-warning");
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        container.className = "unity-mobile";
+        config.devicePixelRatio = 1;
+        mobileWarning.style.display = "block";
+        setTimeout(() => {
+          mobileWarning.style.display = "none";
+        }, 5000);
+      }
+      canvas.style.background = "url('" + buildUrl + "/821652a7ba86ba5731dc5409d399d903.jpg') center / cover";
+      loadingBar.style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          loadingBar.style.display = "none";
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+    </script><script src="https://rawcdn.githack.com/IdkDwij/The-Hamster-Calculator/5e20012b9adc78dd9ba97d90b0c556eafcf7562d/public/mcm-webgl/mcm-webgl/Build/304bc71d77b7acd6469bb5cc0730073b.js"></script>
+    <script src=""></script>
+  
+<script src="https://rawcdn.githack.com/IdkDwij/The-Hamster-Calculator/5e20012b9adc78dd9ba97d90b0c556eafcf7562d/public/mcm-webgl/mcm-webgl/Build/4e20d7eb8e868230cafe4baff2e177d4.js"></script></body></html>

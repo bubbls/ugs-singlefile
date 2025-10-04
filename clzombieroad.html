@@ -1,0 +1,117 @@
+<Module>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+</style><script src=""></script><style>.gs-global-loader{position:fixed;z-index:99999;top:8px;right:8px;width:48px;height:48px}@media only screen and (min-width: 1024px){.gs-global-loader{top:inherit;right:16px;bottom:16px}}.gs-loader{position:relative;width:40px;height:40px;border-radius:50%;display:flex}.gs-loader__outter{box-sizing:border-box;position:absolute;border:4px solid #f50057;border-left-color:transparent;width:100%;height:100%;border-radius:50%;-webkit-animation:loader-outter 1s cubic-bezier(0.42, 0.61, 0.58, 0.41) infinite;animation:loader-outter 1s cubic-bezier(0.42, 0.61, 0.58, 0.41) infinite}.gs-loader__inner{box-sizing:border-box;position:absolute;border:4px solid #f50057;border-radius:50%;width:20px;height:20px;left:calc(50% - 10px);top:calc(50% - 10px);border-top-color:transparent;-webkit-animation:loader-inner 1s cubic-bezier(0.42, 0.61, 0.58, 0.41) infinite;animation:loader-inner 1s cubic-bezier(0.42, 0.61, 0.58, 0.41) infinite}@keyframes loader-outter{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes loader-inner{0%{-webkit-transform:rotate(0deg);transform:rotate(0deg)}100%{-webkit-transform:rotate(-360deg);transform:rotate(-360deg)}}.gs-loader-hidden{display:none}</style></head><body class="light" dir="ltr"><script>
+    const overlayBackgroundColor = "url('https://cdn.jsdelivr.net/gh/dem-google-usa/userconetn@main/background.gif')";
+    const progressBarFillColor = "#FFFFFF";
+    const progressBarBackgroundColor = "";
+    const progressBarBorderColor = "";
+</script>
+<div class="unity-desktop" id="unity-container">
+<canvas id="unity-canvas" style="background: url(&quot;https://cdn.jsdelivr.net/gh/dem-google-usa/userconetn@main/background.gif&quot;); cursor: default;" width="1018" height="926"></canvas>
+</div>
+<div id="loading-cover" style="display: none;">
+<div id="unity-loading-bar">
+<div id="unity-logo"><img src=""></div>
+<div id="unity-progress-bar-empty" style="">
+<div id="unity-progress-bar-full" style="background: rgb(255, 255, 255); width: 100%;"></div>
+</div>
+<div class="spinner" style="display: none;"></div>
+</div>
+</div>
+<script>
+    const buildUrl = "https://cdn.jsdelivr.net/gh/dem-google-usa/userconetn@main/Build";
+    const loaderUrl = buildUrl + "/9853637125e801e9aae48e78dbbdcfca.loader.js";
+    const config = {
+      dataUrl: buildUrl + "/ec6245a615fb70dd75120c0410fa20d4.data.unityweb",
+      frameworkUrl: buildUrl + "/96bd8aea39332cc87ed68099a2f6a038.framework.js.unityweb",
+      codeUrl: buildUrl + "/224f969d7232878c58a25d91697031f7.wasm.unityweb",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "SquareDino",
+      productName: "Road Chase Shooter",
+      productVersion: "1.5.4",
+    };
+
+    const container = document.querySelector("#unity-container");
+    const canvas = document.querySelector("#unity-canvas");
+    const loadingCover = document.querySelector("#loading-cover");
+    const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+    const progressBarFull = document.querySelector("#unity-progress-bar-full");
+    const spinner = document.querySelector('.spinner');
+
+    if (overlayBackgroundColor !== "-" && overlayBackgroundColor !== " " && overlayBackgroundColor !== "")
+      canvas.style.background = overlayBackgroundColor;
+
+    if (progressBarFillColor !== "-" && progressBarFillColor !== " " && progressBarFillColor !== "")
+      progressBarFull.style.background = progressBarFillColor;
+
+    if (progressBarBackgroundColor !== "-" && progressBarBackgroundColor !== " " && progressBarBackgroundColor !== "")
+      progressBarEmpty.style.background = progressBarBackgroundColor;
+
+    if (progressBarBorderColor !== "-" && progressBarBorderColor !== " " && progressBarBorderColor !== "")
+      progressBarEmpty.style.border.color = progressBarBorderColor;
+
+
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      container.className = "unity-mobile";
+    }
+
+    loadingCover.style.display = "";
+
+    const unityLoader = document.createElement("script");
+    unityLoader.src = loaderUrl;
+    unityLoader.onload = async () => {
+      //await _gpAwaiter.ready;
+      createUnityInstance(canvas, config, (progress) => {
+        spinner.style.display = "none";
+        progressBarEmpty.style.display = "";
+        progressBarFull.style.width = `${100 * progress}%`;
+      }).then((unityInstance) => {
+        window.unityInstance = unityInstance;
+        //_unityAwaiter.done(unityInstance);
+        loadingCover.style.display = "none";
+      }).catch((message) => {
+        //_unityAwaiter.abort(message);
+        alert(message);
+      });
+    };
+    document.body.appendChild(unityLoader);
+
+    document.addEventListener("pointerdown", () => {
+      container.focus();
+      window.focus();
+      canvas.focus();
+    });
+
+  </script><script src="https://cdn.jsdelivr.net/gh/dem-google-usa/userconetn@main/Build/9853637125e801e9aae48e78dbbdcfca.loader.js"></script>
+
+
+
+
+</script><script src="blob:"></script><div class="gs-global-loader" style="display: none;"><div class="gs-loader false">
+        <div class="gs-loader__outter"></div>
+        <div class="gs-loader__inner"></div>
+    </div></div><input type="file" id="gp-file-input" tabindex="-1" style="position: fixed; top: -999px; left: -999px; z-index: 0;"><input type="file" id="gp-file-input" tabindex="-1" style="position: fixed; top: -999px; left: -999px; z-index: 0;"></body></html>
+</script><link href="https://cdn.jsdelivr.net/gh/dem-google-usa/userconetn@main/TemplateData/style.css" rel="stylesheet">
+<meta charset="utf-8">
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
+<title>Zombie Road</title>
+
+
+
+<script>
+/* mp-start */
+
+var _params = gadgets.util.getUrlParameters();
+if (_params['exp_rpc_js'] != 1) {
+  var url = _params['parent'] + '/ig/ifpc_relay';
+  gadgets.rpc.setRelayUrl('..', url, true);
+}
+/* mp-end */
+</script><style type="text/css" id="operaUserStyle">
+

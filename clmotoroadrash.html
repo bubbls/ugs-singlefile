@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<html lang="en-us">
+  <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@c48a116edd88e1aa293844c8b806a8a4ea36d214/moto%20road%20rash/"> 
+<head>
+  <meta charset="utf-8">
+  <title>Moto Road Rash 3D</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="shortcut icon" href="style/favicon.ico">
+  <link rel="stylesheet" href="style/style.css">
+
+  <!-- Unity scripts -->
+  <script src="UnityLoader.js"></script>
+  <script src="UnityProgress.js"></script>
+
+  <script>
+    // --- utility to merge split parts ---
+    function mergeFiles(fileParts) {
+      return new Promise((resolve, reject) => {
+        let buffers = [];
+        function fetchPart(i) {
+          if (i >= fileParts.length) {
+            let mergedBlob = new Blob(buffers);
+            let mergedUrl = URL.createObjectURL(mergedBlob);
+            resolve(mergedUrl);
+            return;
+          }
+          fetch(fileParts[i])
+            .then(r => r.arrayBuffer())
+            .then(data => {
+              buffers.push(data);
+              fetchPart(i + 1);
+            })
+            .catch(reject);
+        }
+        fetchPart(0);
+      });
+    }
+
+    function getParts(file, start, end) {
+      let arr = [];
+      for (let i = start; i <= end; i++) {
+        arr.push(file + ".part" + i);
+      }
+      return arr;
+    }
+
+    function resizeUnityContainer() {
+      var container = document.getElementById("gameContainer");
+      container.style.width = window.innerWidth + "px";
+      container.style.height = window.innerHeight + "px";
+    }
+
+    window.addEventListener('resize', resizeUnityContainer);
+
+    // ---- MAIN LOADER ----
+    window.addEventListener("load", function () {
+      // 1. Load the original JSON config
+      fetch("build.json")
+        .then(r => r.json())
+        .then(config => {
+          // 2. Merge split .data, .wasm.code, and .wasm.framework parts
+          return Promise.all([
+            mergeFiles(getParts("MotoRoadRash3D-2.data.unityweb", 1, 4)),
+            mergeFiles(getParts("MotoRoadRash3D-2.wasm.code.unityweb", 1, 1)), // adjust part count if needed
+            mergeFiles(getParts("MotoRoadRash3D-2.wasm.framework.unityweb", 1, 1)) // adjust part count if needed
+          ]).then(([dataUrl, wasmCodeUrl, wasmFrameworkUrl]) => {
+            config.dataUrl = dataUrl;
+            config.wasmCodeUrl = wasmCodeUrl;
+            config.wasmFrameworkUrl = wasmFrameworkUrl;
+
+            // 4. Turn config back into a Blob JSON file
+            let blob = new Blob([JSON.stringify(config)], { type: "application/json" });
+            let blobUrl = URL.createObjectURL(blob);
+
+            // 5. Instantiate Unity with blob URL
+            window.gameInstance = UnityLoader.instantiate("gameContainer", blobUrl, {
+              onProgress: UnityProgress,
+              Module: {
+                onRuntimeInitialized: function () {
+                  resizeUnityContainer();
+                  let loadingText = document.querySelector("#loading-text");
+                  if (loadingText) loadingText.remove();
+                  // Hide Unity loading screen elements
+                  UnityProgress(window.gameInstance, 'complete');
+                }
+              }
+            });
+          });
+        })
+        .catch(err => {
+          console.error("Unity load failed:", err);
+        });
+    });
+  </script>
+</head>
+
+<body style="margin:0; padding:0; background:#000;">
+  <div class="webgl-content">
+    <div id="gameContainer" style="width: 900px; height: 563px;"></div>
+    <div class="footer">
+      <div class="webgl-logo"></div>
+      <div class="fullscreen" onclick="gameInstance.SetFullscreen(1)"></div>
+      <div class="title">Moto Road Rash 3D</div>
+    </div>
+  </div>
+</body>
+</html>

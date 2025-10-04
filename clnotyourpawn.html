@@ -1,0 +1,40 @@
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | GTMK2022</title>
+  </head>
+  <body style="text-align: center">
+    <canvas id="unity-canvas" width=960 height=600 style="width: 960px; height: 600px; background: #231F20"></canvas>
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@73eb568214b336eaba79e0feb4952b3a04098746/not%20your%20pawn/Build/WebBuild1.loader.js"></script>
+    <script>
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas:
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+      }
+
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@73eb568214b336eaba79e0feb4952b3a04098746/not%20your%20pawn/Build/WebBuild1.data",
+        frameworkUrl: "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@73eb568214b336eaba79e0feb4952b3a04098746/not%20your%20pawn/Build/WebBuild1.framework.js",
+        codeUrl: "https://rawcdn.githack.com/bubbls/UGS-Assets/73eb568214b336eaba79e0feb4952b3a04098746/not%20your%20pawn/Build/WebBuild1.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "GTMK2022",
+        productVersion: "1.0",
+        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,38 @@
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="Google.com" />
+<Content type="html"><![CDATA[
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>google.co</title>
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/tty67hlt6jf6/j@main/style/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/tty67hlt6jf6/j@main/style/style.css">
+    <script src="https://cdn.jsdelivr.net/gh/tty67hlt6jf6/j@main/UnityLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/tty67hlt6jf6/j@main/UnityProgress.js"></script>
+    <script>
+      var gameInstance = UnityLoader.instantiate("gameContainer", "https://cdn.jsdelivr.net/gh/tty67hlt6jf6/j@main/build.json", {onProgress: UnityProgress,Module:{onRuntimeInitialized: function() {UnityProgress(gameInstance, "complete")}}});
+    </script>
+  </head>
+  <body>
+    <div class="webgl-content">
+      <div id="gameContainer" style="width: 900px; height: 600px;"></div>
+      <div class="footer">
+                <div class="webgl-logo"></div>
+                <div class="fullscreen" onclick="gameInstance.SetFullscreen(1)"></div>
+                <div class="title">google.com</div>
+            </div>
+    </div>
+  </body>
+</html>
+</Content>
+</Module>

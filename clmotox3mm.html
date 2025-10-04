@@ -1,0 +1,145 @@
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<html><head><base target="_blank">
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: "Gill Sans", sans-serif; background: transparent; }
+        .game-embed-container { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #274e13; border-radius: 10px; overflow: hidden; position: relative; box-sizing: border-box; color: white; text-align: center; }
+        .button-wrapper { display: flex; flex-direction: column; align-items: center; gap: 25px; padding: 20px; width: 100%; max-width: 550px; box-sizing: border-box; }
+        .logo-text { font-family: "Gill Sans", sans-serif; font-size: 2.5rem; font-weight: bold; color: #ffffff; text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6); padding-bottom: 10px; }
+        .button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; width: 100%; }
+        @media (max-width: 480px) { .button-grid { grid-template-columns: 1fr; } .logo-text { font-size: 2rem; } }
+        .c-button { min-height: 50px; appearance: none; border: 2px solid rgba(0,0,0,0.2); border-radius: 8px; color: #ffffff; padding: 10px 15px; font-size: 18px; cursor: pointer; transition: all 0.2s ease-in-out; text-align: center; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        .btn-primary { background: #6aa84f; }
+        .btn-primary:hover { background: #8fbc8f; border-color: #a2d1a2; transform: translateY(-2px); }
+        .btn-alt { background: #073763; }
+        .btn-alt:hover { background: #3d85c6; border-color: #6f9ac4; transform: translateY(-2px); }
+        .c-button:focus { outline: none; box-shadow: 0 0 0 4px #cbd6ee; }
+        .c-button:disabled { background: #555; cursor: not-allowed; }
+        .game-embed-container iframe { width: 100%; height: 100%; border: none; }
+    </style>
+</head>
+<body data-new-gr-c-s-loaded="14.1255.0">
+    <div id="gameContainer" class="game-embed-container"><iframe src="https://script.google.com/macros/s/AKfycbw7_zG02ZMXnPSdwCx0CcmN8eX_0Bk3715TSP-Eglb1DyVhp7RxShuXq4qJ8Q2s7cnW/exec"></iframe></div>
+    <script>
+        const gameContainer = document.getElementById('gameContainer');
+        const buttonWrapper = document.getElementById('buttonWrapper');
+        const googleScriptUrl = "https://script.google.com/macros/s/AKfycbw7_zG02ZMXnPSdwCx0CcmN8eX_0Bk3715TSP-Eglb1DyVhp7RxShuXq4qJ8Q2s7cnW/exec";
+        const gameXmlUrl = "https://120164218-101451616934779516.preview.editmysite.com/uploads/b/139890129-624069120114626136/files/m3m.xml";
+        const faviconUrl = "https://ssl.gstatic.com/classroom/favicon.png";
+        const pageTitle = "classroom.google.com";
+        const playPrimaryInlineBtn = document.getElementById('playPrimaryInline');
+        const playPrimaryFullscreenBtn = document.getElementById('playPrimaryFullscreen');
+        playPrimaryInlineBtn.addEventListener('click', () => {
+            gameContainer.innerHTML = '';
+            const iframe = document.createElement('iframe');
+            iframe.src = googleScriptUrl;
+            gameContainer.appendChild(iframe);
+        });
+        playPrimaryFullscreenBtn.addEventListener('click', () => {
+            const newWindow = window.open('', '_blank');
+            if (!newWindow) return alert("Please allow pop-ups.");
+            newWindow.document.write(`<!DOCTYPE html><html><head><title>${pageTitle}</title><link rel="icon" href="${faviconUrl}"><style>body,html{margin:0;padding:0;height:100%;width:100%;overflow:hidden;}iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;}</style></head><body><iframe src="${googleScriptUrl}" allowfullscreen></iframe></body></html>`);
+            newWindow.document.close();
+        });
+        const playAltInlineBtn = document.getElementById('playAltInline');
+        const playAltFullscreenBtn = document.getElementById('playAltFullscreen');
+        let readyHtmlContent = null;
+        async function prepareGameContent() {
+            try {
+                const resp = await fetch(gameXmlUrl);
+                if (!resp.ok) throw new Error(`Failed to load XML: ${resp.status} ${resp.statusText}`);
+                const xmlText = await resp.text();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(xmlText, "application/xml");
+                const contentNode = xmlDoc.querySelector("Content");
+                if (!contentNode) throw new Error("<Content> not found in XML");
+                const htmlContent = contentNode.textContent;
+                const doc = parser.parseFromString(htmlContent, 'text/html');
+                if (!doc.head) {
+                    const headEl = doc.createElement('head');
+                    doc.documentElement.insertBefore(headEl, doc.documentElement.firstChild);
+                }
+                let titleTag = doc.querySelector('title');
+                if (!titleTag) {
+                    titleTag = doc.createElement('title');
+                    doc.head.appendChild(titleTag);
+                }
+                titleTag.textContent = pageTitle;
+
+                const faviconLink = doc.createElement('link');
+                faviconLink.rel = 'icon';
+                faviconLink.href = faviconUrl;
+                doc.head.appendChild(faviconLink);
+                const injectedHost = JSON.stringify(window.location.hostname);
+                const injectedHref = JSON.stringify(window.location.href);
+                const shimCode = `(function(){const injectedDomain=${injectedHost},injectedHref=${injectedHref},targetHosts=["api.gamemonetize.com","gamemonetize.com","gamedistribution.com","ads.gamedistribution.com"];try{window.fulldomain=injectedHref,window._injected_real_host=injectedDomain}catch(e){}function shouldPatch(url){try{return!!url&&targetHosts.some(h=>-1!==url.indexOf(h))}catch(e){return!1}}function replaceDomainParam(u){try{const val=u.searchParams.get("domain");return!val||""===val.trim()||val.toLowerCase().startsWith("blob")?(u.searchParams.set("domain",injectedDomain),!0):!1}catch(e){return!1}}try{const _fetch=window.fetch;window.fetch=function(input,init){try{let urlStr=null;"string"==typeof input?urlStr=input:input instanceof Request&&(urlStr=input.url);if(urlStr&&shouldPatch(urlStr)){const uu=new URL(urlStr,location.href);replaceDomainParam(uu),"string"==typeof input?input=uu.toString():input=new Request(uu.toString(),input)}}catch(e){}return _fetch.call(this,input,init)}}catch(e){}try{const _open=XMLHttpRequest.prototype.open,_send=XMLHttpRequest.prototype.send;XMLHttpRequest.prototype.open=function(method,url,async,user,pass){try{this._shim_url=url,this._shim_method=method}catch(e){}return _open.apply(this,arguments)},XMLHttpRequest.prototype.send=function(body){try{if(this._shim_url&&shouldPatch(this._shim_url)){const uu=new URL(this._shim_url,location.href);replaceDomainParam(uu),_open.call(this,this._shim_method||"GET",uu.toString(),!0)}}catch(e){}return _send.apply(this,arguments)}}catch(e){}try{Object.defineProperty(document,"referrer",{get:function(){return injectedHref},configurable:!0})}catch(e){try{document.referrer=injectedHref}catch(e){}}})();`;
+                const shimScriptTag = doc.createElement('script');
+                shimScriptTag.textContent = shimCode;
+                doc.head.prepend(shimScriptTag);
+                const allScripts = Array.from(doc.querySelectorAll('script[src]'));
+                const gameScripts = allScripts.filter(s => !s.src.toLowerCase().includes('imasdk.googleapis.com') && !s.src.toLowerCase().includes('cdn.jsdelivr.net') && !s.src.toLowerCase().includes('googletagmanager'));
+                const mainScriptTag = gameScripts.pop();
+                if (!mainScriptTag) {
+                    const baseTag = doc.createElement('base');
+                    baseTag.href = gameXmlUrl.substring(0, gameXmlUrl.lastIndexOf('/') + 1);
+                    doc.head.prepend(baseTag);
+                    readyHtmlContent = doc.documentElement.outerHTML;
+                    return;
+                }
+                const mainJsUrl = mainScriptTag.src;
+                let mainJsText = await (await fetch(mainJsUrl)).text();
+                const runtimeListRegex = /runtimeScriptList\s*:\s*\[\s*["']([^"']+)["']\s*\]/;
+                const runtimeMatch = mainJsText.match(runtimeListRegex);
+                if (runtimeMatch) {
+                    mainJsText = mainJsText.replace('scriptFolder:"scripts/"', 'scriptFolder:""');
+                    const c3RuntimeUrl = runtimeMatch[1];
+                    let c3RuntimeText = await (await fetch(c3RuntimeUrl)).text();
+                    c3RuntimeText = c3RuntimeText.replace('new URL(fulldomain).hostname.split(".")', '(fulldomain && !fulldomain.startsWith("blob:") ? new URL(fulldomain).hostname : "localhost").split(".")');
+                    c3RuntimeText = c3RuntimeText.replace('document.body.appendChild(img);', 'if (document.body) { document.body.appendChild(img); } else { window.addEventListener("DOMContentLoaded", () => document.body.appendChild(img)); }');
+                    mainJsText = mainJsText.replace(runtimeListRegex, 'runtimeScriptList:[]');
+                    const c3RuntimeScriptTag = doc.createElement('script');
+                    c3RuntimeScriptTag.textContent = c3RuntimeText;
+                    doc.head.appendChild(c3RuntimeScriptTag);
+                }
+                mainScriptTag.remove();
+                const newMainScriptTag = doc.createElement('script');
+                if (mainScriptTag.getAttribute('type') === 'module') newMainScriptTag.type = 'module';
+                newMainScriptTag.textContent = mainJsText;
+                (doc.body || doc.documentElement).appendChild(newMainScriptTag);
+                const baseTag = doc.createElement('base');
+                baseTag.href = gameXmlUrl.substring(0, gameXmlUrl.lastIndexOf('/') + 1);
+                doc.head.prepend(baseTag);
+                readyHtmlContent = doc.documentElement.outerHTML;
+            } catch (err) {
+                gameContainer.innerHTML = `<div style="color:red;padding:20px;">Error: ${err.message}</div>`;
+                playAltInlineBtn.disabled = true;
+                playAltFullscreenBtn.disabled = true;
+            }
+        }
+        prepareGameContent();
+        function launchAltGame(isInline) {
+            if (!readyHtmlContent) return alert('Game is not ready yet. Please wait.');
+            const blob = new Blob([readyHtmlContent], { type: 'text/html' });
+            const gameUrl = URL.createObjectURL(blob);
+            if (isInline) {
+                gameContainer.innerHTML = '';
+                const iframe = document.createElement('iframe');
+                iframe.src = gameUrl;
+                gameContainer.appendChild(iframe);
+            } else {
+                const newWin = window.open(gameUrl, '_blank');
+                if (!newWin) alert('Please allow popups for this site.');
+            }
+        }
+        playAltInlineBtn.addEventListener('click', () => launchAltGame(true));
+        playAltFullscreenBtn.addEventListener('click', () => launchAltGame(false));
+    </script>
+
+</body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>

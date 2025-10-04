@@ -1,0 +1,141 @@
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="icon" type="icon" href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@ad6ffa3289c102eb4a4aced92a17e4ea291603d5/bananasim.png"/>
+  <meta name="viewport" content="width=device-width">
+  <title>banana simulator</title>
+  <link href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@ad6ffa3289c102eb4a4aced92a17e4ea291603d5/banacss.css" rel="stylesheet" type="text/css" /> 
+</head>
+
+<body>
+  <div id="settingsmenu" class="container">
+    <h3>settings</h3>
+    
+    <p2 id="highscore1">highscore:</p2>
+    <p3 id="rebirth1">rebirthscore:</p3>
+
+    <br>
+    <br>
+    <button id="highscorebutton">ON</button>
+    <button id="rebirthscorebutton">ON</button>
+    <button id="rebirthbutton">rebirth (1,000,000 bananas)</button>
+    <button id="resetbutton">reset progress</button>
+  </div>
+</div>
+
+  <div id="updatelogmenu" class="container2">
+    <h6>update log</h6>
+    <h5>Version: 2.0</h5>
+    <h4>• Made the game a little bit harder, since it was too easy to win the game
+      <br>
+      • Added a stats button with a menu to show what the workers will give you in return for buying them
+      <br>
+      
+    </h4>
+
+    <a href="" class="discord-button">
+      <img src="discordlogo.png" alt="Logo" style="width: 55px; height: auto;">
+  </a>
+
+  </div>
+
+  <div id="resetmenu" class="container1">
+    <h4>Are you sure you want to reset your progress? This will reset your highscore, rebirths, bananas, and money.</h4>
+    <br>
+    <button id="yesbutton">yes</button>
+    <button id="nobutton">no</button>
+  </div>
+
+  <div id="statsmenu" class="container3">
+    <h6>stats</h6>
+    <h4>miner - 2 bananas
+      <br>
+      farmer - 30 money
+      <br>
+      monkey - 100 bananas
+      <br>
+      collector - 350 bananas, 700 money
+      <br>
+      marketer - 1350 bananas, 1600 money
+      <br>
+      government - 6500 bananas, 7500 money
+      <br>
+      ape - 25620 bananas
+      <br>
+      bank - 66612 money
+    </h4>
+  </div>
+
+
+
+  <center>
+    <fieldset>
+      <h1>banana simulator</h1>
+      <p1 id="highscore">HIGHSCORE - bananas: 0, money: 0</p1>
+      <p1 id="rebirths">rebirths: 0</p1>
+      <br>
+      <button id="click">click</button>
+      <br>
+      <br>
+      <p1 id="clicks">bananas: 0</p1>
+      <br>
+      <p1 id="coins">money: 0</p1>
+      <h2>menu</h2>
+      <button id="upgrade">upgrade (50 bananas)</button>
+      <br>
+      <br>
+      <button id="sell">sell bananas (free)</button>
+      <br>
+      <br>
+      <button id="sellmoney">sell money (free)</button>
+      <h1>workers</h1>
+      <button id="miner" class="tower">add miner (30 bananas)</button>
+        <br>
+        <br>
+        <button id="farmer" class="tower">add farmer (200 bananas)</button>
+        <br>
+        <br>
+        <button id="monkey" class="tower">add monkey (1,000 money)</button>
+        <br>
+        <br>
+        <button id="collector" class="tower">add collector (4,500 money)</button>
+        <br>
+        <br>
+        <button id="marketer" class="tower">add marketer (8,000 money)</button>
+        <br>
+        <br>
+        <button id="government" class="tower">add government (24,000 money)</button>
+        <br>
+        <br>
+        <button id="ape" class="tower">add ape (68,500 bananas)</button>
+        <br>
+        <br>
+        <button id="bank" class="tower">add bank (150,700 money)</button>
+    </fieldset>
+  </center>
+  <button id="settingsbutton" style="border: none; background-color: rgba(36, 36, 36, 0.5); position: absolute; top: 25px; right: 25px; padding: 10px; display: inline-flex; justify-content: center; align-items: center; box-sizing: border-box;">
+    <img src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@ad6ffa3289c102eb4a4aced92a17e4ea291603d5/settings.png" alt="Logo" style="width: 40px; height: auto; display: block;">
+</button>
+
+<button id="updatelogbutton" style="border: none; background-color: rgba(36, 36, 36, 0.5); position: absolute; top: 25px; right: 95px; padding: 10px; display: inline-flex; justify-content: center; align-items: center; box-sizing: border-box;">
+  <img src="updatelog.png" alt="Logo" style="width: 40px; height: auto; display: block;">
+</button>
+
+<button id="statsbutton" style="border: none; background-color: rgba(36, 36, 36, 0.5); position: absolute; top: 25px; right: 165px; padding: 10px; display: inline-flex; justify-content: center; align-items: center; box-sizing: border-box;">
+  <img src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@ad6ffa3289c102eb4a4aced92a17e4ea291603d5/stats.png" alt="Logo" style="width: 40px; height: auto; display: block;">
+</button>
+
+</body>
+
+<div id="tooltip"></div>
+
+<script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@ad6ffa3289c102eb4a4aced92a17e4ea291603d5/script.js"></script>
+</html>

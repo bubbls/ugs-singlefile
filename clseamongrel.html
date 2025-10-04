@@ -1,0 +1,35 @@
+<!doctype html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<html lang="en-us">
+
+<head>
+  <meta charset="utf-8">
+  <base href="https://rawcdn.githack.com/bubbls/UGS-Assets/b5f8873fda89bfff71ad5580007372401ce0df64/sea%20mongrel/"
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | Seamongrel</title>
+</head>
+
+<body style="text-align: center">
+  <canvas id="unity-canvas" width=1280 height=720 style="width: 1280px; height: 720px; background: #11465B"></canvas>
+  <script src="Build/WebGL.loader.js"></script>
+  <script>
+    createUnityInstance(document.querySelector("#unity-canvas"), {
+      dataUrl: "Build/WebGL.data.gz",
+      frameworkUrl: "Build/WebGL.framework.js.gz",
+      codeUrl: "Build/WebGL.wasm.gz",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "kulu",
+      productName: "Seamongrel",
+      productVersion: "0.1",
+      // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+      // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+    });
+  </script>
+</body>
+
+</html>

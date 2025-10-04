@@ -1,0 +1,95 @@
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+<!--this is a game like sonic. Uses jsdelivr--!>
+
+<!DOCTYPE html>
+<!--for this one I used jszip with help from chatgpt.--!>
+<html lang="en">
+<base href="https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/MISC/adventneon/">
+<head>
+  <meta charset="utf-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta http-equiv="pragma" content="no-cache"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+  <title>AdventNEON</title>
+  <style>
+    body {
+      background: #000;
+      color: #ccc;
+      margin: 0;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+    }
+    .gm4html5_div_class {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    canvas {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 0;
+      margin: 0;
+      padding: 0;
+      display: block;
+      image-rendering: optimizeSpeed;
+      -webkit-interpolation-mode: nearest-neighbor;
+      -ms-touch-action: none;
+    }
+  </style>
+  <!-- Include JSZip -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+  <div class="gm4html5_div_class" id="gm4html5_div_id">
+    <img src="AdventNEON/splash.png" id="GM4HTML5_loadingscreen" alt="GameMaker:HTML5 loading screen" style="display:none;">
+    <canvas id="canvas" width="1280" height="720">
+      <p>Your browser doesn't support HTML5 canvas.</p>
+    </canvas>
+  </div>
+
+  <script>
+    async function loadGameFromZip() {
+      try {
+        const response = await fetch('AdventNEON/AdventNEON.js.zip');
+        const arrayBuffer = await response.arrayBuffer();
+        const zip = await JSZip.loadAsync(arrayBuffer);
+
+        const file = zip.file('AdventNEON.js');
+        if (!file) throw new Error("AdventNEON.js not found in zip!");
+
+        const jsContent = await file.async('text');
+        new Function(jsContent)(); // Run the unzipped JS
+
+        // Wait a moment, then recenter canvas
+        setTimeout(() => {
+          const canvas = document.getElementById('canvas');
+          canvas.style.position = 'absolute';
+          canvas.style.top = '50%';
+          canvas.style.left = '50%';
+          canvas.style.transform = 'translate(-50%, -50%)';
+        }, 1000);
+
+        if (typeof GameMaker_Init === 'function') {
+          GameMaker_Init();
+        } else {
+          console.warn("GameMaker_Init not found.");
+        }
+
+      } catch (err) {
+        console.error("Failed to load or execute AdventNEON:", err);
+      }
+    }
+
+    window.onload = loadGameFromZip;
+  </script>
+</body>
+</html>

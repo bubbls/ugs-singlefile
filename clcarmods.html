@@ -1,0 +1,587 @@
+<Module>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+	<ModulePrefs title="google.com" />
+	<Content type="html">
+		<![CDATA[
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/6xgungmaster/google@main/style.css"/>
+    <!-- Yandex Games SDK -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        canvas:focus { outline: none; }
+        html, body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            user-select: none;
+            height: 100%;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+    </style>
+</head>
+<body class="light">
+<div id="unity-container" class="unity-desktop">
+    <canvas id="unity-canvas" tabindex="-1"></canvas>
+</div>
+<div id="loading-cover" style="display:none;">
+    <div id="unity-loading-bar">
+        <div id="unity-progress-bar-empty" style="display: none;">
+            <div id="unity-progress-bar-full"></div>
+        </div>
+        <div class="spinner"></div>
+    </div>
+</div>
+
+<script>
+    const hideFullScreenButton = "";
+    const buildUrl = "https://cdn.jsdelivr.net/gh/6xgungmaster/google@main/Build";
+    const loaderUrl = buildUrl + "/bb0d9ecdb05db3e84da20bd14a4f84dc.loader.js";
+    const compressedDataUrl = buildUrl + "/430c326a4c4d669723ed7cb141728f8a.zip";
+    const compressedCodeUrl = buildUrl + "/1a9c83d74d30ec5e78b8c18c6503ee0a.zip";
+
+    const config = {
+        frameworkUrl: buildUrl + "/unityFramework.js",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "GtaArcade",
+        productVersion: "0.1"
+    };
+
+
+    async function fetchAndDecompress(url, fileName) {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Failed to fetch ${url}`);
+        const arrayBuffer = await response.arrayBuffer();
+        const zip = await JSZip.loadAsync(arrayBuffer);
+        return zip.file(fileName).async("uint8array");
+    }
+
+    Promise.all([
+        fetchAndDecompress(compressedDataUrl, "game.data.br"),
+        fetchAndDecompress(compressedCodeUrl, "game.wasm.br")
+    ]).then(([data, code]) => {
+        const dataBlob = new Blob([data], { type: "application/octet-stream" });
+        const codeBlob = new Blob([code], { type: "application/wasm" });
+        config.dataUrl = URL.createObjectURL(dataBlob);
+        config.codeUrl = URL.createObjectURL(codeBlob);
+
+        const script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+            createUnityInstance(document.querySelector("#unity-canvas"), config, (progress) => {
+                document.querySelector(".spinner").style.display = "none";
+                document.querySelector("#unity-progress-bar-empty").style.display = "";
+                document.querySelector("#unity-progress-bar-full").style.width = `${100 * progress}%`;
+            }).then((unityInstance) => {
+                document.querySelector("#loading-cover").style.display = "none";
+                console.log("Unity successfully loaded.");
+            }).catch((message) => {
+                console.error("Unity yükleme hatası:", message);
+            });
+        };
+        document.body.appendChild(script);
+    }).catch(err => console.error("Error decompressing files:", err));
+
+      const container = document.querySelector("#unity-container");
+        const canvas = document.querySelector("#unity-canvas");
+        const loadingCover = document.querySelector("#loading-cover");
+        const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+        const progressBarFull = document.querySelector("#unity-progress-bar-full");
+        const spinner = document.querySelector('.spinner');
+
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            container.className = "unity-mobile";
+        }
+
+        loadingCover.style.background = "url('<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="google.com" />
+<Content type="html"><![CDATA[
+
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/6xgungmaster/google@main/style.css"/>
+    <!-- Yandex Games SDK -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <style>
+        canvas:focus { outline: none; }
+        html, body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            user-select: none;
+            height: 100%;
+            -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        }
+    </style>
+</head>
+<body class="light">
+<div id="unity-container" class="unity-desktop">
+    <canvas id="unity-canvas" tabindex="-1"></canvas>
+</div>
+<div id="loading-cover" style="display:none;">
+    <div id="unity-loading-bar">
+        <div id="unity-progress-bar-empty" style="display: none;">
+            <div id="unity-progress-bar-full"></div>
+        </div>
+        <div class="spinner"></div>
+    </div>
+</div>
+
+<script>
+    const hideFullScreenButton = "";
+    const buildUrl = "https://cdn.jsdelivr.net/gh/6xgungmaster/google@main/Build";
+    const loaderUrl = buildUrl + "/bb0d9ecdb05db3e84da20bd14a4f84dc.loader.js";
+    const compressedDataUrl = buildUrl + "/430c326a4c4d669723ed7cb141728f8a.zip";
+    const compressedCodeUrl = buildUrl + "/1a9c83d74d30ec5e78b8c18c6503ee0a.zip";
+
+    const config = {
+        frameworkUrl: buildUrl + "/unityFramework.js",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "GtaArcade",
+        productVersion: "0.1"
+    };
+
+
+    async function fetchAndDecompress(url, fileName) {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Failed to fetch ${url}`);
+        const arrayBuffer = await response.arrayBuffer();
+        const zip = await JSZip.loadAsync(arrayBuffer);
+        return zip.file(fileName).async("uint8array");
+    }
+
+    Promise.all([
+        fetchAndDecompress(compressedDataUrl, "game.data.br"),
+        fetchAndDecompress(compressedCodeUrl, "game.wasm.br")
+    ]).then(([data, code]) => {
+        const dataBlob = new Blob([data], { type: "application/octet-stream" });
+        const codeBlob = new Blob([code], { type: "application/wasm" });
+        config.dataUrl = URL.createObjectURL(dataBlob);
+        config.codeUrl = URL.createObjectURL(codeBlob);
+
+        const script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+            createUnityInstance(document.querySelector("#unity-canvas"), config, (progress) => {
+                document.querySelector(".spinner").style.display = "none";
+                document.querySelector("#unity-progress-bar-empty").style.display = "";
+                document.querySelector("#unity-progress-bar-full").style.width = `${100 * progress}%`;
+            }).then((unityInstance) => {
+                document.querySelector("#loading-cover").style.display = "none";
+                console.log("Unity successfully loaded.");
+            }).catch((message) => {
+                console.error("Unity yükleme hatası:", message);
+            });
+        };
+        document.body.appendChild(script);
+    }).catch(err => console.error("Error decompressing files:", err));
+
+      const container = document.querySelector("#unity-container");
+        const canvas = document.querySelector("#unity-canvas");
+        const loadingCover = document.querySelector("#loading-cover");
+        const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+        const progressBarFull = document.querySelector("#unity-progress-bar-full");
+        const spinner = document.querySelector('.spinner');
+
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            container.className = "unity-mobile";
+        }
+
+        loadingCover.style.background = "url('https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@287710a4fac80d3ea9187e9d27c8358034b2639b/pdctrsh91fc91.jpg') center / cover";
+        loadingCover.style.display = "";
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        function FocusGame() {
+            window.focus();
+            canvas.focus();
+        }
+
+        window.addEventListener('pointerdown', FocusGame);
+        window.addEventListener('touchstart', FocusGame);
+
+        let StartUnityInstance;
+        let myGameInstance;
+        let ysdk = null; // Yandex SDK pasif
+
+        // Varsayılan değerlerle environmentData, cloudSaves, paymentsData ve playerData gibi değişkenlerin tanımlanması
+        let environmentData = {
+            language: "en",
+            domain: "default_domain",
+            deviceType: "desktop",
+            isMobile: false,
+            isDesktop: true,
+            isTablet: false,
+            isTV: false,
+            appID: "default_app_id",
+            browserLang: navigator.language || "en",
+            payload: null,
+            promptCanShow: false,
+            reviewCanShow: false,
+            platform: navigator.platform,
+            browser: (function() {
+                let userAgent = navigator.userAgent;
+                if (userAgent.includes("YaBrowser")) return "Yandex";
+                if (userAgent.includes("OPR") || userAgent.includes("Opera")) return "Opera";
+                if (userAgent.includes("Firefox")) return "Firefox";
+                if (userAgent.includes("MSIE") || userAgent.includes("Trident")) return "IE";
+                if (userAgent.includes("Edge")) return "Edge";
+                if (userAgent.includes("Chrome")) return "Chrome";
+                if (userAgent.includes("Safari")) return "Safari";
+                return "Other";
+            })()
+        };
+        
+        let cloudSaves = 'noData';
+        let paymentsData = 'none';
+        let playerData = 'noData'; // Varsayılan playerData tanımı
+        let player = null;
+        let payments = null;
+        let initGame = false;
+        let nowFullAdOpen = false;
+
+        // Eksik olabilecek tüm SDK işlevlerini varsayılan olarak tanımla
+        function GetPayments() { console.warn("GetPayments is not implemented"); return Promise.resolve("none"); }
+        function SaveCloud() { console.warn("SaveCloud is not implemented"); }
+        function LoadCloud() { console.warn("LoadCloud is not implemented"); return Promise.resolve("noData"); }
+        function InitPlayer() { console.warn("InitPlayer is not implemented"); return Promise.resolve("noData"); }
+
+function FullAdShow() {
+    try {
+        console.log("Full-screen ad functionality is disabled.");
+
+        // Create a modal for the message
+        const warningModal = document.createElement('div');
+        warningModal.id = "warning-modal";
+        warningModal.style.position = "fixed";
+        warningModal.style.top = "0";
+        warningModal.style.left = "0";
+        warningModal.style.width = "100%";
+        warningModal.style.height = "100%";
+        warningModal.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+        warningModal.style.color = "white";
+        warningModal.style.zIndex = "1000";
+        warningModal.style.display = "flex";
+        warningModal.style.flexDirection = "column";
+        warningModal.style.justifyContent = "center";
+        warningModal.style.alignItems = "center";
+        warningModal.innerHTML = `
+            <h1 style="font-size: 24px; margin-bottom: 20px;">FULL-SCREEN ADS ARE DISABLED</h1>
+            <p style="font-size: 18px; margin-bottom: 30px; text-align: center;">
+                Please refresh the page to continue the game.
+            </p>
+            <button id="refresh-btn" style="
+                padding: 10px 20px; 
+                font-size: 16px; 
+                cursor: pointer; 
+                background-color: #007BFF; 
+                color: white; 
+                border: none; 
+                border-radius: 5px;">
+                Refresh Page
+            </button>
+        `;
+
+        // Append the modal to the body
+        document.body.appendChild(warningModal);
+
+        // Refresh the page on button click
+        document.getElementById("refresh-btn").onclick = function () {
+            console.log("Button clicked. Refreshing the page...");
+            location.reload(); // Refresh the page
+        };
+
+    } catch (error) {
+        console.error("Error during FullAdShow:", error);
+    }
+}
+
+
+function RewardedShow() {
+    try {
+        console.log("Rewarded ad functionality is disabled.");
+
+        // Create a modal for the message
+        const warningModal = document.createElement('div');
+        warningModal.id = "warning-modal";
+        warningModal.style.position = "fixed";
+        warningModal.style.top = "0";
+        warningModal.style.left = "0";
+        warningModal.style.width = "100%";
+        warningModal.style.height = "100%";
+        warningModal.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+        warningModal.style.color = "white";
+        warningModal.style.zIndex = "1000";
+        warningModal.style.display = "flex";
+        warningModal.style.flexDirection = "column";
+        warningModal.style.justifyContent = "center";
+        warningModal.style.alignItems = "center";
+        warningModal.innerHTML = `
+            <h1 style="font-size: 24px; margin-bottom: 20px;">REWARD-AD BANNED IN YOUR SCHOOL</h1>
+            <p style="font-size: 18px; margin-bottom: 30px; text-align: center;">
+                Please refresh the page to restart the game.
+            </p>
+            <button id="refresh-btn" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
+                Refresh Page
+            </button>
+        `;
+
+        // Append the modal to the body
+        document.body.appendChild(warningModal);
+
+        // Refresh the page on button click
+        document.getElementById("refresh-btn").onclick = function () {
+            location.reload(); // Refresh the page
+        };
+    } catch (error) {
+        console.error("Error during RewardedShow:", error);
+    }
+}
+
+
+        function StickyAdActivity() { console.warn("StickyAdActivity is not implemented"); }
+        function Review() { console.warn("Review is not implemented"); }
+        function PromptShow() { console.warn("PromptShow is not implemented"); }
+        function InitLeaderboards() { console.warn("InitLeaderboards is not implemented"); }
+        function GetLeaderboardScores() { console.warn("GetLeaderboardScores is not implemented"); }
+        function SetLeaderboardScores() { console.warn("SetLeaderboardScores is not implemented"); }
+        function ConsumePurchase() { console.warn("ConsumePurchase is not implemented"); }
+        function ConsumePurchases() { console.warn("ConsumePurchases is not implemented"); } // Varsayılan tanım eklendi
+
+
+        function InitGame() {
+            try {
+                console.log('Init Game Success');
+                initGame = true;
+                if (nowFullAdOpen === true && myGameInstance != null) {
+                    myGameInstance.SendMessage('YandexGame', 'OpenFullAd');
+                }
+            } catch (error) {
+                console.error("InitGame sırasında hata:", error);
+            }
+        }
+
+        // Hata oluştuğunda oyuna devam etmek için tüm hataları global olarak yakalayan yapı
+        window.addEventListener("unhandledrejection", function(event) {
+            console.warn("Hata es geçildi:", event.reason);
+            event.preventDefault();
+        });
+    </script>
+</script>
+</body>
+</html>
+
+
+
+]]></Content>
+</Module>
+') center / cover";
+        loadingCover.style.display = "";
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        function FocusGame() {
+            window.focus();
+            canvas.focus();
+        }
+
+        window.addEventListener('pointerdown', FocusGame);
+        window.addEventListener('touchstart', FocusGame);
+
+        let StartUnityInstance;
+        let myGameInstance;
+        let ysdk = null; // Yandex SDK pasif
+
+        // Varsayılan değerlerle environmentData, cloudSaves, paymentsData ve playerData gibi değişkenlerin tanımlanması
+        let environmentData = {
+            language: "en",
+            domain: "default_domain",
+            deviceType: "desktop",
+            isMobile: false,
+            isDesktop: true,
+            isTablet: false,
+            isTV: false,
+            appID: "default_app_id",
+            browserLang: navigator.language || "en",
+            payload: null,
+            promptCanShow: false,
+            reviewCanShow: false,
+            platform: navigator.platform,
+            browser: (function() {
+                let userAgent = navigator.userAgent;
+                if (userAgent.includes("YaBrowser")) return "Yandex";
+                if (userAgent.includes("OPR") || userAgent.includes("Opera")) return "Opera";
+                if (userAgent.includes("Firefox")) return "Firefox";
+                if (userAgent.includes("MSIE") || userAgent.includes("Trident")) return "IE";
+                if (userAgent.includes("Edge")) return "Edge";
+                if (userAgent.includes("Chrome")) return "Chrome";
+                if (userAgent.includes("Safari")) return "Safari";
+                return "Other";
+            })()
+        };
+        
+        let cloudSaves = 'noData';
+        let paymentsData = 'none';
+        let playerData = 'noData'; // Varsayılan playerData tanımı
+        let player = null;
+        let payments = null;
+        let initGame = false;
+        let nowFullAdOpen = false;
+
+        // Eksik olabilecek tüm SDK işlevlerini varsayılan olarak tanımla
+        function GetPayments() { console.warn("GetPayments is not implemented"); return Promise.resolve("none"); }
+        function SaveCloud() { console.warn("SaveCloud is not implemented"); }
+        function LoadCloud() { console.warn("LoadCloud is not implemented"); return Promise.resolve("noData"); }
+        function InitPlayer() { console.warn("InitPlayer is not implemented"); return Promise.resolve("noData"); }
+
+function FullAdShow() {
+    try {
+        console.log("Full-screen ad functionality is disabled.");
+
+        // Create a modal for the message
+        const warningModal = document.createElement('div');
+        warningModal.id = "warning-modal";
+        warningModal.style.position = "fixed";
+        warningModal.style.top = "0";
+        warningModal.style.left = "0";
+        warningModal.style.width = "100%";
+        warningModal.style.height = "100%";
+        warningModal.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+        warningModal.style.color = "white";
+        warningModal.style.zIndex = "1000";
+        warningModal.style.display = "flex";
+        warningModal.style.flexDirection = "column";
+        warningModal.style.justifyContent = "center";
+        warningModal.style.alignItems = "center";
+        warningModal.innerHTML = `
+            <h1 style="font-size: 24px; margin-bottom: 20px;">FULL-SCREEN ADS ARE DISABLED</h1>
+            <p style="font-size: 18px; margin-bottom: 30px; text-align: center;">
+                Please refresh the page to continue the game.
+            </p>
+            <button id="refresh-btn" style="
+                padding: 10px 20px; 
+                font-size: 16px; 
+                cursor: pointer; 
+                background-color: #007BFF; 
+                color: white; 
+                border: none; 
+                border-radius: 5px;">
+                Refresh Page
+            </button>
+        `;
+
+        // Append the modal to the body
+        document.body.appendChild(warningModal);
+
+        // Refresh the page on button click
+        document.getElementById("refresh-btn").onclick = function () {
+            console.log("Button clicked. Refreshing the page...");
+            location.reload(); // Refresh the page
+        };
+
+    } catch (error) {
+        console.error("Error during FullAdShow:", error);
+    }
+}
+
+
+function RewardedShow() {
+    try {
+        console.log("Rewarded ad functionality is disabled.");
+
+        // Create a modal for the message
+        const warningModal = document.createElement('div');
+        warningModal.id = "warning-modal";
+        warningModal.style.position = "fixed";
+        warningModal.style.top = "0";
+        warningModal.style.left = "0";
+        warningModal.style.width = "100%";
+        warningModal.style.height = "100%";
+        warningModal.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+        warningModal.style.color = "white";
+        warningModal.style.zIndex = "1000";
+        warningModal.style.display = "flex";
+        warningModal.style.flexDirection = "column";
+        warningModal.style.justifyContent = "center";
+        warningModal.style.alignItems = "center";
+        warningModal.innerHTML = `
+            <h1 style="font-size: 24px; margin-bottom: 20px;">REWARD-AD BANNED IN YOUR SCHOOL</h1>
+            <p style="font-size: 18px; margin-bottom: 30px; text-align: center;">
+                Please refresh the page to restart the game.
+            </p>
+            <button id="refresh-btn" style="padding: 10px 20px; font-size: 16px; cursor: pointer;">
+                Refresh Page
+            </button>
+        `;
+
+        // Append the modal to the body
+        document.body.appendChild(warningModal);
+
+        // Refresh the page on button click
+        document.getElementById("refresh-btn").onclick = function () {
+            location.reload(); // Refresh the page
+        };
+    } catch (error) {
+        console.error("Error during RewardedShow:", error);
+    }
+}
+
+
+        function StickyAdActivity() { console.warn("StickyAdActivity is not implemented"); }
+        function Review() { console.warn("Review is not implemented"); }
+        function PromptShow() { console.warn("PromptShow is not implemented"); }
+        function InitLeaderboards() { console.warn("InitLeaderboards is not implemented"); }
+        function GetLeaderboardScores() { console.warn("GetLeaderboardScores is not implemented"); }
+        function SetLeaderboardScores() { console.warn("SetLeaderboardScores is not implemented"); }
+        function ConsumePurchase() { console.warn("ConsumePurchase is not implemented"); }
+        function ConsumePurchases() { console.warn("ConsumePurchases is not implemented"); } // Varsayılan tanım eklendi
+
+
+        function InitGame() {
+            try {
+                console.log('Init Game Success');
+                initGame = true;
+                if (nowFullAdOpen === true && myGameInstance != null) {
+                    myGameInstance.SendMessage('YandexGame', 'OpenFullAd');
+                }
+            } catch (error) {
+                console.error("InitGame sırasında hata:", error);
+            }
+        }
+
+        // Hata oluştuğunda oyuna devam etmek için tüm hataları global olarak yakalayan yapı
+        window.addEventListener("unhandledrejection", function(event) {
+            console.warn("Hata es geçildi:", event.reason);
+            event.preventDefault();
+        });
+    </script>
+</script>
+</body>
+</html>
+
+
+
+]]>
+	</Content>
+</Module>

@@ -1,0 +1,185 @@
+
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<html lang="en-us">
+<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/georgeandprinter/"> 
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | George and the Printer</title>
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+  <script src="TemplateData/UnityProgress.js"></script>
+  <script src="Build/UnityLoader.js"></script>
+  <script>
+    // --- utility to merge split parts ---
+    function mergeFiles(fileParts) {
+      return new Promise((resolve, reject) => {
+        let buffers = [];
+        function fetchPart(i) {
+          if (i >= fileParts.length) {
+            let mergedBlob = new Blob(buffers);
+            resolve(mergedBlob);
+            return;
+          }
+          fetch(fileParts[i])
+            .then(r => r.arrayBuffer())
+            .then(data => {
+              buffers.push(data);
+              fetchPart(i + 1);
+            })
+            .catch(reject);
+        }
+        fetchPart(0);
+      });
+    }
+
+    function getParts(file, start, end) {
+      let arr = [];
+      for (let i = start; i <= end; i++) {
+        arr.push(file + ".part" + i);
+      }
+      return arr;
+    }
+
+    function resizeUnityContainer() {
+      var container = document.getElementById("gameContainer");
+      if (container) {
+        container.style.width = window.innerWidth + "px";
+        container.style.height = window.innerHeight + "px";
+      }
+    }
+
+    window.addEventListener('resize', resizeUnityContainer);
+
+    // Minimal UnityProgress stub
+    function UnityProgress(gameInstance, progress) {
+      try {
+        if (progress === 'complete') {
+          return;
+        }
+        var pct = 0;
+        if (typeof progress === 'number') pct = progress;
+        else if (progress && progress.loaded && progress.total) pct = progress.loaded / progress.total;
+        var txt = document.getElementById('loading-text');
+        if (txt) txt.textContent = 'Loading... ' + Math.round(pct * 100) + '%';
+      } catch (e) {
+        // swallow errors from the progress stub
+      }
+    }
+
+    // ---- MAIN LOADER ----
+    window.addEventListener("load", function () {
+      // Store merged blobs globally
+      window.unityMergedFiles = {};
+      
+      // 1. Load the original JSON config
+      fetch("Build/WebGL.json")
+        .then(r => r.json())
+        .then(config => {
+          console.log("Original config:", config);
+          
+          // 2. Merge split files
+          return Promise.all([
+            mergeFiles(getParts("Build/WebGL.data.unityweb", 1, 3)),
+            mergeFiles(getParts("Build/WebGL.wasm.code.unityweb", 1, 1)), 
+            mergeFiles(getParts("Build/WebGL.wasm.framework.unityweb", 1, 1))
+          ]).then(([dataBlob, wasmCodeBlob, wasmFrameworkBlob]) => {
+            // Store the original filenames as keys
+            window.unityMergedFiles['WebGL.data.unityweb'] = dataBlob;
+            window.unityMergedFiles['WebGL.wasm.code.unityweb'] = wasmCodeBlob;
+            window.unityMergedFiles['WebGL.wasm.framework.unityweb'] = wasmFrameworkBlob;
+            
+            console.log("Merged files ready:", Object.keys(window.unityMergedFiles));
+            
+            // Keep original config - don't modify URLs
+            let blob = new Blob([JSON.stringify(config)], { type: "application/json" });
+            let blobUrl = URL.createObjectURL(blob);
+
+            // Intercept XMLHttpRequest to serve our merged blobs
+            const originalOpen = XMLHttpRequest.prototype.open;
+            const originalSend = XMLHttpRequest.prototype.send;
+            
+            XMLHttpRequest.prototype.open = function(method, url, ...args) {
+              this._url = url;
+              return originalOpen.call(this, method, url, ...args);
+            };
+            
+            XMLHttpRequest.prototype.send = function(...args) {
+              // Check if this is a request for one of our merged files
+              const url = this._url;
+              if (url && typeof url === 'string') {
+                const filename = url.split('/').pop();
+                if (window.unityMergedFiles[filename]) {
+                  console.log("Intercepting request for:", filename);
+                  
+                  // Create a new FileReader to read the blob
+                  const blob = window.unityMergedFiles[filename];
+                  const reader = new FileReader();
+                  const xhr = this;
+                  
+                  reader.onload = function() {
+                    // Manually trigger the XHR events with our blob data
+                    Object.defineProperty(xhr, 'response', { value: reader.result, writable: false });
+                    Object.defineProperty(xhr, 'responseText', { value: reader.result, writable: false });
+                    Object.defineProperty(xhr, 'readyState', { value: 4, writable: false });
+                    Object.defineProperty(xhr, 'status', { value: 200, writable: false });
+                    
+                    if (xhr.onload) xhr.onload();
+                    if (xhr.onreadystatechange) xhr.onreadystatechange();
+                  };
+                  
+                  reader.onerror = function() {
+                    if (xhr.onerror) xhr.onerror();
+                  };
+                  
+                  reader.readAsArrayBuffer(blob);
+                  return;
+                }
+              }
+              
+              return originalSend.apply(this, args);
+            };
+
+            // 5. Instantiate Unity with blob URL
+            window.gameInstance = UnityLoader.instantiate("gameContainer", blobUrl, {
+              onProgress: UnityProgress,
+              Module: {
+                onRuntimeInitialized: function () {
+                  resizeUnityContainer();
+                  let loadingText = document.querySelector("#loading-text");
+                  if (loadingText) loadingText.remove();
+                  UnityProgress(window.gameInstance, 'complete');
+                }
+              }
+            });
+          });
+        })
+        .catch(err => {
+          console.error("Unity load failed:", err);
+          let txt = document.getElementById('loading-text');
+          if (txt) txt.textContent = 'Loading failed: ' + err.message;
+        });
+    });
+  </script>
+</head>
+
+<body>
+  <div class="webgl-content">
+    <div id="gameContainer" style="width: 960px; height: 600px">
+      <p id="loading-text">Loading...</p>
+    </div>
+    <div class="footer">
+      <div class="webgl-logo"></div>
+      <div class="fullscreen" onclick="window.gameInstance && window.gameInstance.SetFullscreen(1)"></div>
+      <div class="title">George and the Printer</div>
+    </div>
+  </div>
+</body>
+
+</html>

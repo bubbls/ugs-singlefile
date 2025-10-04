@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<html lang="en-us">
+<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@459835670515536e0f7ecec6c127d11ef8fa2a82/duck%20life%20battle/">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Duck Life Battle</title>
+
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+</head>
+
+<body class="dark">
+  <div id="unity-container" class="unity-desktop">
+    <canvas id="unity-canvas"></canvas>
+  </div>
+  <div id="loading-cover" style="display:none;">
+    <div id="unity-loading-bar">
+      <div id="unity-logo"><img src="logo.png" style="margin-bottom: 20px"></div>
+      <div id="unity-progress-bar-empty" style="display: none;">
+        <div id="unity-progress-bar-full"></div>
+      </div>
+      <div class="spinner"></div>
+    </div>
+  </div>
+  <div id="unity-fullscreen-button" style="display: none;"></div>
+  <script>
+            function mergeFiles(fileParts) {
+            return new Promise((resolve, reject) => {
+                let buffers = [];
+
+                function fetchPart(index) {
+                    if (index >= fileParts.length) {
+                        let mergedBlob = new Blob(buffers);
+                        let mergedFileUrl = URL.createObjectURL(mergedBlob);
+                        resolve(mergedFileUrl);
+                        return;
+                    }
+                    fetch(fileParts[index]).then((response) => response.arrayBuffer()).then((data) => {
+                        buffers.push(data);
+                        fetchPart(index + 1);
+                    }).catch(reject);
+                }
+                fetchPart(0);
+            });
+        }
+
+        function getParts(file, start, end) {
+            let parts = [];
+            for (let i = start; i <= end; i++) {
+                parts.push(file + ".part" + i);
+            }
+            return parts;
+        }
+        Promise.all([
+            mergeFiles(getParts("Build/Freezenova6.data.unityweb", 1, 3))
+        ]).then(([dataBlobUrl]) => {
+    const buildUrl = "Build";
+    const loaderUrl = buildUrl + "/Freezenova6.loader.js";
+    const config = {
+      dataUrl: dataBlobUrl,
+      frameworkUrl: buildUrl + "/Freezenova6.framework.js.unityweb",
+      codeUrl: buildUrl + "/Freezenova6.wasm.unityweb",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "Wix Games",
+      productName: "Duck Life Battle",
+      productVersion: "2024.5.28",
+    };
+
+    // Query DOM elements before using them
+    const container = document.querySelector("#unity-container");
+    const canvas = document.querySelector("#unity-canvas");
+    const loadingCover = document.querySelector("#loading-cover");
+    const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+    const progressBarFull = document.querySelector("#unity-progress-bar-full");
+    const fullscreenButton = document.querySelector("#unity-fullscreen-button");
+    const spinner = document.querySelector('.spinner');
+
+    const canFullscreen = (function() {
+      for (const key of [
+          'exitFullscreen',
+          'webkitExitFullscreen',
+          'webkitCancelFullScreen',
+          'mozCancelFullScreen',
+          'msExitFullscreen',
+        ]) {
+        if (key in document) {
+          return true;
+        }
+      }
+      return false;
+    }());
+
+    if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      container.className = "unity-mobile";
+      config.devicePixelRatio = 1;
+    }
+    loadingCover.style.display = "";
+
+    // hideFullScreenButton should be a boolean (false to show button)
+    const hideFullScreenButton = false;
+
+    const script = document.createElement("script");
+    script.src = loaderUrl;
+    script.onload = () => {
+      createUnityInstance(canvas, config, (progress) => {
+        if (spinner) spinner.style.display = "none";
+        if (progressBarEmpty) progressBarEmpty.style.display = "";
+        if (progressBarFull) progressBarFull.style.width = `${100 * progress}%`;
+      }).then((unityInstance) => {
+        if (loadingCover) loadingCover.style.display = "none";
+        if (canFullscreen) {
+          if (!hideFullScreenButton && fullscreenButton) {
+            fullscreenButton.style.display = "";
+          }
+          if (fullscreenButton) {
+            fullscreenButton.onclick = () => {
+              unityInstance.SetFullscreen(1);
+            };
+          }
+        }
+      }).catch((message) => {
+        alert(message);
+      });
+    };
+    document.body.appendChild(script);
+    });
+  </script>
+</body>
+
+</html>

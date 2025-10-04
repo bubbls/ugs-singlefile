@@ -1,0 +1,2246 @@
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<!DOCTYPE HTML>
+<html>
+
+<body>
+    <canvas id='canvas'></canvas>
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@1b96670bb9711b4f0fa6e8f953554d5cd12fc8b8/opposite%20day/game-setup.js"></script>
+    <script>
+        var title = 'Opposite Day';
+        var dimensions = { width: 1000, height: 1000 };
+        var images = {};
+        var audios = {};
+
+        initialize();
+        window.setInterval(update, 10);
+
+        function main() {
+            game.update();
+        }
+
+        var game = {
+            switchKeys: false,
+            throughtCheckpoint1: false,
+            checkpoint1: false,
+            levelX: 0,
+            levelY: 0,
+            playerDead: false,
+            respawnTime: 0,
+            won: false,
+            johnbutlergames: false,
+            showTimer: true,
+            update: function () {
+                if (word.endsWith("JOHNBUTLERGAMES")) {
+                    this.johnbutlergames = !this.johnbutlergames;
+                }
+                if (Keys.keys[82]) {
+                    this.reset();
+                }
+                if (this.levelX == -4 && this.levelY == 0 && player.y < 500) {
+                    this.checkpoint1 = true;
+                }
+                if (!this.playerDead) {
+                    player.update();
+                } else {
+                    this.respawnTime--;
+                    if (this.respawnTime == 0) {
+                        this.respawn();
+                    }
+                }
+                if (this.levelX != -5 || this.levelY != 1) {
+                    this.switchKeys = false;
+                }
+                if (this.currentLevel.f !== undefined) {
+                    this.currentLevel.f();
+                }
+                var n = 0;
+                while (n < this.currentLevel.blocks.length) {
+                    var b = this.currentLevel.blocks[n];
+                    if (b.f !== undefined) {
+                        b.f();
+                    }
+                    n++;
+                }
+                particles.update();
+                this.draw();
+                if (!this.won && player.moved) {
+                    timer++;
+                }
+                if (Keys.down[84]) {
+                    game.showTimer = !game.showTimer;
+                }
+            },
+            draw: function () {
+                if (this.levelX == -6 && game.levelY == 1) {
+                    ctx.fillStyle = 'black';
+                    ctx.textAlign = 'center';
+                    ctx.font = "60px Arial";
+                    ctx.fillText('Not Your Time: ' + timer / 100, 500, 400);
+                }
+                //time
+
+                var n = 0;
+                while (n < this.currentLevel.blocks.length) {
+                    var b = this.currentLevel.blocks[n];
+                    this.drawBlock(b);
+                    //draw block
+                    n++;
+                }
+                //draw blocks
+
+                if (!this.playerDead) {
+                    player.draw();
+                }
+                //draw player
+
+                particles.draw();
+                //draw particles
+
+                if (game.showTimer) {
+                    var text = new String(timer / 100);
+                    if (!text.includes(".")) text += ".00";
+                    var split = text.split(".")[1];
+                    if (split.length < 2) text += "0";
+                    ctx.font = "30px Arial";
+                    var width = ctx.measureText(text).width;
+                    ctx.fillStyle = "white";
+                    ctx.fillRect(980 - width, 0, width + 20, 37);
+                    ctx.fillStyle = "black";
+                    ctx.textAlign = "right";
+                    ctx.fillText(text, 990, 30);
+                }
+            },
+            reset: function () {
+                this.levelX = 0;
+                this.levelY = 0;
+                this.checkpoint1 = false;
+                player.x = 480;
+                player.y = 500;
+                player.xmove = 0;
+                player.ymove = 0;
+                player.moved = false;
+                timer = 0;
+                this.won = false;
+                this.playerDead = false;
+                this.refreshLevel();
+            },
+            respawn: function () {
+                this.levelX = 0;
+                this.levelY = 0;
+                player.x = 480;
+                player.y = 500;
+                player.xmove = 0;
+                player.ymove = 0;
+                this.playerDead = false;
+                this.refreshLevel();
+            },
+            refreshLevel: function () {
+                particles.particles = [];
+                this.currentLevel = this.getLevel(this.levelX, this.levelY);
+                var n = 0;
+                while (n < this.currentLevel.blocks.length) {
+                    var b = this.currentLevel.blocks[n];
+                    if (b.collide === undefined) {
+                        b.collide = true;
+                    }
+                    n++;
+                }
+            },
+            getLevel: function (x, y) {
+                var level = { x: x, y: y, blocks: [] };
+                var n = 0;
+                while (n < this.levels.length) {
+                    var l = this.levels[n];
+                    if (l.x == x && l.y == y) {
+                        var keys = Object.keys(l);
+                        var n = 0;
+                        while (n < keys.length) {
+                            if (level[keys[n]] === undefined) {
+                                level[keys[n]] = l[keys[n]];
+                            }
+                            n++;
+                        }
+                        var n = 0;
+                        while (n < l.blocks.length) {
+                            level.blocks.push(JSON.parse(JSON.stringify(l.blocks[n])));
+                            if (l.blocks[n].f !== undefined) {
+                                level.blocks[level.blocks.length - 1].f = l.blocks[n].f;
+                            }
+                            n++;
+                        }
+                        break;
+                    }
+                    n++;
+                }
+                return level;
+            },
+            drawBlock: function (block) {
+                var red = "red";
+                var zeroRed = "rgba(255,0,0,0)";
+                if (this.johnbutlergames) {
+                    red = "blue";
+                    zeroRed = "rgba(0,0,255,0)";
+                }
+                ctx.textAlign = 'center';
+                if (block.type == 'block') {
+                    ctx.fillStyle = 'black';
+                    if (block.iRadius !== undefined) {
+                        var p = player;
+                        var grd = ctx.createRadialGradient(p.x + p.w / 2, p.y + p.h / 2, 50, p.x + p.w / 2, p.y + p.h / 2, block.iRadius);
+                        grd.addColorStop(0, 'black');
+                        grd.addColorStop(1, 'rgba(0,0,0,0)');
+                        ctx.fillStyle = grd;
+                    }
+                    if (block.sRadius !== undefined) {
+                        var p = player;
+                        var grd = ctx.createRadialGradient(p.x + p.w / 2, p.y + p.h / 2, 50, p.x + p.w / 2, p.y + p.h / 2, block.sRadius);
+                        grd.addColorStop(0, 'black');
+                        grd.addColorStop(1, red);
+                        ctx.fillStyle = grd;
+                    }
+                    if (block.fRadius !== undefined) {
+                        var p = player;
+                        var grd = ctx.createRadialGradient(p.x + p.w / 2, p.y + p.h / 2, 50, p.x + p.w / 2, p.y + p.h / 2, block.fRadius);
+                        grd.addColorStop(1, 'black');
+                        grd.addColorStop(0, 'rgb(0,0,0,0)');
+                        ctx.fillStyle = grd;
+                    }
+                    ctx.fillRect(block.x, block.y, block.w, block.h);
+                } else if (block.type == 'lava') {
+                    ctx.fillStyle = red;
+                    if (block.iRadius !== undefined) {
+                        var p = player;
+                        var grd = ctx.createRadialGradient(p.x + p.w / 2, p.y + p.h / 2, 50, p.x + p.w / 2, p.y + p.h / 2, block.iRadius);
+                        grd.addColorStop(0, red);
+                        grd.addColorStop(1, zeroRed);
+                        ctx.fillStyle = grd;
+                    }
+                    if (block.sRadius !== undefined) {
+                        var p = player;
+                        var grd = ctx.createRadialGradient(p.x + p.w / 2, p.y + p.h / 2, 50, p.x + p.w / 2, p.y + p.h / 2, block.sRadius);
+                        grd.addColorStop(1, 'black');
+                        grd.addColorStop(0, red);
+                        ctx.fillStyle = grd;
+                    }
+                    if (block.fRadius !== undefined) {
+                        var p = player;
+                        var grd = ctx.createRadialGradient(p.x + p.w / 2, p.y + p.h / 2, 50, p.x + p.w / 2, p.y + p.h / 2, block.fRadius);
+                        grd.addColorStop(1, red);
+                        grd.addColorStop(0, 'rgb(0,0,0,0)');
+                        ctx.fillStyle = grd;
+                    }
+                    ctx.fillRect(block.x, block.y, block.w, block.h);
+                } else if (block.type == 'text') {
+                    ctx.fillStyle = 'black';
+                    if (block.iRadius !== undefined) {
+                        var p = player;
+                        var grd = ctx.createRadialGradient(p.x + p.w / 2, p.y + p.h / 2, 50, p.x + p.w / 2, p.y + p.h / 2, block.iRadius);
+                        grd.addColorStop(0, 'black');
+                        grd.addColorStop(1, 'rgba(0,0,0,0)');
+                        ctx.fillStyle = grd;
+                    }
+                    if (block.fRadius !== undefined) {
+                        var p = player;
+                        var grd = ctx.createRadialGradient(p.x + p.w / 2, p.y + p.h / 2, 50, p.x + p.w / 2, p.y + p.h / 2, block.fRadius);
+                        grd.addColorStop(1, 'black');
+                        grd.addColorStop(0, 'rgb(0,0,0,0)');
+                        ctx.fillStyle = grd;
+                    }
+                    ctx.font = block.size + 'px Arial';
+                    ctx.fillText(block.text, block.x, block.y);
+                }
+            },
+            currentLevel: {},
+            levels: [
+                {
+                    x: 0, y: 0, f: function () {
+                        if (game.won && player.x > 975 && player.xmove > 0) {
+                            game.levelX = 2;
+                            game.levelY = 0;
+                            player.x = -10;
+                            game.refreshLevel();
+                        }
+                    }, blocks: [{ x: 0, y: 700, w: 650, h: 300, type: 'block' }, { x: 750, y: 700, w: 100, h: 300, type: 'block' }, {
+                        x: 650, y: 700, w: 100, h: 300, type: 'block', f: function () {
+                            if (game.checkpoint1) {
+                                this.w = 0;
+                            } else {
+                                this.w = 100;
+                            }
+                            if (player.y > 950) {
+                                player.y = 0;
+                                player.x = 900;
+                                game.levelX = -4;
+                                game.levelY = 0;
+                                game.throughcheckpoint1 = true;
+                                game.refreshLevel();
+                            }
+                        }
+                    }, { x: 850, y: 850, w: 150, h: 150, type: 'block' }, { x: 500, y: 200, text: 'Opposite Day', size: 100, type: 'text', collide: false }, {
+                        x: 500, y: 400, text: '', size: 50, type: 'text', collide: false, f: function () {
+                            this.text = 'Go this way to win';
+                            if (game.won) {
+                                this.text = "No bonus levels"
+                            }
+                        }
+                    }, { x: 500, y: 450, text: '---------->', size: 50, type: 'text', collide: false }, { x: 0, y: 600, w: 100, h: 100, type: 'block' }, {
+                        x: 700, y: 650, type: 'text', collide: false, size: 25, text: '', f: function () {
+                            if (game.checkpoint1 && !game.throughcheckpoint1) {
+                                this.text = "What's in here?";
+                            } else {
+                                this.text = '';
+                            }
+                        }
+                    }]
+                },
+                { x: 1, y: 0, blocks: [{ x: 0, y: 900, w: 1000, h: 100, type: 'lava' }, { x: 500, y: 200, text: "It's Opposite Day", size: 100, type: 'text', collide: false }, { x: 500, y: 400, text: 'What did you expect?', size: 50, type: 'text', collide: false }] },
+                {
+                    x: -1, y: 0, blocks: [{ x: 500, y: 200, type: 'text', text: "You must think you're so smart.", size: 50, collide: false }, { x: 250, y: 800, type: 'text', text: 'lol', size: 40, collide: false }, { x: 700, y: 600, w: 400, h: 400, type: 'block' }, { x: 100, y: 900, w: 600, h: 100, type: 'lava' }, { x: 0, y: 600, w: 200, h: 400, type: 'block' }, {
+                        x: 200, y: 600, w: 100, h: 400, type: 'block', f: function () {
+                            if (player.y > 600 && !this.l) {
+                                this.d = true;
+                            }
+                            if (player.x < 500 && !this.d) {
+                                this.l = true;
+                            }
+                            if (this.l) {
+                                this.w = 200 * Math.max(0, Math.min(1, (player.x - 300) / 100));
+                            } else {
+                                this.w = 200;
+                            }
+                        }
+                    }, {
+                        x: 500, y: 700, w: 200, h: 50, type: 'block', collide: true, f: function () {
+                            if (player.x < 500 && !this.d) {
+                                this.l = true;
+                            }
+                            if (player.y > 600 && !this.l) {
+                                this.d = true;
+                            }
+                            if (player.y == 660 && !this.l) {
+                                this.dd = true;
+                            }
+                            if (this.dd) {
+                                this.w = 400;
+                                this.x = 300;
+                            } else if (this.d) {
+                                var n = Math.max(0, Math.min(1, (player.y - 600) / 80));
+                                this.w = 400 * n;
+                                this.x = 700 - 400 * n;
+                            } else {
+                                this.w = 0;
+                                this.x = 700;
+                            }
+                        }
+                    }]
+                },
+                {
+                    x: -2, y: 0, blocks: [{ x: 500, y: 100, size: 50, text: 'Jump!', collide: false, type: 'text' }, { x: 700, y: 600, w: 300, h: 400, type: 'block' }, { x: 0, y: 650, w: 500, h: 49, type: 'lava' }, { x: 0, y: 699, w: 500, h: 1, type: 'lava', collide: false }, {
+                        x: 0, y: 350, w: 140, h: 350, type: 'block', f: function () {
+                            var n = Math.max(0, 260 - player.x);
+                            if (player.y > 650) {
+                                n = 0;
+                            }
+                            this.h = 350 + n;
+                            this.y = 350 - n;
+                        }
+                    }, { x: 300, y: 450, w: 80, h: 250, type: 'block' }, {
+                        x: 540, y: 650, w: 160, h: 50, type: 'lava', collide: false, f: function () {
+                            if (player.x > 500) {
+                                this.w = 160 * (1 - Math.max(0, player.y - 560) / 100);
+                            }
+                        }
+                    }, { x: 0, y: 800, w: 800, h: 200, type: 'block' }, {
+                        x: 0, y: 700, w: 800, h: 100, type: 'block', collide: false, f: function () {
+                            this.w = 800 * (1 - Math.max(0, player.y - 600) / 100);
+                        }
+                    }, { x: 500, y: 550, w: 80, h: 150, type: 'block' }]
+                },
+                {
+                    x: -3, y: 0, blocks: [{ x: 500, y: 100, size: 50, text: 'The path is obvious:', collide: false, type: 'text' }, { x: 0, y: 950, w: 1000, h: 50, type: 'lava' }, { x: 0, y: 400, w: 50, h: 600, type: 'block' }, { x: 800, y: 800, w: 200, h: 200, type: 'block' }, { x: 550, y: 750, w: 80, h: 20, type: 'block' }, { x: 300, y: 650, w: 80, h: 20, type: 'block' }, { x: 290, y: 630, w: 10, h: 40, type: 'block' }, { x: 400, y: 550, w: 80, h: 20, type: 'block' }, { x: 0, y: 450, w: 300, h: 20, type: 'block' }, { x: 460, y: 380, w: 80, h: 20, type: 'block' }, { x: 560, y: 280, w: 80, h: 20, type: 'block' }, { x: 600, y: 180, w: 40, h: 120, type: 'block' }, { x: 600, y: 180, w: 340, h: 20, type: 'block' }, { x: 900, y: 100, w: 40, h: 80, type: 'block' }, { x: 940, y: 0, w: 40, h: 120, type: 'block' }, { x: 960, y: 300, w: 40, h: 400, type: 'block' }, {
+                        x: 0, y: 1000, w: 800, h: 90, type: 'block', f: function () {
+                            this.y = Math.max(2600 - player.y * 2, 910)
+                        }
+                    }, {
+                        x: 320, y: 900, size: 40, text: "The stakes aren't that high...", type: 'text', f: function () {
+                            this.y = Math.max(2580 - player.y * 2, 900)
+                        }
+                    }]
+                },
+                { x: -3, y: -1, blocks: [{ x: 0, y: 0, w: 1000, h: 960, type: 'lava' }, { x: 500, y: 500, type: 'text', size: 50, text: 'I thought you would know better by now.' }] },
+                { x: -4, y: 0, blocks: [{ x: 500, y: 100, size: 50, text: "Don't worry, this level's easy.", collide: false, type: 'text' }, { x: 900, y: 450, w: 100, h: 550, type: 'lava' }, { x: 900, y: 800, w: 200, h: 200, type: 'lava' }, { x: 800, y: 400, w: 200, h: 50, type: 'block' }, { x: 550, y: 250, w: 50, h: 75, type: 'block' }, { x: 0, y: 950, w: 1000, h: 50, type: 'lava' }, { x: 800, y: 300, w: 50, h: 100, type: 'block' }, { x: 890, y: 450, w: 10, h: 50, type: 'block' }, { x: 750, y: 200, w: 50, h: 150, type: 'block' }, { x: 0, y: 200, w: 600, h: 50, type: 'block' }, { x: 0, y: 0, w: 50, h: 0, type: 'lava', f: function () { if (player.y < 200) { this.h = Math.min(Math.max(0, (250 - player.x) * 2), 200) } } }, { x: 160, y: -100, size: 30, text: 'Not that easy', type: 'text', f: function () { if (player.y < 200) { this.y = Math.min(Math.max(0, (250 - player.x) * 2), 200) - 160 } } }, { x: 700, y: 800, w: 50, h: 10, type: 'block' }, { x: 350, y: 800, w: 100, h: 50, type: 'block' }, { x: 0, y: 900, w: 250, h: 50, type: 'block' }, { x: 0, y: 250, w: 50, h: 500, type: 'block' }, { x: 450, y: 700, w: 100, h: 10, type: 'block', iRadius: 150 }, { x: 500, y: 600, w: 50, h: 10, type: 'block', iRadius: 150 }, { x: 450, y: 500, w: 50, h: 10, type: 'block', iRadius: 150 }, { x: 300, y: 400, w: 50, h: 450, type: 'lava', iRadius: 150 }, { x: 550, y: 250, w: 50, h: 500, type: 'block', iRadius: 150 }, { x: 550, y: 750, w: 249.9, h: 50, type: 'lava', iRadius: 150 }, { x: 750, y: 550, w: 50, h: 200, type: 'block', iRadius: 150 }, { x: 750, y: 500, w: 75, h: 50, type: 'block', iRadius: 130 }, { x: 450, y: 900, w: 250, h: 50, type: 'block', iRadius: 150 }, { x: 750, y: 900, w: 150, h: 50, type: 'block', iRadius: 150 }, { x: 200, y: 399.9, w: 250, h: 10, type: 'block', iRadius: 150 }, { x: 50, y: 500, w: 100, h: 10, type: 'block', iRadius: 150 }, { x: 150, y: 600, w: 150, h: 10, type: 'block', iRadius: 150 }, { x: 50, y: 700, w: 100, h: 10, type: 'block', iRadius: 150 }, { x: 150, y: 800, w: 150, h: 10, type: 'block', iRadius: 150 }, { x: 670, y: 730, size: 30, text: ':P', type: 'text', iRadius: 130 }, { x: 670, y: 450, size: 30, text: 'Go left', type: 'text', iRadius: 150 }] },
+                {
+                    x: -5, y: 0, p: false, f: function () {
+                        if (player.x < 900 && player.y > 850 && !game.playerDead && this.p === false) {
+                            this.p = 1;
+                        }
+                        if (this.p !== false) {
+                            this.p++;
+                        }
+                        if (player.x < 900 && this.p !== false) {
+                            this.p = Math.max((800 - player.x) / 1.5, this.p);
+                        }
+                    }, blocks: [{ x: 900, y: 900, w: 100, h: 100, type: 'block' }, { x: 0, y: 910, w: 800, h: 90, type: 'block' }, { x: 890, y: 790, w: 10, h: 210, type: 'block' }, { x: 800, y: 650, w: 10, h: 200, type: 'block' }, {
+                        x: 0, y: 0, w: 1000, h: 0, type: 'lava', f: function () {
+                            if (game.currentLevel.p !== false) {
+                                this.h = game.currentLevel.p * 2 - 150;
+                                this.h = Math.min(900, this.h);
+                                this.h = Math.min(player.y, this.h);
+                            }
+                        }
+                    }, {
+                        x: -500, y: 100, text: 'RUN!!!', size: 100, type: 'text', f: function () {
+                            if (game.currentLevel.p !== false) {
+                                this.x = game.currentLevel.p * 20;
+                                this.x = Math.min(500, this.x - 500);
+                            }
+                        }
+                    }, {
+                        x: 800, y: 910, w: 90, h: 100, type: 'block', l: false, f: function () {
+                            if (player.x < 700) {
+                                this.l = true;
+                            }
+                            if (game.currentLevel.p !== false && !this.l) {
+                                this.y = 910 + Math.max(0, game.currentLevel.p * 2 - 900);
+                            }
+                        }
+                    }]
+                },
+                {
+                    x: -5, y: 1, f: function () {
+                        if (player.y > 850) {
+                            game.switchKeys = true;
+                        }
+                    }, blocks: [{ x: 400, y: 70, type: 'text', text: 'No tricks here ;)', size: 50 }, { x: 790, y: 0, w: 10, h: 800, type: 'block' }, { x: 900, y: 0, w: 100, h: 900, type: 'block' }, { x: 0, y: 900, w: 1000, h: 100, type: 'block' }, { x: 0, y: 300, w: 100, h: 600, type: 'lava' }, { x: 700, y: 800, w: 100, h: 10, type: 'block' }, { x: 500, y: 700, w: 100, h: 10, type: 'block' }, { x: 100, y: 650, w: 200, h: 10, type: 'block' }, { x: 450, y: 550, w: 100, h: 10, type: 'block' }, { x: 700, y: 500, w: 40, h: 10, type: 'block' }, { x: 500, y: 400, w: 100, h: 10, type: 'block' }, { x: 200, y: 300, w: 100, h: 10, type: 'block' }]
+                },
+                {
+                    x: -6, y: 1, f: function () {
+                        game.won = true;
+                    }, blocks: [{ x: 0, y: 900, w: 1000, h: 100, type: 'block' }, { x: 1019, y: 0, w: 10, h: 1000, type: 'block' }, { x: 500, y: 150, type: 'text', size: 100, text: 'You Lose!' }, { x: 500, y: 250, type: 'text', size: 60, text: 'Congratulations!' }, { x: 500, y: 500, type: 'text', size: 50, text: "I hope you didn't like this game." }, { x: 500, y: 800, type: 'text', size: 50, text: 'Not by John Butler.' }, { x: 0, y: 0, w: 10, h: 900, type: 'lava' }]
+                },
+                {
+                    x: 2, y: 0, f: function () {
+                        if (player.x < -15 && player.xmove < 0) {
+                            player.x = 979;
+                            game.levelX = 0;
+                            game.refreshLevel();
+                        }
+                    }, blocks: [{ x: 0, y: 850, w: 500, h: 150, type: 'block' }, { x: 500, y: 800, w: 500, h: 200, type: 'block' }, { x: 500, y: 200, size: 100, text: 'The Land Of Illusion', type: 'text' }, { x: 500, y: 400, text: '(Not bonus levels)', size: 50, type: 'text' }]
+                },
+                {
+                    x: 3, y: 0, f: function () {
+                        if (player.x > 800) {
+                            game.levelX = 4;
+                            game.refreshLevel();
+                        }
+                    }, blocks: [{ x: 0, y: 800, w: 950, h: 200, type: 'block', iRadius: 150 }, { x: 300, y: 750, size: 50, text: 'Your Choice:', type: 'text', iRadius: 150 }, { x: 450, y: 750, w: 500, h: 50, type: 'block', iRadius: 150 }, { x: 550, y: 650, w: 400, h: 50, type: 'block', iRadius: 150 }, { x: 600, y: 550, w: 350, h: 50, type: 'block', iRadius: 150 }, { x: 600, y: 0, w: 350, h: 500, type: 'block', iRadius: 150 }, { x: 950, y: 0, w: 50, h: 1000, type: 'block', iRadius: 150 }]
+                },
+                {
+                    x: 4, y: 0, f: function () {
+                        if (player.x < 200) {
+                            game.levelX = 5;
+                            game.refreshLevel();
+                        }
+                    }, blocks: [{ x: 50, y: 800, w: 900, h: 200, type: 'block', iRadius: 150 }, { x: 50, y: 750, w: 900, h: 50, type: 'block', iRadius: 150 }, { x: 50, y: 650, w: 900, h: 50, type: 'block', iRadius: 150 }, { x: 50, y: 550, w: 900, h: 50, type: 'block', iRadius: 150 }, { x: 50, y: 0, w: 900, h: 500, type: 'block', iRadius: 150 }, { x: 950, y: 0, w: 50, h: 1000, type: 'block', iRadius: 150 }, { x: 0, y: 0, w: 50, h: 1000, type: 'block', iRadius: 150 }]
+                },
+                { x: 5, y: 0, blocks: [{ x: 0, y: 0, w: 50, h: 1000, type: 'block', iRadius: 150 }, { x: 50, y: 800, w: 950, h: 200, type: 'block', iRadius: 150 }, { x: 50, y: 750, w: 500, h: 50, type: 'block', iRadius: 150 }, { x: 50, y: 650, w: 500, h: 50, type: 'block', iRadius: 150 }, { x: 50, y: 550, w: 500, h: 50, type: 'block', iRadius: 150 }, { x: 50, y: 0, w: 500, h: 500, type: 'block', iRadius: 150 }, { x: 800, y: 700, size: 50, text: 'And this is just', type: 'text', iRadius: 150 }, { x: 800, y: 750, size: 50, text: 'the beginning...', type: 'text', iRadius: 150 }] },
+                { x: 6, y: 0, blocks: [{ x: 500, y: 200, size: 50, type: 'text', text: 'Behold, the mountain' }, { x: 500, y: 250, size: 50, type: 'text', text: 'of persistence:' }, { x: 0, y: 800, w: 1000, h: 200, type: 'block' }, { x: 900, y: 700, w: 100, h: 100, type: 'block' }] },
+                {
+                    x: 7, y: 0, f: function () {
+                        if (player.x < -15 && player.xmove < 0) {
+                            game.levelX = 8;
+                            game.levelY = 2;
+                            player.x = 970;
+                            game.refreshLevel();
+                        }
+                    }, blocks: [{ x: 0, y: 700, w: 100, h: 300, type: 'block' }, { x: 100, y: 600, w: 100, h: 400, type: 'block' }, { x: 200, y: 500, w: 100, h: 500, type: 'block' }, { x: 300, y: 400, w: 100, h: 600, type: 'block' }, { x: 400, y: 300, w: 100, h: 700, type: 'block' }, { x: 500, y: 200, w: 100, h: 800, type: 'block' }, { x: 600, y: 100, w: 100, h: 900, type: 'block' }, { x: 700, y: 0, w: 300, h: 1000, type: 'block' }]
+                },
+                {
+                    x: 7, y: -1, f: function () {
+                        if (player.x > 970) {
+                            game.levelY = 0;
+                            player.x = -19;
+                            game.refreshLevel();
+                        }
+                    }, blocks: [{ x: 700, y: 998, w: 100, h: 2, type: 'block' }, { x: 800, y: 900, w: 100, h: 100, type: 'block' }, { x: 900, y: 800, w: 100, h: 200, type: 'block' }, { x: 998, y: 700, w: 2, h: 300, type: 'block' }]
+                },
+                {
+                    x: 8, y: 2, f: function () {
+                        if (player.x > 975 && player.xmove > 0) {
+                            player.x = -19;
+                            game.levelX = 7;
+                            game.levelY = 0;
+                            game.refreshLevel();
+                        }
+                    }, blocks: [{ x: 0, y: 700, w: 1000, h: 300, type: 'block' }, { x: 500, y: 200, size: 50, type: 'text', text: 'How long were you going to climb?' }]
+                },
+                {
+                    x: 7, y: 2, blocks: [{ x: 0, y: 700, w: 400, h: 300, type: 'block' }, { x: 600, y: 700, w: 400, h: 300, type: 'block' }, { x: 500, y: 200, size: 50, type: 'text', text: '2 truths and a lie:' }, {
+                        x: 0, y: 0, w: 50, h: 0, type: 'lava', f: function () {
+                            this.h = Math.min(700, (150 - player.x) * 10);
+                        }
+                    }, {
+                        x: 120, y: 0, size: 50, text: 'No.', type: 'text', f: function () {
+                            this.y = Math.min(700, (150 - player.x) * 10) - 300;
+                        }
+                    }]
+                },
+                { x: 7, y: 3, blocks: [{ x: 0, y: 0, w: 400, h: 300, type: 'block' }, { x: 600, y: 0, w: 400, h: 300, type: 'block' }, { x: 400, y: 500, w: 200, h: 100, type: 'block' }, { x: 0, y: 300, w: 50, h: 350, type: 'block' }, { x: 0, y: 650, w: 450, h: 50, type: 'block' }, { x: 950, y: 300, w: 50, h: 350, type: 'lava' }, { x: 550, y: 650, w: 450, h: 50, type: 'lava' }, { x: 0, y: 700, w: 400, h: 300, type: 'block' }, { x: 600, y: 700, w: 400, h: 300, type: 'block' }] },
+                { x: 7, y: 4, blocks: [{ x: 0, y: 0, w: 400, h: 300, type: 'block' }, { x: 600, y: 0, w: 400, h: 300, type: 'block' }, { x: 400, y: 500, w: 200, h: 100, type: 'block' }, { x: 0, y: 300, w: 50, h: 350, type: 'lava' }, { x: 0, y: 650, w: 450, h: 50, type: 'lava' }, { x: 950, y: 300, w: 50, h: 350, type: 'block' }, { x: 550, y: 650, w: 450, h: 50, type: 'block' }, { x: 0, y: 700, w: 400, h: 300, type: 'block' }, { x: 600, y: 700, w: 400, h: 300, type: 'block' }] },
+                { x: 7, y: 5, blocks: [{ x: 0, y: 0, w: 400, h: 300, type: 'block' }, { x: 600, y: 0, w: 400, h: 300, type: 'block' }, { x: 400, y: 500, w: 200, h: 100, type: 'block' }, { x: 0, y: 300, w: 50, h: 350, type: 'lava', sRadius: 100 }, { x: 0, y: 650, w: 450, h: 50, type: 'lava', sRadius: 100 }, { x: 950, y: 300, w: 50, h: 350, type: 'block', sRadius: 100 }, { x: 550, y: 650, w: 450, h: 50, type: 'block', sRadius: 100 }, { x: 0, y: 700, w: 400, h: 300, type: 'block' }, { x: 600, y: 700, w: 400, h: 300, type: 'block' }] },
+                { x: 7, y: 6, blocks: [{ x: 0, y: 700, w: 1000, h: 300, type: 'block' }, { x: 0, y: 0, w: 50, h: 700, type: 'block' }, { x: 800, y: 0, w: 200, h: 500, type: 'block' }, { x: 400, y: 600, size: 50, type: 'text', text: 'The Caves of Deception:' }, { x: 800, y: 500, w: 200, h: 200, type: 'block', fRadius: 150, collide: false }] },
+                {
+                    x: 8, y: 6, f: function () {
+                        if (player.x > 800) {
+                            game.levelX = 9;
+                            game.refreshLevel();
+                        }
+                    }, blocks: [{ x: 0, y: 0, w: 1000, h: 1000, type: 'block', collide: false, fRadius: 150 }, { x: 0, y: 700, w: 1000, h: 300, type: 'block' }, { x: 0, y: 300, w: 1000, h: 200, type: 'block' }, { x: 950, y: 500, w: 50, h: 200, type: 'block' }]
+                },
+                {
+                    x: 9, y: 6, f: function () {
+                        if (player.x < 200) {
+                            game.levelX = 10;
+                            game.refreshLevel();
+                        }
+                    }, blocks: [{ x: 0, y: 0, w: 1000, h: 1000, type: 'block', collide: false, fRadius: 150 }, { x: 0, y: 700, w: 1000, h: 300, type: 'block' }, { x: 0, y: 300, w: 1000, h: 200, type: 'block' }, { x: 950, y: 500, w: 50, h: 200, type: 'block' }, { x: 0, y: 500, w: 50, h: 200, type: 'block' }]
+                },
+                {
+                    x: 10, y: 6, f: function () {
+                        if (player.x > 800 && player.y < 500) {
+                            game.levelX = 11;
+                            game.refreshLevel();
+                        }
+                    }, blocks: [{ x: 0, y: 0, w: 1000, h: 1000, type: 'block', collide: false, fRadius: 150 }, { x: 0, y: 700, w: 1000, h: 300, type: 'block' }, { x: 0, y: 300, w: 400, h: 200, type: 'block' }, { x: 950, y: 0, w: 50, h: 700, type: 'block' }, { x: 0, y: 500, w: 50, h: 200, type: 'block' }, { x: 450, y: 600, w: 100, h: 100, type: 'block' }, { x: 550, y: 500, w: 500, h: 10, type: 'block' }]
+                },
+                {
+                    x: 11, y: 6, f: function () {
+                        if (player.x > 500 && player.y < 100) {
+                            game.levelX = 12;
+                            game.refreshLevel();
+                        }
+                    }, blocks: [{ x: 0, y: 0, w: 1000, h: 10, type: 'block' }, { x: 0, y: 0, w: 1000, h: 1000, type: 'block', collide: false, fRadius: 150 }, { x: 0, y: 700, w: 1000, h: 300, type: 'block' }, { x: 950, y: 0, w: 50, h: 700, type: 'block' }, { x: 0, y: 0, w: 50, h: 700, type: 'block' }, { x: 0, y: 500, w: 1000, h: 10, type: 'block' }, { x: 200, y: 100, w: 50, h: 300, type: 'block' }, { x: 50, y: 400, w: 50, h: 10, type: 'block' }, { x: 150, y: 300, w: 50, h: 10, type: 'block' }, { x: 50, y: 200, w: 50, h: 10, type: 'block' }, { x: 150, y: 100, w: 700, h: 10, type: 'block' }]
+                },
+                {
+                    x: 12, y: 6, f: function () {
+                        if (player.x > 235 && player.x < 400 && player.y < 300 && player.y > 100) {
+                            game.levelX = 13;
+                            game.refreshLevel();
+                        }
+                    }, blocks: [{ x: 0, y: 0, w: 1000, h: 1000, type: 'block', collide: false, fRadius: 150 }, { x: 0, y: 0, w: 10, h: 1000, type: 'block' }, { x: 0, y: 100, w: 900, h: 10, type: 'block' }, { x: 900, y: 100, w: 10, h: 800, type: 'block' }, { x: 990, y: 0, w: 10, h: 1000, type: 'block' }, { x: 0, y: 990, w: 1000, h: 10, type: 'block' }, { x: 0, y: 0, w: 1000, h: 10, type: 'block' }, { x: 100, y: 900, w: 810, h: 10, type: 'block' }, { x: 0, y: 800, w: 810, h: 10, type: 'block' }, { x: 100, y: 700, w: 810, h: 10, type: 'block' }, { x: 0, y: 600, w: 810, h: 10, type: 'block' }, { x: 100, y: 500, w: 810, h: 10, type: 'block' }, { x: 0, y: 400, w: 810, h: 10, type: 'block' }, { x: 100, y: 300, w: 810, h: 10, type: 'block' }]
+                },
+                { x: 13, y: 6, blocks: [{ x: 0, y: 0, w: 1000, h: 1000, type: 'block', collide: false, fRadius: 150 }, { x: 0, y: 300, w: 400, h: 10, type: 'block' }, { x: 600, y: 300, w: 400, h: 10, type: 'block' }, { x: 0, y: 0, w: 10, h: 1000, type: 'block' }, { x: 0, y: 400, w: 400, h: 10, type: 'block' }, { x: 600, y: 400, w: 400, h: 10, type: 'block' }, { x: 990, y: 0, w: 10, h: 1000, type: 'block' }, { x: 400, y: 300, w: 10, h: 700, type: 'block' }, { x: 600, y: 300, w: 10, h: 700, type: 'block' }, { x: 0, y: 100, w: 1000, h: 10, type: 'block' }] },
+                { x: 13, y: 7, blocks: [{ x: 0, y: 700, w: 1000, h: 300, type: 'block' }, { x: 0, y: 0, w: 10, h: 700, type: 'lava' }, { x: 990, y: 0, w: 10, h: 700, type: 'lava' }, { x: 500, y: 150, type: 'text', size: 100, text: 'You Lose!' }, { x: 500, y: 250, type: 'text', size: 60, text: 'Congratulations!' }, { x: 500, y: 500, type: 'text', size: 50, text: "I hope you hated these bonus levels." }, { x: 500, y: 600, type: 'text', size: 50, text: 'Not by John Butler.' }] }
+            ]
+        }
+
+        var player = {
+            x: 0,
+            y: 0,
+            w: 40,
+            h: 40,
+            xmove: 0,
+            ymove: 0,
+            resting: false,
+            moved: false,
+            die: function () {
+                if (game.playerDead) return;
+                game.playerDead = true;
+                game.respawnTime = 150;
+                var n = 0;
+                while (n < 20) {
+                    var particle = {};
+                    particle.x = this.x + this.w / 2 - 5 + Math.random() * 10 - 5;
+                    particle.y = this.y + this.h / 2 - 5 + Math.random() * 10 - 5;
+                    particle.w = 10;
+                    particle.h = 10;
+                    particle.color = 'blue';
+                    particle.alpha = 2;
+                    particle.decay = 0.08 - Math.random() / 20;
+                    particle.xmove = Math.random() * 30 - 15;
+                    particle.ymove = Math.random() * 30 - 20;
+                    particles.particles.push(particle);
+                    n++;
+                }
+                var n = 0;
+                while (n < 2) {
+                    var particle = {};
+                    particle.x = this.x + this.w / 2;
+                    particle.y = this.y + this.h / 2;
+                    particle.r = 5;
+                    particle.w = 10;
+                    particle.h = 10;
+                    particle.color = 'black';
+                    particle.shape = 'circle';
+                    particle.alpha = 150;
+                    particle.decay = 1;
+                    particle.xmove = Math.random() * 7.5 * (n * 2 - 1);
+                    particle.ymove = Math.random() * 15 - 10;
+                    particles.particles.push(particle);
+                    n++;
+                }
+            },
+            update: function () {
+                var n = 0;
+                while (n < game.currentLevel.blocks.length) {
+                    var b = game.currentLevel.blocks[n];
+                    if (b.collide && b.type == 'lava') {
+                        if (blocksCollidingEdge(this, b)) {
+                            player.die();
+                        }
+                    }
+                    n++;
+                }
+                //check for lava collisions
+
+                this.ymove += 0.08;
+                if (Keys.keys[37] || Keys.keys[65]) {
+                    if (game.switchKeys) {
+                        this.xmove += 0.15;
+                    } else {
+                        this.xmove -= 0.15;
+                    }
+                    this.moved = true;
+                }
+                if (Keys.keys[39] || Keys.keys[68]) {
+                    if (game.switchKeys) {
+                        this.xmove -= 0.15;
+                    } else {
+                        this.xmove += 0.15;
+                    }
+                    this.moved = true;
+                }
+
+                updateBlock(this, game.currentLevel.blocks);
+                //physics
+
+                this.resting = false;
+                var n = 0;
+                while (n < game.currentLevel.blocks.length) {
+                    var b = game.currentLevel.blocks[n];
+                    if (blocksCollidingEdge(this, b) && b.collide) {
+                        if (this.x >= b.x + b.w || this.x + this.w <= b.x) {
+                            this.xmove = 0;
+                        }
+                        if (this.y + this.h <= b.y) {
+                            if (this.x < b.x + b.w && this.x + this.w > b.x) {
+                                this.resting = true;
+                            }
+                        } else if (this.x < b.x + b.w && this.x + this.w > b.x) {
+                            this.ymove = 1 / 10000;
+                        }
+                    }
+                    n++;
+                }
+                if (this.resting) {
+                    this.ymove = 0;
+                    if (game.switchKeys) {
+                        if (Keys.keys[40] || Keys.keys[83]) {
+                            this.ymove = -6;
+                            this.moved = true;
+                        }
+                    } else {
+                        if (Keys.keys[38] || Keys.keys[87]) {
+                            this.ymove = -6;
+                            this.moved = true;
+                        }
+                    }
+                }
+                //calculate player move
+
+                this.xmove *= 0.96;
+                this.ymove *= 0.98;
+                //dampen
+
+                if (this.x < -this.w / 2) {
+                    this.x += 1000;
+                    game.levelX--;
+                    game.refreshLevel();
+                }
+                if (this.x > 1000 - this.w / 2) {
+                    this.x -= 1000;
+                    game.levelX++;
+                    game.refreshLevel();
+                }
+                if (this.y < -this.h / 2) {
+                    this.y += 1000;
+                    game.levelY--;
+                    game.refreshLevel();
+                }
+                if (this.y > 1000 - this.h / 2) {
+                    this.y -= 1000;
+                    game.levelY++;
+                    game.refreshLevel();
+                }
+                //move player through level walls
+            },
+            draw: function () {
+                ctx.fillStyle = 'blue';
+                ctx.fillRect(this.x, this.y, this.w, this.h);
+                //draw block
+
+                ctx.fillStyle = 'black';
+                var dir = dirTo(0, 0, this.xmove, this.ymove);
+                var speed = distTo(0, 0, this.xmove, this.ymove);
+                speed = Math.min(speed, 5);
+                var move = distToMove(speed, dir);
+                ctx.beginPath();
+                ctx.arc(move.x * 1.5 + this.x + this.w / 2 - 7, move.y * 2 + this.y + this.h / 2 - 7, 3.7, 0, 2 * Math.PI);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(move.x * 1.5 + this.x + this.w / 2 + 7, move.y * 2 + this.y + this.h / 2 - 7, 3.7, 0, 2 * Math.PI);
+                ctx.fill();
+                //draw eyes
+            }
+        }
+
+        var particles = {
+            particles: [],
+            update: function () {
+                var n = 0;
+                while (n < this.particles.length) {
+                    var p = this.particles[n];
+                    p.angle += p.turn;
+                    p.ymove += 0.08;
+                    p.xmove *= 0.96;
+                    p.ymove *= 0.98;
+                    p.alpha -= p.decay;
+                    updateBlock(p, game.currentLevel.blocks);
+                    if (p.alpha <= 0) {
+                        this.particles.splice(n, 1);
+                    } else {
+                        n++;
+                    }
+                }
+            },
+            draw: function () {
+                var n = 0;
+                while (n < this.particles.length) {
+                    var p = this.particles[n];
+                    ctx.fillStyle = p.color;
+                    ctx.globalAlpha = Math.min(p.alpha, 1);
+                    if (p.shape == 'circle') {
+                        ctx.beginPath();
+                        ctx.arc(p.x + p.r, p.y + p.r, p.r, 0, 2 * Math.PI);
+                        ctx.fill();
+                    } else {
+                        ctx.fillRect(p.x, p.y, p.w, p.h);
+                    }
+                    n++;
+                }
+                ctx.globalAlpha = 1;
+            }
+        }
+
+        function updateBlock(block, staticBlocks) {
+            block.x += block.xmove;
+            var n = 0;
+            while (n < staticBlocks.length) {
+                var b = staticBlocks[n];
+                if (blocksColliding(block, b) && b.collide) {
+                    if (block.x + block.w / 2 < b.x + b.w / 2) {
+                        block.x = b.x - block.w;
+                    } else {
+                        block.x = b.x + b.w;
+                    }
+                }
+                n++;
+            }
+            //resolve x collisions
+
+            block.y += block.ymove;
+            var n = 0;
+            while (n < staticBlocks.length) {
+                var b = staticBlocks[n];
+                if (blocksColliding(block, b) && b.collide) {
+                    if (block.y + block.h / 2 < b.y + b.h / 2) {
+                        block.y = b.y - block.h;
+                    } else {
+                        block.y = b.y + b.h;
+                    }
+                }
+                n++;
+            }
+            //resolve y collisions
+        }
+
+        game.reset();
+
+        var timer = 0;
+    </script>
+    <script>
+        // Configuration object
+        var config = {
+            yMoveIncrement: 0.08,
+            xMoveIncrement: 0.15,
+            xMoveDamping: 0.96,
+            yMoveDamping: 0.98,
+            yMoveRestingJump: -6,
+            edgeYMove: 1 / 10000,
+            levelWidth: 1000,
+            levelHeight: 1000,
+            levelOffset: 0.5,
+            fastDescendMultiplier: 0, // New configuration for fast descending
+            gravityDirection: 1 // 1 for down, -1 for up
+        };
+
+        function modifyPlayerDraw() {
+            if (typeof player !== 'undefined' && typeof player.draw === 'function') {
+                player.draw = function () {
+                    ctx.fillStyle = 'rgb(255,0,0)';
+                    ctx.fillRect(this.x, this.y, this.w, this.h);
+
+                    ctx.save();
+                    ctx.translate(this.x, this.y);
+                    ctx.scale(this.w / 40, this.h / 40);
+                    ctx.fillStyle = "black";
+                    ctx.beginPath();
+                    ctx.lineTo(34, 0);
+                    ctx.lineTo(40, 0);
+                    ctx.lineTo(36, 7);
+                    ctx.lineTo(40, 7);
+                    ctx.lineTo(36, 15);
+                    ctx.lineTo(36, 10);
+                    ctx.lineTo(32, 10);
+                    ctx.closePath();
+                    ctx.fill();
+                    ctx.restore();
+                    // Draw the lightning thing
+
+                    // Draw the original black fill
+                    ctx.fillStyle = 'rgb(0,0,0)';
+                    var dir = dirTo(0, 0, this.xmove, this.ymove);
+                    var speed = distTo(0, 0, this.xmove, this.ymove);
+                    speed = Math.min(speed, 5);
+                    var move = distToMove(speed, dir);
+
+                    ctx.beginPath();
+                    ctx.arc(move.x * 1.5 + this.x + this.w / 2 - 7, move.y * 2 + this.y + this.h / 2 - 7, 3.7, 0, 2 * Math.PI);
+                    ctx.fill();
+                    ctx.beginPath();
+                    ctx.arc(move.x * 1.5 + this.x + this.w / 2 + 7, move.y * 2 + this.y + this.h / 2 - 7, 3.7, 0, 2 * Math.PI);
+                    ctx.fill();
+                };
+                console.log("Player's draw method modified.");
+            } else {
+                console.log("Player object or draw method not found.");
+            }
+        }
+
+        // Player update function
+        player.update = function () {
+            var n = 0;
+            while (n < game.currentLevel.blocks.length) {
+                var b = game.currentLevel.blocks[n];
+                if (b.collide && b.type == 'lava') {
+                    if (blocksCollidingEdge(this, b)) {
+                        player.die();
+                    }
+                }
+                n++;
+            }
+            // Check for lava collisions
+
+            this.ymove += config.yMoveIncrement * config.gravityDirection;
+            if (Keys.keys[37] || Keys.keys[65]) {
+                if (game.switchKeys) {
+                    this.xmove += config.xMoveIncrement;
+                } else {
+                    this.xmove -= config.xMoveIncrement;
+                }
+                this.moved = true;
+            }
+            if (Keys.keys[39] || Keys.keys[68]) {
+                if (game.switchKeys) {
+                    this.xmove -= config.xMoveIncrement;
+                } else {
+                    this.xmove += config.xMoveIncrement;
+                }
+                this.moved = true;
+            }
+
+            updateBlock(this, game.currentLevel.blocks);
+            // Physics
+
+            this.resting = false;
+            this.wallJumpLeft = false;
+            this.wallJumpRight = false;
+            var n = 0;
+            while (n < game.currentLevel.blocks.length) {
+                var b = game.currentLevel.blocks[n];
+                if (blocksCollidingEdge(this, b) && b.collide) {
+                    if (this.x >= b.x + b.w || this.x + this.w <= b.x) {
+                        this.xmove = 0;
+                    }
+                    if (this.y + this.h <= b.y) {
+                        if (this.x < b.x + b.w && this.x + this.w > b.x) {
+                            this.resting = true;
+                        }
+                    } else if (this.x < b.x + b.w && this.x + this.w > b.x) {
+                        this.ymove = 1 / 10000;
+                    }
+                    if (this.x + this.w == b.x) {
+                        this.wallJumpLeft = true;
+                    }
+                    if (this.x == b.x + b.w) {
+                        this.wallJumpRight = true;
+                    }
+                }
+                n++;
+            }
+
+            // Wall jump logic
+            if (config.wallJumpEnabled && (this.wallJumpLeft || this.wallJumpRight)) {
+                if (Keys.keys[38] || Keys.keys[87]) { // Jump key pressed
+                    this.ymove = -5; // Apply upward impulse
+                    if (this.wallJumpLeft) {
+                        this.xmove = -3; // Apply force to the left for wall jump left
+                    } else if (this.wallJumpRight) {
+                        this.xmove = 3; // Apply force to the right for wall jump right
+                    }
+                }
+            }
+
+            if (this.resting) {
+                this.ymove = 0;
+                if (game.switchKeys) {
+                    if (Keys.keys[40] || Keys.keys[83]) {
+                        this.ymove = config.yMoveRestingJump * config.gravityDirection;
+                        this.moved = true;
+                    }
+                } else {
+                    if (Keys.keys[38] || Keys.keys[87]) {
+                        this.ymove = config.yMoveRestingJump * config.gravityDirection;
+                        this.moved = true;
+                    }
+                }
+            }
+
+            // Fast descend (or ascend if gravity is reversed) when holding down (or up if switchKeys is active)
+            if (game.switchKeys) {
+                if (Keys.keys[38] || Keys.keys[87]) {
+                    this.ymove += config.yMoveIncrement * config.fastDescendMultiplier * config.gravityDirection;
+                }
+            } else {
+                if (Keys.keys[40] || Keys.keys[83]) {
+                    this.ymove += config.yMoveIncrement * config.fastDescendMultiplier * config.gravityDirection;
+                }
+            }
+
+            // Calculate player move
+
+            this.xmove *= config.xMoveDamping;
+            this.ymove *= config.yMoveDamping;
+            // Dampen
+
+            if (this.x < -this.w * config.levelOffset) {
+                this.x += config.levelWidth;
+                game.levelX--;
+                game.refreshLevel();
+            }
+            if (this.x > config.levelWidth - this.w * config.levelOffset) {
+                this.x -= config.levelWidth;
+                game.levelX++;
+                game.refreshLevel();
+            }
+            if (this.y < -this.h * config.levelOffset) {
+                this.y += config.levelHeight;
+                game.levelY--;
+                game.refreshLevel();
+            }
+            if (this.y > config.levelHeight - this.h * config.levelOffset) {
+                this.y -= config.levelHeight;
+                game.levelY++;
+                game.refreshLevel();
+            }
+            // Move player through level walls
+        }
+
+        var isFirstOpen = true;
+
+        function toggleDebugMenu() {
+            if (debugMenu.style.display == "none") {
+                debugMenu.style.display = "block"
+            } else {
+                debugMenu.style.display = "none";
+            }
+        }
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "`") {
+                toggleDebugMenu();
+                if (isFirstOpen) {
+                    modifyPlayerDraw();
+
+                    var welcomeBox = document.createElement("div");
+                    welcomeBox.style.backgroundColor = "#333"; // dark background
+                    welcomeBox.style.padding = "5px";
+                    welcomeBox.style.borderBottom = "1px solid #666"; // grey border
+                    welcomeBox.style.borderRadius = "5px";
+
+                    var logoImage = document.createElement("img");
+                    logoImage.src = "";
+                    logoImage.style.width = "20px";
+                    logoImage.style.height = "20px";
+                    logoImage.style.marginRight = "10px";
+                    welcomeBox.appendChild(logoImage);
+
+                    var welcomeText = document.createElement("span");
+                    welcomeText.textContent = "Script Made By ppougj";
+                    welcomeText.style.color = "#fff";
+                    welcomeText.style.fontSize = "14px";
+                    welcomeBox.appendChild(welcomeText);
+
+                    var closeButton = document.createElement("button");
+                    closeButton.textContent = "X";
+                    closeButton.style.float = "right";
+                    closeButton.style.fontSize = "12px";
+                    closeButton.style.padding = "5px";
+                    closeButton.style.border = "none";
+                    closeButton.style.backgroundColor = "#444";
+                    closeButton.style.color = "#fff";
+                    closeButton.style.cursor = "pointer";
+                    closeButton.addEventListener("click", function () {
+                        welcomeBox.style.display = "none";
+                    });
+                    welcomeBox.appendChild(closeButton);
+
+                    document.body.appendChild(welcomeBox);
+                    isFirstOpen = false;
+                }
+            }
+        });
+
+        // Add a container for the debug menu
+        var debugMenu = document.createElement("div");
+        debugMenu.style.position = "absolute";
+        debugMenu.style.top = "10px";
+        debugMenu.style.left = "10px";
+        debugMenu.style.fontSize = "16px";
+        debugMenu.style.color = "white";
+        debugMenu.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+        debugMenu.style.padding = "10px";
+        debugMenu.style.borderRadius = "5px";
+        debugMenu.style.display = "none"; // Initially hidden
+        debugMenu.style.resize = "both"; // Make resizable
+        debugMenu.style.overflow = "auto"; // Add overflow for resizing
+        document.body.appendChild(debugMenu);
+
+        // Add a header for the debug menu (for dragging)
+        var debugMenuHeader = document.createElement("div");
+        debugMenuHeader.style.cursor = "move";
+        debugMenuHeader.style.backgroundColor = "#333";
+        debugMenuHeader.style.color = "#fff";
+        debugMenuHeader.style.padding = "5px";
+        debugMenuHeader.style.fontWeight = "bold";
+        debugMenuHeader.textContent = "Debug Menu";
+        debugMenu.appendChild(debugMenuHeader);
+
+        // Add elements for various debug information
+        var positionTracker = document.createElement("div");
+        positionTracker.textContent = "Position: (X: 0.000, Y: 0.000)";
+        debugMenu.appendChild(positionTracker);
+
+        var velocityTracker = document.createElement("div");
+        velocityTracker.textContent = "Velocity: (X: 0.000, Y: 0.000)";
+        debugMenu.appendChild(velocityTracker);
+
+        var chunkTracker = document.createElement("div");
+        chunkTracker.textContent = "Chunk: (X: 0, Y: 0)";
+        debugMenu.appendChild(chunkTracker);
+
+        var fpsTracker = document.createElement("div");
+        fpsTracker.textContent = "FPS: 0";
+        debugMenu.appendChild(fpsTracker);
+
+        var gameTimeTracker = document.createElement("div");
+        gameTimeTracker.textContent = "Game Time: 0s";
+        debugMenu.appendChild(gameTimeTracker);
+
+        // Add a container for position inputs and button
+        var positionContainer = document.createElement("div");
+        positionContainer.style.marginTop = "10px";
+        debugMenu.appendChild(positionContainer);
+
+        // Input fields for setting position
+        var posXInput = document.createElement("input");
+        posXInput.type = "text";
+        posXInput.placeholder = "Enter X position";
+        positionContainer.appendChild(posXInput);
+
+        var posYInput = document.createElement("input");
+        posYInput.type = "text";
+        posYInput.placeholder = "Enter Y position";
+        positionContainer.appendChild(posYInput);
+
+        // Button to set position
+        var setPositionButton = document.createElement("button");
+        setPositionButton.textContent = "Set Position";
+        setPositionButton.addEventListener("click", function () {
+            var newX = parseFloat(posXInput.value);
+            var newY = parseFloat(posYInput.value);
+            if (!isNaN(newX) && !isNaN(newY)) {
+                player.x = newX;
+                player.y = newY;
+                positionTracker.textContent = "Position: (X: " + newX.toFixed(3) + ", Y: " + newY.toFixed(3) + ")";
+            } else {
+                alert("Invalid input! Please enter valid numbers for X and Y positions.");
+            }
+        });
+        positionContainer.appendChild(setPositionButton);
+
+        // Add a container for the timer input and button
+        var timerContainer = document.createElement("div");
+        timerContainer.style.marginTop = "10px";
+        debugMenu.appendChild(timerContainer);
+
+        // Input field for setting the timer value
+        var timerInput = document.createElement("input");
+        timerInput.type = "text";
+        timerInput.placeholder = "Enter Timer Value (s)";
+        timerContainer.appendChild(timerInput);
+
+        // Button to set the timer value
+        var setTimerButton = document.createElement("button");
+        setTimerButton.textContent = "Set Timer";
+        setTimerButton.addEventListener("click", function () {
+            var newTime = parseFloat(timerInput.value);
+            if (!isNaN(newTime)) {
+                timer = newTime;
+                startTime = Date.now() - (newTime * 1000);
+                gameTimeTracker.textContent = "Game Time: " + newTime.toFixed(1) + "s";
+                timerRunning = false; // Pause the timer
+            } else {
+                alert("Invalid input! Please enter a valid number for the timer value.");
+            }
+        });
+        timerContainer.appendChild(setTimerButton);
+
+        // Create a container for the reset and respawn configuration
+        var configContainer = document.createElement("div");
+        configContainer.style.marginBottom = "20px";
+        debugMenu.appendChild(configContainer);
+
+        // Create input fields and labels for each value
+        var configFields = [
+            { label: "Level X", id: "levelX", defaultValue: 0 },
+            { label: "Level Y", id: "levelY", defaultValue: 0 },
+            { label: "Player X", id: "playerX", defaultValue: 480 },
+            { label: "Player Y", id: "playerY", defaultValue: 500 },
+            { label: "Player X Move", id: "playerXMove", defaultValue: 0 },
+            { label: "Player Y Move", id: "playerYMove", defaultValue: 0 }
+        ];
+
+        configFields.forEach(field => {
+            var label = document.createElement("label");
+            label.textContent = field.label;
+            label.style.marginRight = "10px";
+            configContainer.appendChild(label);
+
+            var input = document.createElement("input");
+            input.type = "text";
+            input.id = field.id;
+            input.value = field.defaultValue;
+            input.style.marginRight = "10px";
+            configContainer.appendChild(input);
+
+            configContainer.appendChild(document.createElement("br"));
+        });
+
+        // Create a button to apply the changes to reset function
+        var applyResetConfigButton = document.createElement("button");
+        applyResetConfigButton.textContent = "Apply Reset Config";
+        applyResetConfigButton.style.marginRight = "10px";
+        applyResetConfigButton.addEventListener("click", function () {
+            var levelX = parseInt(document.getElementById("levelX").value);
+            var levelY = parseInt(document.getElementById("levelY").value);
+            var playerX = parseInt(document.getElementById("playerX").value);
+            var playerY = parseInt(document.getElementById("playerY").value);
+            var playerXMove = parseInt(document.getElementById("playerXMove").value);
+            var playerYMove = parseInt(document.getElementById("playerYMove").value);
+
+            if (!isNaN(levelX) && !isNaN(levelY) && !isNaN(playerX) && !isNaN(playerY) && !isNaN(playerXMove) && !isNaN(playerYMove)) {
+                game.reset = function () {
+                    this.levelX = levelX;
+                    this.levelY = levelY;
+                    this.checkpoint1 = false;
+                    player.x = playerX;
+                    player.y = playerY;
+                    player.xmove = playerXMove;
+                    player.ymove = playerYMove;
+                    player.moved = false;
+                    timer = 0;
+                    this.won = false;
+                    this.playerDead = false;
+                    this.refreshLevel();
+                };
+                alert("Reset configuration applied!");
+            } else {
+                alert("Invalid input values!");
+            }
+        });
+        configContainer.appendChild(applyResetConfigButton);
+
+        // Create a button to apply the changes to respawn function
+        var applyRespawnConfigButton = document.createElement("button");
+        applyRespawnConfigButton.textContent = "Apply Respawn Config";
+        applyRespawnConfigButton.addEventListener("click", function () {
+            var levelX = parseInt(document.getElementById("levelX").value);
+            var levelY = parseInt(document.getElementById("levelY").value);
+            var playerX = parseInt(document.getElementById("playerX").value);
+            var playerY = parseInt(document.getElementById("playerY").value);
+            var playerXMove = parseInt(document.getElementById("playerXMove").value);
+            var playerYMove = parseInt(document.getElementById("playerYMove").value);
+
+            if (!isNaN(levelX) && !isNaN(levelY) && !isNaN(playerX) && !isNaN(playerY) && !isNaN(playerXMove) && !isNaN(playerYMove)) {
+                game.respawn = function () {
+                    this.levelX = levelX;
+                    this.levelY = levelY;
+                    player.x = playerX;
+                    player.y = playerY;
+                    player.xmove = playerXMove;
+                    player.ymove = playerYMove;
+                    this.playerDead = false;
+                    this.refreshLevel();
+                };
+                alert("Respawn configuration applied!");
+            } else {
+                alert("Invalid input values!");
+            }
+        });
+        configContainer.appendChild(applyRespawnConfigButton);
+
+        // Function to create an input field for configuration
+        function createConfigInputField(labelText, configKey) {
+            var container = document.createElement("div");
+
+            var label = document.createElement("label");
+            label.textContent = labelText;
+            container.appendChild(label);
+
+            var input = document.createElement("input");
+            input.type = "number";
+            input.value = config[configKey];
+            input.style.marginLeft = "10px";
+            input.addEventListener("change", function () {
+                var newValue = parseFloat(input.value);
+                if (!isNaN(newValue)) {
+                    config[configKey] = newValue;
+                }
+            });
+            container.appendChild(input);
+
+            debugMenu.appendChild(container);
+        }
+
+        // Add input fields for configuration values
+        createConfigInputField("X Move Damping:", "xMoveDamping");
+        createConfigInputField("Y Move Damping:", "yMoveDamping");
+        createConfigInputField("Speed:", "xMoveIncrement");
+        createConfigInputField("Jump hight:", "yMoveRestingJump");
+        createConfigInputField("Edge Y Move:", "edgeYMove");
+        createConfigInputField("Level Width:", "levelWidth");
+        createConfigInputField("Level Height:", "levelHeight");
+        createConfigInputField("Level Offset:", "levelOffset");
+        createConfigInputField("Fast Fall:", "fastDescendMultiplier");
+
+        // Function to store the original block types
+        var originalBlocks = [];
+
+        function storeOriginalBlocks() {
+            for (let i = 0; i <= 29; i++) { // Loop through levels 0 to 29
+                if (game.levels[i] && game.levels[i].blocks) {
+                    originalBlocks[i] = [];
+                    for (let j = 0; j <= 33; j++) { // Loop through blocks 0 to 33
+                        if (game.levels[i].blocks[j]) {
+                            originalBlocks[i][j] = game.levels[i].blocks[j].type;
+                        }
+                    }
+                }
+            }
+        }
+
+        // Function to restore the original block types
+        function restoreOriginalBlocks() {
+            for (let i = 0; i <= 29; i++) {
+                if (game.levels[i] && game.levels[i].blocks) {
+                    for (let j = 0; j <= 33; j++) {
+                        if (game.levels[i].blocks[j]) {
+                            game.levels[i].blocks[j].type = originalBlocks[i][j];
+                        }
+                    }
+                }
+            }
+            console.log("All blocks have been restored to their original types.");
+        }
+
+        function changeLavaToBlock() {
+            for (let i = 0; i <= 29; i++) { // Loop through levels 0 to 29
+                if (game.levels[i] && game.levels[i].blocks) {
+                    for (let j = 0; j <= 33; j++) { // Loop through blocks 0 to 33
+                        if (game.levels[i].blocks[j] && game.levels[i].blocks[j].type === 'lava') {
+                            game.levels[i].blocks[j].type = 'block';
+                        }
+                    }
+                }
+            }
+            console.log("All lava blocks have been changed to block blocks.");
+        }
+
+        // Add a container for the toggle buttons
+        function createToggleButton(label, initialState, toggleFunction) {
+            var buttonContainer = document.createElement("div");
+            buttonContainer.style.marginBottom = "5px";
+
+            var button = document.createElement("button");
+            button.textContent = label;
+            button.style.backgroundColor = initialState ? "green" : "red"; // Set initial color based on state
+
+            button.addEventListener("click", function () {
+                toggleFunction(function (newState) {
+                    button.style.backgroundColor = newState ? "green" : "red"; // Change color based on new state
+                });
+            });
+
+            buttonContainer.appendChild(button);
+
+            return buttonContainer;
+        }
+
+        // Toggle wall jump state
+        var wallJumpEnabled = config.wallJumpEnabled || false;
+        var toggleWallJumpButton = createToggleButton(
+            "Toggle Wall Jump",
+            wallJumpEnabled,
+            function (callback) {
+                wallJumpEnabled = !wallJumpEnabled;
+                config.wallJumpEnabled = wallJumpEnabled;
+                callback(wallJumpEnabled);
+            }
+        );
+        debugMenu.appendChild(toggleWallJumpButton);
+
+        // Toggle gravity direction
+        var gravityDirection = config.gravityDirection || 1;
+        var toggleGravityButton = createToggleButton(
+            "Toggle Gravity",
+            gravityDirection === 1,
+            function (callback) {
+                gravityDirection *= -1;
+                config.gravityDirection = gravityDirection;
+                callback(gravityDirection === 1);
+            }
+        );
+        debugMenu.appendChild(toggleGravityButton);
+
+        // Add a toggle button for lava
+        var noLavaEnabled = false;
+        var lavaToggleButton = createToggleButton(
+            "Toggle No Lava",
+            noLavaEnabled,
+            function (callback) {
+                if (!noLavaEnabled) {
+                    storeOriginalBlocks();
+                    changeLavaToBlock();
+                    noLavaEnabled = true;
+                } else {
+                    restoreOriginalBlocks();
+                    noLavaEnabled = false;
+                }
+                callback(noLavaEnabled);
+            }
+        );
+        debugMenu.appendChild(lavaToggleButton);
+
+        // Add a container for the game.won dropdown
+        var gameWonContainer = document.createElement("div");
+        gameWonContainer.style.marginTop = "10px";
+        debugMenu.appendChild(gameWonContainer);
+
+        // Add the game.won dropdown to the container
+        var gameWonLabel = document.createElement("label");
+        gameWonLabel.textContent = "Game Won: ";
+        gameWonLabel.style.marginRight = "5px";
+        gameWonContainer.appendChild(gameWonLabel);
+
+        var gameWonDropdown = document.createElement("select");
+        var optionTrue = document.createElement("option");
+        optionTrue.value = "true";
+        optionTrue.textContent = "True";
+        gameWonDropdown.appendChild(optionTrue);
+
+        var optionFalse = document.createElement("option");
+        optionFalse.value = "false";
+        optionFalse.textContent = "False";
+        optionFalse.selected = true;
+        gameWonDropdown.appendChild(optionFalse);
+
+        gameWonDropdown.addEventListener("change", function () {
+            game.won = (this.value === "true");
+        });
+
+        gameWonContainer.appendChild(gameWonDropdown);
+
+        // Add buttons for save and load states
+        var saveStateButton = document.createElement("button");
+        saveStateButton.textContent = "Save State";
+        saveStateButton.addEventListener("click", function () {
+            var state = {
+                player: {
+                    x: player.x,
+                    y: player.y,
+                    xmove: player.xmove,
+                    ymove: player.ymove,
+                    resting: player.resting,
+                },
+                game: {
+                    currentLevel: game.currentLevel,
+                    levelX: game.levelX,
+                    levelY: game.levelY,
+                }
+            };
+            localStorage.setItem('saveState', JSON.stringify(state));
+        });
+        debugMenu.appendChild(saveStateButton);
+
+        var loadStateButton = document.createElement("button");
+        loadStateButton.textContent = "Load State";
+        loadStateButton.addEventListener("click", function () {
+            var state = JSON.parse(localStorage.getItem('saveState'));
+            if (state) {
+                player.x = state.player.x;
+                player.y = state.player.y;
+                player.xmove = state.player.xmove;
+                player.ymove = state.player.ymove;
+                player.resting = state.player.resting;
+
+                game.currentLevel = state.game.currentLevel;
+                game.levelX = state.game.levelX;
+                game.levelY = state.game.levelY;
+                game.refreshLevel();
+            }
+        });
+        debugMenu.appendChild(loadStateButton);
+
+        // Add a container for God Mode
+        var GodModeContainer = document.createElement("div");
+        GodModeContainer.style.marginBottom = "20px";
+        debugMenu.appendChild(GodModeContainer);
+
+        // Add a button for God Mode
+        var GodModeButton = document.createElement("button");
+        GodModeButton.textContent = "God Mode";
+        GodModeButton.style.marginTop = "10px";
+        GodModeButton.addEventListener("click", function () {
+            // Override the setter for game.playerDead
+            Object.defineProperty(game, 'playerDead', {
+                get: function () {
+                    return false;
+                },
+                set: function (value) {
+                }
+            });
+
+            game.die();
+            console.log("God Mode enabled!");
+        });
+        GodModeContainer.appendChild(GodModeButton);
+
+        // Add a button to turn off God Mode
+        var turnOffGodModeButton = document.createElement("button");
+        turnOffGodModeButton.textContent = "Turn Off God Mode";
+        turnOffGodModeButton.style.marginTop = "10px";
+        turnOffGodModeButton.addEventListener("click", function () {
+            // Restore the original behavior of game.playerDead
+            delete game.playerDead;
+            console.log("God Mode disabled!");
+        });
+        GodModeContainer.appendChild(turnOffGodModeButton);
+
+        // Add a container for switchKeys
+        var switchKeysContainer = document.createElement("div");
+        switchKeysContainer.style.marginBottom = "20px";
+        debugMenu.appendChild(switchKeysContainer);
+
+        // Add a button to enable switchKeys
+        var enableSwitchKeysButton = document.createElement("button");
+        enableSwitchKeysButton.textContent = "Enable switchKeys";
+        enableSwitchKeysButton.style.marginTop = "10px";
+        enableSwitchKeysButton.addEventListener("click", function () {
+            // Override the getter and setter for game.switchKeys
+            Object.defineProperty(game, 'switchKeys', {
+                get: function () {
+                    return true;
+                },
+                set: function (value) {
+                    // Ignore any attempt to change the value
+                }
+            });
+
+            console.log("switchKeys enabled!");
+        });
+        switchKeysContainer.appendChild(enableSwitchKeysButton);
+
+        // Add a button to disable switchKeys
+        var disableSwitchKeysButton = document.createElement("button");
+        disableSwitchKeysButton.textContent = "Disable switchKeys";
+        disableSwitchKeysButton.style.marginTop = "10px";
+        disableSwitchKeysButton.addEventListener("click", function () {
+            // Restore the original behavior of game.switchKeys
+            delete game.switchKeys;
+            console.log("switchKeys disabled!");
+        });
+        switchKeysContainer.appendChild(disableSwitchKeysButton);
+
+        // Settings button to open the settings tab
+        var settingsButton = document.createElement("button");
+        settingsButton.textContent = "Settings";
+        settingsButton.addEventListener("click", function () {
+            settingsTab.style.display = settingsTab.style.display === "none" ? "block" : "none";
+        });
+        debugMenu.appendChild(settingsButton);
+
+        // Hide/show media tab
+        var mediaTabButton = document.createElement("button");
+        mediaTabButton.textContent = "Media Settings";
+        mediaTabButton.addEventListener("click", function () {
+            mediaTab.style.display = mediaTab.style.display === "none" ? "block" : "none";
+        });
+        debugMenu.appendChild(mediaTabButton);
+
+        // Settings tab container
+        var settingsTab = document.createElement("div");
+        settingsTab.style.position = "absolute";
+        settingsTab.style.top = "10px";
+        settingsTab.style.left = "10px";
+        settingsTab.style.fontSize = "16px";
+        settingsTab.style.color = "white"; // Fixed quotation marks
+        settingsTab.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+        settingsTab.style.padding = "10px";
+        settingsTab.style.borderRadius = "5px";
+        settingsTab.style.display = "none"; // Initially hidden
+        settingsTab.style.resize = "both"; // Make resizable
+        settingsTab.style.overflow = "auto"; // Add overflow for resizing
+        document.body.appendChild(settingsTab);
+
+        // Settings tab header
+        var settingsHeader = document.createElement("div");
+        settingsHeader.style.cursor = "move";
+        settingsHeader.style.backgroundColor = "#333";
+        settingsHeader.style.color = "#fff";
+        settingsHeader.style.padding = "5px";
+        settingsHeader.style.fontWeight = "bold";
+        settingsHeader.textContent = "Settings";
+        settingsTab.appendChild(settingsHeader);
+
+        // Input for selecting background color
+        var bgColorInput = document.createElement("input");
+        bgColorInput.type = "color";
+        bgColorInput.value = "#000000"; // Default color
+        bgColorInput.addEventListener("input", function () {
+            debugMenu.style.backgroundColor = bgColorInput.value;
+        });
+        settingsTab.appendChild(document.createElement("br"));
+        settingsTab.appendChild(document.createTextNode("Debug Menu Background Color: "));
+        settingsTab.appendChild(bgColorInput);
+
+        // Input for changing text color
+        var textColorInput = document.createElement("input");
+        textColorInput.type = "color";
+        textColorInput.addEventListener("input", function () {
+            debugMenu.style.color = textColorInput.value;
+            settingsTab.style.color = textColorInput.value; // Change text color for settings tab
+        });
+        settingsTab.appendChild(document.createElement("br"));
+        settingsTab.appendChild(document.createTextNode("Text Color: "));
+        settingsTab.appendChild(textColorInput);
+
+        // Input for adjusting background color and image opacity
+        var bgOpacityInput = document.createElement("input");
+        bgOpacityInput.type = "range";
+        bgOpacityInput.min = "0";
+        bgOpacityInput.max = "1";
+        bgOpacityInput.step = "0.1";
+        bgOpacityInput.value = "1"; // Default value
+        bgOpacityInput.addEventListener("input", function () {
+            var currentColor = debugMenu.style.backgroundColor;
+            var currentImage = debugMenu.style.backgroundImage;
+            var currentOpacity = bgOpacityInput.value;
+            debugMenu.style.backgroundColor = rgbaToRgbaA(currentColor, currentOpacity);
+            if (currentImage && currentImage !== 'none') {
+                debugMenu.style.backgroundImage = rgbaToRgbaA(currentImage, currentOpacity);
+            }
+        });
+        settingsTab.appendChild(document.createElement("br"));
+        settingsTab.appendChild(document.createTextNode("Background Color Opacity: "));
+        settingsTab.appendChild(bgOpacityInput);
+
+        // Function to convert RGBA color to RGBA with specified opacity
+        function rgbaToRgbaA(rgba, opacity) {
+            return rgba.replace(/rgba?\(([^)]+)\)/, (match, colors) => {
+                const [r, g, b, a] = colors.split(",").map(c => c.trim());
+                return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            });
+        }
+
+        // Create a tab for image and video settings
+        var mediaTab = document.createElement("div");
+        mediaTab.style.position = "absolute";
+        mediaTab.style.top = "10px";
+        mediaTab.style.left = "10px";
+        mediaTab.style.fontSize = "16px";
+        mediaTab.style.color = "white";
+        mediaTab.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+        mediaTab.style.padding = "10px";
+        mediaTab.style.borderRadius = "5px";
+        mediaTab.style.display = "none"; // Initially hidden
+        mediaTab.style.resize = "both"; // Make resizable
+        mediaTab.style.overflow = "auto"; // Add overflow for resizing
+        document.body.appendChild(mediaTab);
+
+        // Media tab header
+        var mediaHeader = document.createElement("div");
+        mediaHeader.style.cursor = "move";
+        mediaHeader.style.backgroundColor = "#333";
+        mediaHeader.style.color = "#fff";
+        mediaHeader.style.padding = "5px";
+        mediaHeader.style.fontWeight = "bold";
+        mediaHeader.textContent = "Media Settings";
+        mediaTab.appendChild(mediaHeader);
+
+        // Input for uploading background video file to the debug menu
+        var debugMenuBgVideoInput = document.createElement("input");
+        debugMenuBgVideoInput.type = "file";
+        debugMenuBgVideoInput.accept = "video/mp4";
+        debugMenuBgVideoInput.addEventListener("change", function (event) {
+            var file = event.target.files[0];
+            if (file) {
+                var url = URL.createObjectURL(file);
+
+                // Remove existing video if present
+                var existingVideo = debugMenu.querySelector("video");
+                if (existingVideo) {
+                    debugMenu.removeChild(existingVideo);
+                }
+
+                // Create video element
+                var video = document.createElement("video");
+                video.src = url;
+                video.autoplay = true;
+                video.loop = true;
+                video.style.position = "absolute";
+                video.style.top = "0";
+                video.style.left = "0";
+                video.style.width = "100%";
+                video.style.height = "100%";
+                video.style.objectFit = "cover";
+                video.style.zIndex = "-1"; // Ensure the video is behind the content
+                debugMenu.appendChild(video);
+
+                // Create audio slider for volume control
+                var audioSlider = document.createElement("input");
+                audioSlider.type = "range";
+                audioSlider.min = "0";
+                audioSlider.max = "1";
+                audioSlider.step = "0.01";
+                audioSlider.value = "0.5"; // Default volume at 50%
+                audioSlider.addEventListener("input", function () {
+                    video.volume = audioSlider.value;
+                });
+                mediaTab.appendChild(document.createElement("br"));
+                mediaTab.appendChild(document.createTextNode("Debug Menu Background Video Volume: "));
+                mediaTab.appendChild(audioSlider);
+            }
+        });
+        mediaTab.appendChild(document.createElement("br"));
+        mediaTab.appendChild(document.createTextNode("Debug Menu Background Video: "));
+        mediaTab.appendChild(debugMenuBgVideoInput);
+
+        // Input for adding background image(URL) to the debug menu
+        var bgImageInput = document.createElement("input");
+        bgImageInput.type = "text";
+        bgImageInput.placeholder = "Enter background image URL";
+        bgImageInput.addEventListener("input", function () {
+            debugMenu.style.backgroundImage = `url(${bgImageInput.value})`;
+        });
+        mediaTab.appendChild(document.createElement("br"));
+        mediaTab.appendChild(document.createTextNode("Background Image URL(Debug Menu): "));
+        mediaTab.appendChild(bgImageInput);
+
+        // Input for adding background image to the debug menu
+        var bgImageInputDebug = document.createElement("input");
+        bgImageInputDebug.type = "file";
+        bgImageInputDebug.addEventListener("change", function () {
+            const file = bgImageInputDebug.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    debugMenu.style.backgroundImage = `url(${e.target.result})`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        mediaTab.appendChild(document.createElement("br"));
+        mediaTab.appendChild(document.createTextNode("Background Image (Debug Menu): "));
+        mediaTab.appendChild(bgImageInputDebug);
+
+        // Input for adding background image (URL) to the settings menu
+        var settingsTabBgImageInput = document.createElement("input");
+        settingsTabBgImageInput.type = "text";
+        settingsTabBgImageInput.placeholder = "Enter background image URL for settings menu";
+        settingsTabBgImageInput.addEventListener("input", function () {
+            settingsTab.style.backgroundImage = `url(${settingsTabBgImageInput.value})`;
+        });
+        mediaTab.appendChild(document.createElement("br"));
+        mediaTab.appendChild(document.createTextNode("Background Image URL(settings): "));
+        mediaTab.appendChild(settingsTabBgImageInput);
+
+        // Input for adding background image to the settings menu
+        var bgImageInputSettings = document.createElement("input");
+        bgImageInputSettings.type = "file";
+        bgImageInputSettings.addEventListener("change", function () {
+            const file = bgImageInputSettings.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    settingsTab.style.backgroundImage = `url(${e.target.result})`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        mediaTab.appendChild(document.createElement("br"));
+        mediaTab.appendChild(document.createTextNode("Background Image (Settings Menu): "));
+        mediaTab.appendChild(bgImageInputSettings);
+
+        // Input for background size
+        var bgSizeSelect = document.createElement("select");
+        bgSizeSelect.addEventListener("change", function () {
+            debugMenu.style.backgroundSize = bgSizeSelect.value;
+        });
+        var bgSizeOptions = [
+            "cover",
+            "contain",
+            "auto"
+        ];
+        bgSizeOptions.forEach(function (option) {
+            var bgSizeOption = document.createElement("option");
+            bgSizeOption.textContent = option;
+            bgSizeSelect.appendChild(bgSizeOption);
+        });
+        mediaTab.appendChild(document.createElement("br"));
+        mediaTab.appendChild(document.createTextNode("Background Size: "));
+        mediaTab.appendChild(bgSizeSelect);
+
+        // Input for background repeat
+        var bgRepeatSelect = document.createElement("select");
+        bgRepeatSelect.addEventListener("change", function () {
+            debugMenu.style.backgroundRepeat = bgRepeatSelect.value === "true" ? "repeat" : "no-repeat";
+        });
+        var bgRepeatOptions = [
+            "true",
+            "false"
+        ];
+        bgRepeatOptions.forEach(function (option) {
+            var bgRepeatOption = document.createElement("option");
+            bgRepeatOption.textContent = option;
+            bgRepeatSelect.appendChild(bgRepeatOption);
+        });
+        mediaTab.appendChild(document.createElement("br"));
+        mediaTab.appendChild(document.createTextNode("Background Repeat: "));
+        mediaTab.appendChild(bgRepeatSelect);
+
+        // Make the media tab draggable
+        let isMediaDragging = false;
+        let mediaOffsetX, mediaOffsetY;
+
+        mediaHeader.addEventListener('mousedown', function (e) {
+            isMediaDragging = true;
+            mediaOffsetX = e.clientX - mediaTab.offsetLeft;
+            mediaOffsetY = e.clientY - mediaTab.offsetTop;
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (isMediaDragging) {
+                mediaTab.style.left = (e.clientX - mediaOffsetX) + 'px';
+                mediaTab.style.top = (e.clientY - mediaOffsetY) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', function () {
+            isMediaDragging = false;
+        });
+
+        // Input for changing font family
+        var fontSelector = document.createElement("select");
+        fontSelector.addEventListener("change", function () {
+            var selectedFont = fontSelector.value;
+            debugMenu.style.fontFamily = selectedFont;
+            settingsTab.style.fontFamily = selectedFont;
+        });
+        var fontOptions = [
+            "Abadi MT Condensed Light",
+            "Albertus Extra Bold",
+            "Albertus Medium",
+            "Antique Olive",
+            "Arial",
+            "Arial Black",
+            "Arial MT",
+            "Arial Narrow",
+            "Bazooka",
+            "Book Antiqua",
+            "Bookman Old Style",
+            "Boulder",
+            "Calisto MT",
+            "Calligrapher",
+            "Century Gothic",
+            "Century Schoolbook",
+            "Cezanne",
+            "CG Omega",
+            "CG Times",
+            "Charlesworth",
+            "Chaucer",
+            "Clarendon Condensed",
+            "Comic Sans MS",
+            "Copperplate Gothic Bold",
+            "Copperplate Gothic Light",
+            "Cornerstone",
+            "Haettenschweiler",
+            "Heather",
+            "Helvetica",
+            "Marigold",
+            "Market",
+            "Matisse ITC",
+            "MS LineDraw",
+            "News GothicMT",
+            "OCR A Extended",
+            "Old Century",
+            "Pegasus",
+            "Pickwick",
+            "Poster",
+            "Pythagoras",
+            "Sceptre",
+            "Sherwood",
+            "Signboard",
+            "Socket",
+            "Steamer",
+            "Storybook",
+            "Subway",
+            "Tahoma",
+            "Technical",
+            "Teletype",
+            "Tempus Sans ITC",
+            "Times",
+            "Times New Roman",
+            "Times New Roman PS",
+            "Trebuchet MS",
+            "Verdana",
+            "Westminster"
+        ];
+        fontOptions.forEach(function (option) {
+            var fontOption = document.createElement("option");
+            fontOption.textContent = option;
+            fontSelector.appendChild(fontOption);
+        });
+        settingsTab.appendChild(document.createElement("br"));
+        settingsTab.appendChild(document.createTextNode("Font Family: "));
+        settingsTab.appendChild(fontSelector);
+
+        // Set default font family for debug and settings menu
+        debugMenu.style.fontFamily = "Arial";
+        settingsTab.style.fontFamily = "Arial";
+
+        // Create a container for the input tracker
+        var inputTrackerContainer = document.createElement("div");
+        inputTrackerContainer.style.marginTop = "20px";
+        debugMenu.appendChild(inputTrackerContainer);
+
+        // Create labels for W, A, S, D
+        var wLabel = createInputLabel("W");
+        var aLabel = createInputLabel("A");
+        var sLabel = createInputLabel("S");
+        var dLabel = createInputLabel("D");
+        var rLabel = createInputLabel("Reset", "60px");
+
+        // Create labels for arrow keys
+        var upLabel = createInputLabel("â†‘");
+        var leftLabel = createInputLabel("â†");
+        var downLabel = createInputLabel("â†“");
+        var rightLabel = createInputLabel("â†’");
+
+        // Append labels to the input tracker container
+        [inputTrackerContainer, inputTrackerContainer].forEach(container => {
+            container.appendChild(wLabel);
+            container.appendChild(aLabel);
+            container.appendChild(sLabel);
+            container.appendChild(dLabel);
+            container.appendChild(rLabel);
+            container.appendChild(document.createElement("br")); // Add line break
+            container.appendChild(upLabel);
+            container.appendChild(leftLabel);
+            container.appendChild(downLabel);
+            container.appendChild(rightLabel);
+        });
+
+        // Function to create input labels
+        function createInputLabel(key, width = "30px") {
+            var label = document.createElement("div");
+            label.textContent = key;
+            label.style.display = "inline-block";
+            label.style.width = width; // Set the width based on the parameter
+            label.style.height = "30px";
+            label.style.backgroundColor = "black";
+            label.style.color = "white";
+            label.style.textAlign = "center";
+            label.style.paddingTop = "8px";
+            label.style.borderRadius = "5px";
+            label.style.marginRight = "5px";
+            return label;
+        }
+
+        // Function to toggle the background color of the labels when corresponding keys are pressed
+        function toggleLabelColor(label, isActive) {
+            if (isActive) {
+                label.style.backgroundColor = "green";
+            } else {
+                label.style.backgroundColor = "black";
+            }
+        }
+
+        // Add event listeners to track keydown and keyup events for W, A, S, D
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "w") {
+                toggleLabelColor(wLabel, true);
+            } else if (event.key === "a") {
+                toggleLabelColor(aLabel, true);
+            } else if (event.key === "s") {
+                toggleLabelColor(sLabel, true);
+            } else if (event.key === "d") {
+                toggleLabelColor(dLabel, true);
+            } else if (event.key === "r") {
+                toggleLabelColor(rLabel, true);
+            }
+        });
+
+        document.addEventListener("keyup", function (event) {
+            if (event.key === "w") {
+                toggleLabelColor(wLabel, false);
+            } else if (event.key === "a") {
+                toggleLabelColor(aLabel, false);
+            } else if (event.key === "s") {
+                toggleLabelColor(sLabel, false);
+            } else if (event.key === "d") {
+                toggleLabelColor(dLabel, false);
+            } else if (event.key === "r") {
+                toggleLabelColor(rLabel, false);
+            }
+        });
+
+        // Add event listeners to track keydown and keyup events for arrow keys
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "ArrowUp") {
+                toggleLabelColor(upLabel, true);
+            } else if (event.key === "ArrowLeft") {
+                toggleLabelColor(leftLabel, true);
+            } else if (event.key === "ArrowDown") {
+                toggleLabelColor(downLabel, true);
+            } else if (event.key === "ArrowRight") {
+                toggleLabelColor(rightLabel, true);
+            }
+        });
+
+        document.addEventListener("keyup", function (event) {
+            if (event.key === "ArrowUp") {
+                toggleLabelColor(upLabel, false);
+            } else if (event.key === "ArrowLeft") {
+                toggleLabelColor(leftLabel, false);
+            } else if (event.key === "ArrowDown") {
+                toggleLabelColor(downLabel, false);
+            } else if (event.key === "ArrowRight") {
+                toggleLabelColor(rightLabel, false);
+            }
+        });
+
+        var lastFrameTime = Date.now();
+        var frameCount = 0;
+
+        setInterval(function () {
+            var currentTime = Date.now();
+            var deltaTime = (currentTime - lastFrameTime) / 1000; // convert milliseconds to seconds
+            var fps = Math.round(1 / deltaTime); // calculate frames per second
+
+            fpsTracker.textContent = "FPS: " + fps; // update FPS counter
+
+            lastFrameTime = currentTime;
+        }, 1000 / 60); // update FPS every second
+
+        var lastX = player.x;
+        var lastY = player.y;
+        var lastTime = Date.now();
+        var chunkSize = 1000; // Adjusted chunk size to 1000
+        var startTime = Date.now();
+        var lastFrameTime = Date.now();
+        var frameCount = 0;
+        var timerRunning = true;
+
+        setInterval(function () {
+            var currentTime = Date.now();
+            var deltaTime = (currentTime - lastTime) / 1000; // convert milliseconds to seconds
+
+            var x = player.x.toFixed(3);
+            var y = player.y.toFixed(3);
+
+            var velocityX = ((player.x - lastX) / deltaTime).toFixed(3);
+            var velocityY = ((player.y - lastY) / deltaTime).toFixed(3);
+
+            var chunkX = Math.floor(player.x / chunkSize);
+            var chunkY = Math.floor(player.y / chunkSize);
+
+            if (timerRunning) {
+                var elapsedTime = (currentTime - startTime) / 1000; // convert milliseconds to seconds
+                gameTimeTracker.textContent = "Game Time: " + elapsedTime.toFixed(1) + "s";
+            }
+
+            positionTracker.textContent = "Position: (X: " + x + ", Y: " + y + ")";
+            velocityTracker.textContent = "Velocity: (X: " + velocityX + ", Y: " + velocityY + ")";
+            chunkTracker.textContent = "Chunk: (X: " + chunkX + ", Y: " + chunkY + ")";
+
+            if (player.x !== lastX || player.y !== lastY) {
+                timerRunning = true; // Start the timer when the player moves
+            }
+
+            lastX = player.x;
+            lastY = player.y;
+            lastTime = currentTime;
+        }, 100);
+
+        (function () {
+            'use strict';
+
+            // Function to modify the player's die method
+            function modifyPlayerDie() {
+                if (typeof player !== 'undefined' && typeof player.die === 'function') {
+                    player.die = function () {
+                        if (game.playerDead) return;
+                        game.playerDead = true;
+                        game.respawnTime = 150;
+
+                        // Create red explosion particles
+                        for (let n = 0; n < 20; n++) {
+                            const particle = {
+                                x: this.x + this.w / 2 - 5 + Math.random() * 10 - 5,
+                                y: this.y + this.h / 2 - 5 + Math.random() * 10 - 5,
+                                w: 10,
+                                h: 10,
+                                color: 'rgb(255,0,0)',
+                                alpha: 2,
+                                decay: 0.08 - Math.random() / 20,
+                                xmove: Math.random() * 30 - 15,
+                                ymove: Math.random() * 30 - 20
+                            };
+                            particles.particles.push(particle);
+                        }
+
+                        // Create black circle particles
+                        for (let n = 0; n < 2; n++) {
+                            const particle = {
+                                x: this.x + this.w / 2,
+                                y: this.y + this.h / 2,
+                                r: 5,
+                                w: 10,
+                                h: 10,
+                                color: 'black',
+                                shape: 'circle',
+                                alpha: 150,
+                                decay: 1,
+                                xmove: Math.random() * 7.5 * (n * 2 - 1),
+                                ymove: Math.random() * 15 - 10
+                            };
+                            particles.particles.push(particle);
+                        }
+                    };
+                    console.log("Player's die method modified.");
+                } else {
+                    console.log("Player object or die method not found.");
+                }
+            }
+
+            // Wait for the player object to be defined
+            function waitForPlayer() {
+                if (typeof player !== 'undefined' && typeof player.die === 'function') {
+                    modifyPlayerDie();
+                } else {
+                    setTimeout(waitForPlayer, 100);
+                }
+            }
+
+            waitForPlayer();
+        })();
+
+        // Function to update the debug menu position based on window size
+        function updateDebugMenuPosition() {
+            var topPos = window.innerHeight * 0.01;
+            var leftPos = window.innerWidth * 0.01;
+            debugMenu.style.top = topPos + 'px';
+            debugMenu.style.left = leftPos + 'px';
+        }
+
+        // Initial position update
+        updateDebugMenuPosition();
+
+        // Add event listener for window resize to update debug menu position
+        window.addEventListener('resize', updateDebugMenuPosition);
+
+        // Add event listener for keydown to toggle the debug menu visibility
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'q' || event.key === 'Q') {
+                console.log('Debug menu toggle event');
+                if (debugMenu.style.display === 'none') {
+                    debugMenu.style.display = 'block';
+                } else {
+                    debugMenu.style.display = 'none';
+                }
+            }
+        });
+
+        // Flag to indicate whether resizing or dragging is active
+        var isResizing = false;
+        var isDragging = false;
+
+        // Make the debug menu draggable
+        function makeDraggable(element) {
+            var pos3 = 0, pos4 = 0, pos1 = 0, pos2 = 0;
+            element.onmousedown = dragMouseDown;
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                if (isResizing) return;
+                isDragging = true;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                if (!isDragging || isResizing) return;
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                element.style.top = (element.offsetTop - pos2) + "px";
+                element.style.left = (element.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                isDragging = false;
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+        }
+
+        debugMenuHeader.addEventListener('mousedown', function (e) {
+            isDragging = true;
+            offsetX = e.clientX - debugMenu.offsetLeft;
+            offsetY = e.clientY - debugMenu.offsetTop;
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (isDragging) {
+                debugMenu.style.left = (e.clientX - offsetX) + 'px';
+                debugMenu.style.top = (e.clientY - offsetY) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', function () {
+            isDragging = false;
+        });
+
+        // Make the settings tab draggable
+        let isSettingsDragging = false;
+        let settingsOffsetX, settingsOffsetY;
+
+        settingsHeader.addEventListener('mousedown', function (e) {
+            isSettingsDragging = true;
+            settingsOffsetX = e.clientX - settingsTab.offsetLeft;
+            settingsOffsetY = e.clientY - settingsTab.offsetTop;
+        });
+
+        document.addEventListener('mousemove', function (e) {
+            if (isSettingsDragging) {
+                settingsTab.style.left = (e.clientX - settingsOffsetX) + 'px';
+                settingsTab.style.top = (e.clientY - settingsOffsetY) + 'px';
+            }
+        });
+
+        document.addEventListener('mouseup', function () {
+            isSettingsDragging = false;
+        });
+
+        // Event listener for mousedown on debugMenu to initiate resizing
+        document.addEventListener('mousedown', function (event) {
+            if (event.target === debugMenu) {
+                var startX = event.clientX;
+                var startY = event.clientY;
+                var startWidth = debugMenu.offsetWidth;
+                var startHeight = debugMenu.offsetHeight;
+
+                // Set resizing flag
+                isResizing = true;
+
+                // Event listener for mousemove during resizing
+                function handleMouseMove(event) {
+                    resizeDebugMenu(startX, startY, startWidth, startHeight, event);
+                }
+
+                // Event listener for mouseup to stop resizing
+                function handleMouseUp() {
+                    // Reset resizing flag
+                    isResizing = false;
+                    document.removeEventListener('mousemove', handleMouseMove);
+                    document.removeEventListener('mouseup', handleMouseUp);
+                }
+
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+            }
+        });
+
+        // Event listener for mousedown on settingsTab to initiate resizing
+        document.addEventListener('mousedown', function (event) {
+            if (event.target === settingsTab) {
+                var startX = event.clientX;
+                var startY = event.clientY;
+                var startWidth = settingsTab.offsetWidth;
+                var startHeight = settingsTab.offsetHeight;
+
+                // Set resizing flag
+                isResizing = true;
+
+                // Event listener for mousemove during resizing
+                function handleMouseMove(event) {
+                    resizeSettingsTab(startX, startY, startWidth, startHeight, event);
+                }
+
+                // Event listener for mouseup to stop resizing
+                function handleMouseUp() {
+                    // Reset resizing flag
+                    isResizing = false;
+                    document.removeEventListener('mousemove', handleMouseMove);
+                    document.removeEventListener('mouseup', handleMouseUp);
+                }
+
+                document.addEventListener('mousemove', handleMouseMove);
+                document.addEventListener('mouseup', handleMouseUp);
+            }
+        });
+    </script>
+</body>
+
+</html>

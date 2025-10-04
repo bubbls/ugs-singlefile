@@ -1,0 +1,140 @@
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<body dir="ltr" onload="onResize();"> 
+   <div id="background" style="display: none;"> 
+     <div id="custom-loader">
+      <div class="fill"></div>
+      <div class="label">90%</div>
+    </div>  
+   </div>   
+        
+    <canvas id="gameContainer" style="width: 356px; height: 200px; top: 361px; left: 0px; cursor: default;" width="356" height="200"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/gh/comt7xc6/a@main/Build/CyberCarsPunkRacing.loader.js"></script>
+    
+            <script>
+        devamke();      
+         
+         function devamke() {
+            
+         
+             var buildUrl = "https://cdn.jsdelivr.net/gh/comt7xc6/a@main/Build/";
+             var loaderUrl = buildUrl + "/CyberCarsPunkRacing.loader.js";
+             var config = {
+                              dataUrl: "https://cdn.jsdelivr.net/gh/comt7xc6/a@main/Build/CyberCarsPunkRacing.data.unityweb",
+             frameworkUrl: "https://cdn.jsdelivr.net/gh/comt7xc6/a@main/Build/CyberCarsPunkRacing.framework.js.unityweb",
+             codeUrl: "https://cdn.jsdelivr.net/gh/comt7xc6/a@main/Build/CyberCarsPunkRacing.wasm.unityweb",
+             streamingAssetsUrl: "https://cdn.jsdelivr.net/gh/comt7xc6/a@main/StreamingAssets/",
+             companyName: "Ozgur Aydin",
+             productName: "Cyber Cars Punk Racing",
+             productVersion: "1.0",
+             //matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+              //devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+               
+             
+               };
+               
+               var mobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+               if (mobile) {
+
+                  config.devicePixelRatio = 1.2;
+                }
+                
+               var canvas = document.querySelector("#gameContainer");
+            
+            
+             var script = document.createElement("script");
+             script.src = loaderUrl;
+             script.onload = () => {
+             createUnityInstance(canvas, config, (progress) => {
+            
+            if (progress == 1) {
+                    document.getElementById('background').style.display = "none";
+                    
+
+                 }
+                 else {
+                 
+                 setLoaderProgressTo(progress);
+                                                                            
+                 }
+                }).then((unityInstance) => {
+                 myGameInstance = unityInstance;
+                }).catch((message) => {
+                    alert(message);
+                });
+            };
+              document.body.appendChild(script);
+            
+        }   
+                
+            function setLoaderProgressTo(value)
+            {
+               const fill = document.getElementsByClassName("fill")[0];
+               const fillText = document.getElementsByClassName("label")[0];
+
+               var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+               if (isMobile) {
+ 
+               
+                }
+              else{
+                    fill.animate(
+                    [
+                       { width: (value * 100) + "%" }
+                       ],
+                    {
+                       duration: 300,
+                       fill: "forwards"
+                       }
+                    );
+                 }             
+               fillText.textContent = (value * 100).toFixed() + "%";
+            }   
+                
+                
+                
+                
+                
+        
+        function onResize() {
+            var container = document.querySelector("#gameContainer");
+            var w = 1280;
+            var h = 720;
+
+            if (true) {
+                w = window.innerWidth;
+                h = window.innerHeight;
+
+                var r = 720 / 1280;
+
+                if (w * r > window.innerHeight) {
+                    w = Math.min(w, Math.ceil(h / r));
+                }
+                h = Math.floor(w * r);
+            } else {
+                w = 1280;
+                h = 720;
+            }
+
+            container.style.width    = (w) + "px";
+            container.style.height   = (h) + "px";
+            container.style.top      = Math.floor((window.innerHeight - h) / 2) + "px";
+            container.style.left     = Math.floor((window.innerWidth - w) / 2) + "px";
+        }
+        window.addEventListener('resize', onResize);
+    
+    </script><script src="https://cdn.jsdelivr.net/gh/comt7xc6/a@main/Build//CyberCarsPunkRacing.loader.js"></script>
+        
+   
+
+
+
+
+<script>gadgets.util.runOnLoadHandlers();</script><script>window.google.csi.tickDl();
+</script><script src=""></script></body>

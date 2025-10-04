@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+      <base href = "https://cdn.jsdelivr.net/gh/faralong/all@main/sandboxcity/">
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    
+    <link rel="stylesheet" href="TemplateData/style.css">
+	<link rel="manifest" href="manifest.json">
+  </head>
+  <body class="noselect">
+    <div id="unity-container">
+      <canvas id="unity-canvas"></canvas>
+    </div>
+    <div id="loading-cover" style="display:none;">
+      <div id="unity-loading-bar">
+        <div id="unity-logo"><img src="logo.png"></div>
+        </br></br></br>
+        <div id="unity-progress-bar-empty" style="display: none;">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+        <div class="spinner"></div>
+      </div>
+    </div>
+    <script src = "jszip.js"></script>
+     <script>
+      
+
+      
+      
+  async function fetchAndCombineZip(binUrls) {
+    const responses = await Promise.all(binUrls.map(url => fetch(url)));
+    const buffers = await Promise.all(responses.map(res => res.arrayBuffer()));
+    let totalLength = buffers.reduce((acc, buf) => acc + buf.byteLength, 0);
+    let combined = new Uint8Array(totalLength);
+    let offset = 0;
+    for (let buf of buffers) {
+        combined.set(new Uint8Array(buf), offset);
+        offset += buf.byteLength;
+    }
+    return combined;
+}
+
+async function unzipWebpFromExternalBins(binUrls) {
+    const blobUrls = {};
+    const bytes = await fetchAndCombineZip(binUrls);
+    const zip = await JSZip.loadAsync(bytes);
+    for (const [filename, file] of Object.entries(zip.files)) {
+        if (!file.dir) {
+            let mime = '';
+            if (filename.endsWith('.js') || filename.endsWith('.mjs')) {
+                mime = 'text/javascript';
+            } else if (filename.endsWith('.css')) {
+                mime = 'text/css';
+            } else if (filename.endsWith('.html')) {
+                mime = 'text/html';
+            } else if (filename.endsWith('.webp')) {
+                mime = 'image/webp';
+            } else if (filename.endsWith('.png')) {
+                mime = 'image/png';
+            } else if (filename.endsWith('.jpg') || filename.endsWith('.jpeg')) {
+                mime = 'image/jpeg';
+            }
+            const rawBlob = await file.async("blob");
+            const blob = mime ? new Blob([rawBlob], { type: mime }) : rawBlob;
+            const blobUrl = URL.createObjectURL(blob);
+            console.log("Extracted:", filename);
+            blobUrls[filename] = blobUrl;
+        }
+    }
+    return blobUrls;
+}
+
+let blobUrlss = "";
+let binParts = [
+  "parts-1.bin",
+  "parts-2.bin"
+];
+
+unzipWebpFromExternalBins(binParts).then(blobUrls => {
+    blobUrlss = blobUrls;
+    const ORIGINAL_CREATE_ELEMENT = document.createElement;
+    const ORIGINAL_SET_ATTRIBUTE = Element.prototype.setAttribute;
+
+    
+    document.createElement = function(tagName) {
+        const el = ORIGINAL_CREATE_ELEMENT.call(this, tagName);
+
+        if (tagName.toLowerCase() === 'script') {
+            Object.defineProperty(el, 'src', {
+                set(newSrc) {
+                    const filename = extractFilename(newSrc);
+                    const replacement = blobUrlss[filename];
+                    if (replacement) {
+                        
+                        ORIGINAL_SET_ATTRIBUTE.call(el, 'src', replacement);
+                    } else {
+                        ORIGINAL_SET_ATTRIBUTE.call(el, 'src', newSrc);
+                    }
+                },
+                get() {
+                    return el.getAttribute('src');
+                },
+                configurable: true
+            });
+        }
+
+        return el;
+    };
+
+    
+    Element.prototype.setAttribute = function(name, value) {
+        if (this.tagName === 'SCRIPT' && name === 'src') {
+            const filename = extractFilename(value);
+            const replacement = blobUrlss[filename];
+            if (replacement) {
+             
+                return ORIGINAL_SET_ATTRIBUTE.call(this, name, replacement);
+            }
+        }
+
+        return ORIGINAL_SET_ATTRIBUTE.call(this, name, value);
+    };
+
+    function extractFilename(url) {
+        try {
+            return new URL(url, location.href).pathname.split('/').pop();
+        } catch {
+            return url.split('/').pop(); 
+        }
+    }
+
+
+const imageSrcDescriptor = Object.getOwnPropertyDescriptor(Image.prototype, 'src');
+Object.defineProperty(Image.prototype, 'src', {
+  set(value) {
+    const newURL = rewriteURL(value);
+    imageSrcDescriptor.set.call(this, newURL);
+  },
+  get: imageSrcDescriptor.get,
+  configurable: true,
+  enumerable: true,
+});
+
+
+const scriptSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, 'src');
+Object.defineProperty(HTMLScriptElement.prototype, 'src', {
+  set(value) {
+    const newURL = rewriteURL(value);
+    scriptSrcDescriptor.set.call(this, newURL);
+  },
+  get: scriptSrcDescriptor.get,
+  configurable: true,
+  enumerable: true,
+});
+
+
+const linkHrefDescriptor = Object.getOwnPropertyDescriptor(HTMLLinkElement.prototype, 'href');
+Object.defineProperty(HTMLLinkElement.prototype, 'href', {
+  set(value) {
+    const newURL = rewriteURL(value);
+    linkHrefDescriptor.set.call(this, newURL);
+  },
+  get: linkHrefDescriptor.get,
+  configurable: true,
+  enumerable: true,
+});
+
+
+const mediaSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'src');
+Object.defineProperty(HTMLMediaElement.prototype, 'src', {
+  set(value) {
+    const newURL = rewriteURL(value);
+    mediaSrcDescriptor.set.call(this, newURL);
+  },
+  get: mediaSrcDescriptor.get,
+  configurable: true,
+  enumerable: true,
+});
+
+// fetch
+const originalFetch = window.fetch;
+window.fetch = function(resource, init) {
+
+  if (typeof resource === "string") {
+  //console.log(resource)
+    resource = rewriteURL(resource);
+  } else if (resource instanceof Request) {
+    resource = new Request(rewriteURL(resource.url), resource);
+  }
+  return originalFetch.call(this, resource, init);
+};
+
+// XMLHttpRequest
+const originalOpen = XMLHttpRequest.prototype.open;
+XMLHttpRequest.prototype.open = function(method, url, ...rest) {
+  const newURL = rewriteURL(url);
+  return originalOpen.call(this, method, newURL, ...rest);
+};
+
+
+const OriginalAudio = window.Audio;
+window.Audio = function(src) {
+  const audio = new OriginalAudio();
+  if (src) {
+    audio.src = rewriteURL(src);
+  }
+  return audio;
+};
+window.Audio.prototype = OriginalAudio.prototype;
+
+
+function rewriteURL(original) {
+  var trimmed = original.split("/").pop();
+  //console.log(trimmed)
+  if (trimmed.includes("?")) trimmed = trimmed.split("?")[0]
+  return blobUrlss[trimmed] || original;
+}
+	  window.addEventListener("load", function () {
+        if ("serviceWorker" in navigator) {
+          navigator.serviceWorker.register("ServiceWorker.js");
+        }
+      });
+	  
+	  const container = document.querySelector("#unity-container");
+      const canvas = document.querySelector("#unity-canvas");
+      const loadingCover = document.querySelector("#loading-cover");
+      const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+      const progressBarFull = document.querySelector("#unity-progress-bar-full");
+      const spinner = document.querySelector('.spinner');
+
+      const buildUrl = "Build";
+      const loaderUrl = buildUrl + "/29ad73b296bbd9b503bac5b115873c24.loaderr.js";
+      const config = {
+        dataUrl: buildUrl + "/377cdd392655e67e31ec74d2b36ecd2f.data.unityweb",
+        frameworkUrl: buildUrl + "/b73ecc4533c4192af04360e3f7833f8c.framework.js.unityweb",
+        codeUrl: buildUrl + "/25e018f3026d2d0ab943454002e5b48a.wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Salted Caramel Games",
+        productName: "Sandbox City",
+        productVersion: "6.40"
+      };
+	  
+      loadingCover.style.display = "";
+	  
+	  var gameInstance;
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+		  spinner.style.display = "none";
+          progressBarEmpty.style.display = "";
+          progressBarFull.style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+		  console.log("<do.G> Unity inited");
+          gameInstance = unityInstance;
+          loadingCover.style.display = "none";
+		  loadAds();
+        }).catch((message) => {
+          alert(message);
+        });
+      };
+      document.body.appendChild(script);
+	  
+	  // Focus
+  	  function setFocus() {
+  	    container.focus();
+  		window.focus();
+  		canvas.focus();
+  	  }
+
+  	  window.addEventListener("touchstart", () => {
+  	    setFocus();
+  	  });
+  	  window.addEventListener("pointerdown", () => {
+  	    setFocus();
+  	  });
+  	  window.addEventListener("resize", () => {
+  	    setFocus();
+  	  });
+});
+    </script>
+    
+    <script src="msstart-v1.0.0-rc.20.min.js"></script>
+	
+	<script>
+	
+	  var _interstitialAdInstance = null;
+	  var _rewardedAdInstance = null;
+	  
+	  function loadAds() {
+	    loadInterstitialAd();
+	    loadRewardedAd();
+	  }
+	  
+	  function loadInterstitialAd() {
+	    _interstitialAdInstance = null;
+		
+	    $msstart.loadAdsAsync().then(adInstance => {
+		  // Use the adInstance.instanceId to make a call to showAdsAsync
+		  _interstitialAdInstance = adInstance;
+		  console.log("Interstitial ad successfully loaded!");
+	    }).catch(e => {
+		  console.error('<do.G> Error loading interstitial ad. Will retry in 20 seconds...', e);
+		  setTimeout(loadInterstitialAd, 20000);
+		});
+	  }
+	  
+	  function loadRewardedAd() {
+	    _rewardedAdInstance = null;
+		
+	    $msstart.loadAdsAsync(true).then(adInstance => {
+		  // Pass in boolean true for the optional parameter isRewardedAd, to fetch Rewarded ads
+		  _rewardedAdInstance = adInstance;
+		  console.log("Rewarded ad successfully loaded!");
+	    }).catch(e => {
+		  console.error('<do.G> Error loading rewarded ad. Will retry in 20 seconds...', e);
+		  setTimeout(loadRewardedAd, 20000);
+		});
+	  }
+	  
+	  function showInterstitialAd() {
+	    if (_interstitialAdInstance == null) {
+		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		  return;
+		}
+	    
+		try {
+	      $msstart.showAdsAsync(_interstitialAdInstance.instanceId).then(adInstance => {
+		    // Ad started showing successfully
+		    gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdStart');
+		
+            // Use the adInstance.showAdsCompletedAsync to be notified of the completion of showing the advertisement
+		    adInstance.showAdsCompletedAsync.then(() => {
+  		      gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdClose');
+  		    }).catch(e => {
+		      console.error('<do.G> Error interstitial showAdsCompletedAsync: ', e);
+		      gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		    }).finally(() => {
+		      loadInterstitialAd();
+		    });
+		  
+	      }).catch(e => {
+		    console.error('<do.G> Error show interstitial ad: ', e);
+		    gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		    loadInterstitialAd();
+		  });
+		} catch (e) {
+          console.error('<do.G> Error show interstitial ad: ', e.message);
+		  gameInstance.SendMessage('MSStartSDK', 'OnInterstitialAdShowError');
+		  loadInterstitialAd();
+        }
+	  }
+	  
+	  function showRewardedAd() {
+	    if (_rewardedAdInstance == null) {
+		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		  return;
+		}
+		
+		try {
+		  $msstart.showAdsAsync(_rewardedAdInstance.instanceId).then(adInstance => {
+		    // Ad started showing successfully
+		    gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdStart');
+		  
+            // Use the adInstance.showAdsCompletedAsync to be notified of the completion of showing the advertisement
+		    adInstance.showAdsCompletedAsync.then(() => {
+  		      gameInstance.SendMessage('MSStartSDK', 'OnReward');
+  		    }).catch(e => {
+		      console.error('<do.G> Error rewarded showAdsCompletedAsync: ', e);
+		      gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		    }).finally(() => {
+		      loadRewardedAd();
+		    });
+		  
+		  }).catch(e => {
+		    console.error('<do.G> Error show rewarded ad: ', e);
+		    gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		    loadRewardedAd();
+		  });
+		} catch (e) {
+          console.error('<do.G> Error show rewarded ad: ', e.message);
+		  gameInstance.SendMessage('MSStartSDK', 'OnRewardedAdShowError');
+		  loadRewardedAd();
+        }
+	  }
+	  
+	</script>
+	
+  </body>
+</html>

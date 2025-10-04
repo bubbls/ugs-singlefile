@@ -1,0 +1,364 @@
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+<!--this is a horror game where the monster moves when you dont look at him. Uses jsdelivr and raw.githubusercontent--!>
+
+<html lang="en-us"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Ancient Sins</title>
+</head>
+
+<body>
+  <div id="unity-container" class="unity-desktop">
+    <canvas id="unity-canvas" width="1625" height="864" tabindex="-1" style="width: 1300px; height: 691px; cursor: default;"></canvas>
+  </div>
+  <style>
+    body,
+    html {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100vw !important;
+      height: 100vh !important;
+    }
+  </style>
+
+  <script>
+    // Ensure that any query parameters used to load the page aren't available to the game runtime
+    // This is mainly to address the visibility of the access_token for private games
+    window.history.replaceState(null, null, window.location.pathname);
+  </script>
+
+  <script>
+    const container = document.querySelector("#unity-container");
+    const canvas = document.querySelector("#unity-canvas");
+  </script>
+
+  <script>
+    // Hacky solution for managing audio volume of the game player dynamically
+    window.audioStream = [];
+    window.AudioContextOrigin = window.AudioContext || window.webkitAudioContext;
+    window.AudioContext = function () {
+      const ac = new window.AudioContextOrigin();
+      const dest = ac.createMediaStreamDestination();
+      const baseMerge = ac.createGain();
+
+      window.globalGain = ac.createGain();
+      window.globalGain.gain.value = 1;
+      window.globalGain.connect(ac.destination);
+      
+      // Intercept connect() so that all nodes go through globalGain at the end
+      const originalConnect = AudioNode.prototype.connect;
+      AudioNode.prototype.connect = function (destination, ...args) {
+        if (destination === ac.destination) {
+          // Instead of connecting directly to destination, go through globalGain
+          return originalConnect.call(this, window.globalGain, ...args);
+        }
+        return originalConnect.call(this, destination, ...args);
+      };
+      return ac;
+    };
+  </script>
+
+  <script>
+    function sendParentMessage(event, data) {
+      <!--window.top.postMessage({ event: event, message: data }, 'https://play.unity.com');-->
+      window.top.postMessage({ event: event, message: data }, '*');
+    }
+  </script>
+
+  <script>
+    async function loadScript(url) {
+      return new Promise((resolve, reject) => {
+        const dynamicScriptElement = document.createElement("script");
+        dynamicScriptElement.src = url;
+        document.body.appendChild(dynamicScriptElement);
+
+        dynamicScriptElement.onload = () => {
+          resolve();
+        };
+
+        dynamicScriptElement.onerror = (error) => {
+          reject(error);
+        }
+      });
+    }
+  </script>
+
+  <script>
+    function startRecordingCanvas() {
+      window.recordedBlobs = [];
+      const availableRecordingOptions = ['video/webm;codecs=h264', 'video/webm;codecs=vp8,opus', 'video/webm'];
+      let recordingOptionIndex = 0;
+
+      while (availableRecordingOptions[recordingOptionIndex] && !MediaRecorder.isTypeSupported(availableRecordingOptions[recordingOptionIndex])) {
+        recordingOptionIndex++;
+      }
+
+      let recordingOption = availableRecordingOptions[recordingOptionIndex];
+
+      if (!recordingOption) {
+        console.error('This browser does not support recording via any support encoder');
+      }
+
+      window.mediaRecorder = new MediaRecorder(canvas.captureStream(), { mimeType: recordingOption });
+
+      mediaRecorder.onstop = () => {
+        onRecordingCompleted(window.recordedBlobs);
+      };
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          recordedBlobs.push(event.data);
+        }
+      };
+
+      mediaRecorder.start(10);
+    }
+
+    function onRecordingCompleted(blobs) {
+      sendParentMessage('recording.ready', { recordingBlobs: blobs });
+    }
+
+    function stopRecordingCanvas() {
+      mediaRecorder.stop();
+    }
+  </script>
+
+  <script>
+    // Patch canvas requestPointerLock
+    canvas._requestPointerLock = canvas.requestPointerLock;
+    canvas.requestPointerLock = async () => {
+      try {
+        return await canvas._requestPointerLock({
+          unadjustedMovement: true,
+        });
+      } catch (e) { /* swallow pointer lock errors */ }
+    };
+
+    if (navigator && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      const meta = document.createElement('meta');
+      meta.name = 'viewport';
+      meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+      document.getElementsByTagName('head')[0].appendChild(meta);
+      container.className = "unity-mobile";
+      canvas.className = "unity-mobile";
+    } else {
+      canvas.style.width = "960px";
+      canvas.style.height = "600px";
+    }
+
+    let gameInstance;
+
+    window.addEventListener(
+      'message',
+      ({ data, origin }) => {
+        if (origin !== 'https://play.unity.com') {
+          return;
+        }
+
+        if (!gameInstance) {
+          return;
+        }
+
+        const { event, message } = data;
+
+        switch (event) {
+          case 'mute.disable':
+            window.globalGain.gain.value = 1;
+            break;
+          case 'mute.enable':
+            window.globalGain.gain.value = 0;
+            break;
+          case 'fullscreen.enable':
+            gameInstance.SetFullscreen(true);
+            break;
+          case 'fullscreen.disable':
+            gameInstance.SetFullscreen(false);
+            break;
+          case 'recording.start':
+            startRecordingCanvas();
+            break;
+          case 'recording.stop':
+            stopRecordingCanvas();
+            break;
+        }
+      }
+    );
+
+    const bundleFormat = "3"
+
+    const legacyGameProperties = {
+      productVersion: "1.0",
+      graphicsAPI: ["WebGL 1.0"],
+      webglContextAttributes: { preserveDrawingBuffer: false },
+      splashScreenStyle: "Dark",
+      backgroundColor: "#231F20",
+      developmentBuild: false,
+      multithreading: false,
+      unityVersion: "2019.3.15f1",
+      Module: { splashScreenStyle: "Dark", preRun: [] }
+    };
+
+    let config;
+    let loaderUrl;
+    let configBlobUrl;
+    let encodedConfig;
+    let configBlob;
+
+    switch (bundleFormat) {
+      case "1":
+        loaderUrl = ""
+
+        config = {
+          dataUrl: "https://raw.githubusercontent.com/Stinkalistic/junk/refs/heads/main/ancientsins/Build/game.data.br",
+          wasmFrameworkUrl: "https://cdn.jsdelivr.net/gh/Stinkalistic/junk@main/ancientsins/Build/framework.js",
+          asmCodeUrl: "",
+          asmMemoryUrl: "",
+          asmFrameworkUrl: "",
+          streamingAssetsUrl: "https://play.unity.com/api/v1/games/game/47fd837e-02d6-4618-ba66-e3f639f5da7d/build/66ffd07c-838f-458a-8865-19b8f71582fb/streaming",
+          companyName: "play.unity.com",
+          productName: "Unity Play Project",
+          ...legacyGameProperties
+        };
+
+        encodedConfig = JSON.stringify(config);
+        configBlob = new Blob([encodedConfig], { type: "application/json" });
+        configBlobUrl = URL.createObjectURL(configBlob);
+        break;
+      case "2":
+        loaderUrl = ""
+
+        config = {
+          dataUrl: "https://raw.githubusercontent.com/Stinkalistic/junk/refs/heads/main/ancientsins/Build/game.data.br",
+          wasmFrameworkUrl: "https://cdn.jsdelivr.net/gh/Stinkalistic/junk@main/ancientsins/Build/framework.js",
+          wasmCodeUrl: "https://raw.githubusercontent.com/Stinkalistic/junk/refs/heads/main/ancientsins/Build/game.wasm.wasm",
+          streamingAssetsUrl: "https://play.unity.com/api/v1/games/game/47fd837e-02d6-4618-ba66-e3f639f5da7d/build/66ffd07c-838f-458a-8865-19b8f71582fb/streaming",
+          companyName: "play.unity.com",
+          productName: "Unity Play Project",
+          ...legacyGameProperties
+        };
+
+        encodedConfig = JSON.stringify(config);
+        configBlob = new Blob([encodedConfig], { type: "application/json" });
+        configBlobUrl = URL.createObjectURL(configBlob);
+        break;
+      case "3":
+      default:
+        loaderUrl = "https://cdn.jsdelivr.net/gh/Stinkalistic/junk@main/ancientsins/Build/loader.js";
+
+        config = {
+          dataUrl: "https://raw.githubusercontent.com/Stinkalistic/junk/refs/heads/main/ancientsins/Build/game.data.br",
+          frameworkUrl: "https://cdn.jsdelivr.net/gh/Stinkalistic/junk@main/ancientsins/Build/framework.js",
+          codeUrl: "https://raw.githubusercontent.com/Stinkalistic/junk/refs/heads/main/ancientsins/Build/game.wasm.wasm",
+          streamingAssetsUrl: "https://play.unity.com/api/v1/games/game/47fd837e-02d6-4618-ba66-e3f639f5da7d/build/66ffd07c-838f-458a-8865-19b8f71582fb/streaming",
+          companyName: "play.unity.com",
+          productName: "Unity Play Project",
+          productVersion: "1.0",
+        };
+        break;
+    }
+
+    async function loadFeatures() {
+      const availableFeatures = "".split(',').map(x => x.trim());
+
+      if (availableFeatures.includes('webgpu')) {
+        const webGPUCacheLoaderUrl = "";
+        const webGPUCacheDataUrl = "";
+
+        console.log(`Loading WebGPU cache data...`);
+        await loadScript(webGPUCacheDataUrl);
+
+        console.log(`Loading WebGPU cache loader...`);
+        await loadScript(webGPUCacheLoaderUrl);
+      }
+    }
+
+    function instantiateUsingUnityLoader() {
+      const res = UnityLoader.instantiate("unity-container", configBlobUrl, {
+        onProgress: (instance, progress) => {
+          gameInstance = instance;
+          sendParentMessage('progress', { progress: progress });
+
+          // This loader doesn't have an event for completion as far as I can tell, but it does finish the progress load on 0.9
+          if (progress === 0.9) {
+            sendParentMessage('ready', {});
+          }
+        },
+        Module: {
+          resolveBuildUrl: (e) => {
+            return e;
+          },
+          locateFile: (e) => {
+            if (e === 'build.wasm') {
+              return config['wasmCodeUrl'];
+            }
+
+            return e;
+          }
+        }
+      });
+    };
+
+    function instantiateUsingCreateUnityInstance() {
+      createUnityInstance(canvas, config, (progress) => {
+        sendParentMessage('progress', { progress: progress });
+      }).then(instance => {
+        gameInstance = instance;
+        sendParentMessage('ready', {});
+      }).catch(error => {
+        sendParentMessage('error', { error: error });
+      });
+    }
+
+    function patchUnityLoader(loaderSource) {
+      // Older versions of the loader will only identify and respect compression if the file ends in .unityweb
+      // Because this format has changed, we need to patch the old loaders to always respect compression
+
+      if (loaderSource.indexOf('e.wasmCodeUrl.endsWith(".unityweb")') !== -1) {
+        return loaderSource.replace('e.wasmCodeUrl.endsWith(".unityweb")', '(e.wasmCodeUrl.endsWith(".unityweb") || true)');
+      }
+      return loaderSource;
+    }
+
+    async function getPatchedUnityLoaderUrl() {
+      const loaderSourceResponse = await fetch(loaderUrl);
+      const loaderSource = await loaderSourceResponse.text();
+      const patchedLoaderSource = patchUnityLoader(loaderSource);
+      const patchedLoaderBlob = new Blob([patchedLoaderSource], { type: "application/javascript" });
+      const patchedLoaderUrl = URL.createObjectURL(patchedLoaderBlob);
+
+      return patchedLoaderUrl;
+    }
+
+    async function instantiateUnityLoader() {
+      const patchedUnityLoaderUrl = await getPatchedUnityLoaderUrl();
+
+      await loadScript(patchedUnityLoaderUrl);
+
+      switch (bundleFormat) {
+        case "1":
+        case "2":
+          instantiateUsingUnityLoader();
+          break;
+        case "3":
+        default:
+          instantiateUsingCreateUnityInstance();
+          break;
+      }
+    }
+
+    addEventListener("DOMContentLoaded", () => {
+      loadFeatures().then(() => {
+        console.log(`Initializing Unity loader...`);
+        instantiateUnityLoader();
+      }).catch(e => {
+        console.error(`Failed to load features - ${e}`);
+      });
+    });
+  </script>
+
+
+<script src="blob:https://play.unity.com/e4dc44a4-6283-4b47-b52f-17b686dea051"></script><script src="https://storage.googleapis.com/unity-play-prd-resource-bucket/games/47fd837e-02d6-4618-ba66-e3f639f5da7d/66ffd07c-838f-458a-8865-19b8f71582fb/framework.js.br?GoogleAccessId=unity-play-prd-api-sa%40unity-play-web-site-prd.iam.gserviceaccount.com&amp;Expires=1748052346&amp;Signature=a30Fs0UFOy7MIGRgJLFle8tSuyyQr11kLG7cdbK7eiTOvO7CPvTFQktfp4y2aSnKOysDVfWLFfKebNFl3oI7SasRUn33%2Brye3KQBx4AxDXxR9x%2F17hlqOHRn321vX%2ByzmaHhTvCPZvy3lNzRK7aG2MplcT8h3FRJiq%2BbnaGJ%2FT0u9je4sLdEU1I%2B0GmqV1mB2VUUMZu519aiZ6N9nOPkbjXeRARivVIpbYXjZ2601JekY7Q0ZKKvxm9i9NZWD88kHIDTUE%2FOo%2FeIJTxd3mJVvPl2naJE%2B9dvYL4E2tFIxPkWbJQqsRZG6yYeBA699rtDaKJK9dklgQEVfSfrgcilQg%3D%3D"></script></body></html>

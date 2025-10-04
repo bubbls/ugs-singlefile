@@ -1,0 +1,418 @@
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+<html><head><script src="//www.google.com/jsapi"></script><script>window.parent.maeExportApis_();</script>
+
+
+  <base target="_top">
+  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&amp;display=swap" rel="stylesheet">
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    body {
+      background: url('https://lh7-us.googleusercontent.com/3J6w8x84nyifqd5m-0bHoO-CHb9UG75YRvCKxbImnoKB-0T7hfWP33h2w2RiJHFoad3CICKPhiV5-PBRYIGbvOtwnfLIAbogNVBA24SNPV9IYehkG_CpqiBJleqqXWUww4QE9LSvi3u3EDnh-F-tXgE') repeat;
+      font-family: "Silkscreen", sans-serif;
+      font-weight: 400;
+      color: #625973;
+      font-style: normal;
+      text-decoration: none;
+    }
+    #app-container {
+      width: 600px;
+      height: 700px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(179, 226, 255, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
+    h1 {
+      font-size: 24px;
+      margin-bottom: 5px;
+      text-align: center;
+    }
+    #games-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .game-icon-container {
+      position: relative;
+      margin: 10px;
+    }
+    .game-icon {
+      width: 100px;
+      height: 100px;
+      cursor: pointer;
+      transition: transform 0.3s;
+      border: 2px solid #625973;
+      border-radius: 5px;
+    }
+    .game-icon:hover {
+      transform: scale(1.1);
+    }
+    .game-name {
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 5px 10px;
+      border-radius: 5px;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .game-icon-container:hover .game-name {
+      opacity: 1;
+    }
+    #game-frame {
+      display: none;
+      width: calc(100% - 20px);
+      height: calc(100% - 120px);
+      margin: 10px;
+    }
+    .navigation-buttons img, #back-button {
+      width: auto;
+      height: auto;
+      cursor: pointer;
+      margin: 5px;
+      transition: opacity 0.3s;
+    }
+    .navigation-buttons img:hover, #back-button:hover {
+      opacity: 0.7;
+    }
+    #back-button {
+      display: none;
+    }
+    .page-navigation {
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app-container">
+    <h1 class="silkscreen-regular">PICO-8 GAMES</h1>
+    <p id="subtitle" class="silkscreen-regular">More info about PICO-8 console at <a href="https://www.lexaloffle.com/pico-8.php" target="_blank" class="link">lexaloffle.com</a></p>
+    <div id="games-list"><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/C9JlxCEEApf5-HghbTBzqMT__m1U-0cfzwcG8fM6xEa4nLEcJqIS2boexmLtCFMycaYPtdQSoeSMYgm8-WSw27hw1BVoPj_VHy5CvGg519jp-1zxEgtmznksVc1GzkbStp3Gm02yMBQrQSzk8lFnlG0" class="game-icon"><div class="game-name">BAS</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/Uhx-4veotwVKwv2WBvRNLBIph3RmxW4Yzv4m4vOI4loyEGj7U-eIYhQ0qDzAPGsYluG3Pp2N2narmbbFI_wSa3WKRZgU8RqkMX_Vck8q0dCKuHyiG8WmW3yZhvLsp6PlcBtjWo6lT6OURMrPckiqlds" class="game-icon"><div class="game-name">Suika</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/o-viiXssbpz5Aohefvh-iWE3Oll87vJssAe9fLJ0Ylh8uPp9W3EFb1Jx3qS5_Li-TFCQcFCAd4Dt8BydNNX5ys3fGEiiPwxC-AGaJnsbtyEIN5z_DV5YO8v-ebGO0m8c_a8CyGCXAJxs-59rfjBufJc" class="game-icon"><div class="game-name">PullFrog</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/A46pY4d1TUosXhrRZNfvt-xflKSW7HymOlocpx9EAwXIxQwcnZIVC_RELWqljQLkzjvbsrWkbh0Ssg7ShnqxWySwS35_mpPFBAdwrj_DIEYPxdzcj1XyGkyI-L_lFXNqf7CW4OXBN5axieSb7BDesG4" class="game-icon"><div class="game-name">Terra</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/gN0_fiJxkUh4kBnIUez1bFWp51-HzgZijp80giFfTTlasKyU3pGG-FZApo8_oJobU1fSIJhXZHRRtzpkKVabxuQZYNWpBP__cHJxhlME6yyej0i-5jchmOSIVqLT8fsYigzhrhlqTAwdtNKu9Gv08Xg" class="game-icon"><div class="game-name">Slipways</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/LFjkaiEwja39aM8SUVipUTxwjOCTw_6vX6XWt8lBSXrak8_z6BsnH1mNArTOIffUTiykTOv2frM2Z5afgdakYKsDXyqQSq91OWwJfSAqAk8elQRtG6e5zkSATK3rFQMn9XZWISDQexRTMv05IdP6b4o" class="game-icon"><div class="game-name">Combo Pool</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/MdFk-54xUk1XKAXeA_yoddsMnDFa9DdBy3T8jkma58qFMSB_NgCp6GdgB2rv5-INiYDpG4UHP20qoNK0QdlzccUt7N7BBL8Jegw74Ew34m7XewUGxilQALImjPIyAsCfaybrFhUeUKsK37Mn-SWP1EU" class="game-icon"><div class="game-name">Kalikan</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/TnmI1skgoW_Q2OKWRBnve44X6ckjv5Toqm1d_aPd2b9Wb1qq0Cjat7P48xTM687t-my1JhUFwsFIBoOt7fMkOv97vmhQG-P6vpv9-Ytxzl-0A4jrAB_lCjjPc5ZsNBG5EUbg2nJwbtpy-z900I41f5E" class="game-icon"><div class="game-name">SnakeLike</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/CmJ4sON0sjtOHZi2UqJMSEILfUjldG_3_onIGAGFpFfH8bwEp729Jqp5-z1nKIKXBLlpF8mkdPcCVpQdODt7MrApTzivW7dW0dinqtBKQtq6MfILjtNWPDUe2GumDcI6zusaGst8ejIEglLmOFRjefA" class="game-icon"><div class="game-name">Celeste</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/Aw763bomJmSz--AWneet0of-QNfmCCFERavUvAgZrm0KjXpTNy_lX5zzilaFD5FcrIcvoUVoMZCL0ByOCDyXCZ_mHaITdLYl6wELpi1taQ5l38p7HeO374E-nkl0TpYaYw0DRtJD6oEatLjjoddKdTQ" class="game-icon"><div class="game-name">Celeste 2</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/xz2BeGRWzNYkPx0brlY31QUI9aZ0z6EYo5QI5tazOr4L9g1_S4KZrnkoXBkeIWdPkHE479wESXVPG3R5mEpy_zcwEAxYt74OvHmeurIvdD-dR65FyQcRIHIHcYqv1w5u2oAtlxdrOtMoz-WnDKSb8Y8" class="game-icon"><div class="game-name">Just One Boss</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/iRxaYpI0Wt-AxmA4OEbFM39qtlG-_DTbwUT6NzmdbBMaSFCR2lD6tkbSxL9wN7GDZ-FtarJFkTCqCrTpaAXk8Oj43fGzqkZe320i2jJ0o36QU-H6J1ZTzsTpYApCAFgjqx4Qo72LvtvkX6KB-g2DM3U" class="game-icon"><div class="game-name">High Stakes</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/lvPJ4lBYGYOGBYBTmKQGUtc7RTsWzEMRM3cHAyN645gWvXfLf--yEnTcV0jBizfS-SIAqY1Uo1Lkgf95-F-FLygoUj11T3HqLoNpDUohKacfqs3vmbtOlPv-khCoQoh_3x8sKlLAIHAUekA96KZAFZ4" class="game-icon"><div class="game-name">To a Starling</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/V5-gaxIK_WFI-3GWKvfOn6la-O_8AbaIQpian9W8AKugCB_5VB5Qp2-tIpjGrOr1dAZcjvpX6txBSRiNihUIJNo8gYC4zE0juMFiM7VwEszjyj7Dq8fjQLwFmyCsMHItwNluUAQ7qCwrgont6CuZido" class="game-icon"><div class="game-name">UFO Swamp Odyssey</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/HExubtCFIT23TJHUGUn1YGrFJVsHokeDpnryTx-a-upuAwNfT_S_RvXJ8wNbswNTxr2T0hBPQ3AzlJ98Fu2_LrmcgIywNPf5QmEJ_w_jvIURmgaGvBqemPFKvZzwGewIVoB4zWUXMSDzTugadXu_4iI" class="game-icon"><div class="game-name">Mimic</div></div><div class="game-icon-container"><img src="https://lh7-us.googleusercontent.com/RzmxybIqoXUfMJwejLJVuQxyvN93ijiSm1oA9hJypqoKPDDpjyfaxDczdZR0mxKj0DWnESiTuXZZyEam4QW5dlLWL14e400fzXyfJE1Ud9zTUuDrGxK-B_KK5Uiqz740GRyhRWV30D4RCDwUkFW19qU" class="game-icon"><div class="game-name">Ascent</div></div></div>
+    <iframe id="game-frame"></iframe>
+    <img src="https://lh7-us.googleusercontent.com/6IAopH7hyVGz81nxm9f7BSnkqAoXhMtqM_UZl4cz6PpnAhnWa3pxVqHiThENbbW6lhu8Wi88RPS0B-EG5qSNLQvuaSCqCJxYk2xXDczSygZz0iDlvy9ZPHNGAfIOvOjyA-aKwHQ1s6ZreL9FyOwb5Z4" id="back-button" onclick="closeGame()">
+
+    <div class="page-navigation navigation-buttons" id="page-navigation" style="display: flex; justify-content: center; align-items: center;">
+      <img src="https://lh7-us.googleusercontent.com/S-AroLDW4PhQFRqFsYjthjKCNLo7apcAvlitBDjXyeylZ41vkr3M_cqaFNg0oSSPyZ7t67zloI0EnvNcMPW6piQzFcSP_h1QiDNywmmznp2Hfd3lJC44170j2EQqvG3fhzk-07NC-FR5M5dIVcdm7Wk" id="prev-page" onclick="prevPage()">
+      <span id="page-counter" class="silkscreen-regular" style="text-align: center;">PAGE 1</span>
+      <img src="https://lh7-us.googleusercontent.com/B1e0lbp3HsR0gB7UWbFm6FCcIbdQFrSYnFceEKv1wMO6mao82Yee6sXEM8KEohTJf5lCvOLBC83k-F43eKbibDb6DQ1_MxyYtS-dlhaf9L33TILaEcNhad3if4JysgG61-MrZG2d3bWhgGHPbT1MAoE" id="next-page" onclick="nextPage()">
+    </div>
+    <p id="footer-text" class="silkscreen-regular">This app does not work correctly on mobile devices!</p>
+  </div>
+
+  <script>
+    var currentPage = 1;
+    var gamesPerPage = 16;
+    var totalGames = 0;
+    var games = [];
+
+    function openGame(url) {
+      var gameFrame = document.getElementById('game-frame');
+      var gamesList = document.getElementById('games-list');
+      var backButton = document.getElementById('back-button');
+      var pageNavigation = document.getElementById('page-navigation');
+
+      gameFrame.src = url;
+      gameFrame.style.display = 'block';
+      gamesList.style.display = 'none';
+      backButton.style.display = 'block';
+      pageNavigation.style.display = 'none';
+      document.getElementById('subtitle').style.display = 'none';
+      document.getElementById('footer-text').style.display = 'none';
+    }
+
+    function closeGame() {
+      var gameFrame = document.getElementById('game-frame');
+      var gamesList = document.getElementById('games-list');
+      var backButton = document.getElementById('back-button');
+      var pageNavigation = document.getElementById('page-navigation');
+
+      gameFrame.src = '';
+      gameFrame.style.display = 'none';
+      gamesList.style.display = 'flex'; 
+      backButton.style.display = 'none';
+      pageNavigation.style.display = 'flex';
+      document.getElementById('subtitle').style.display = 'block'; 
+      document.getElementById('footer-text').style.display = 'block';
+    }
+
+    function handleGameClick(url) {
+      openGame(url);
+    }
+
+    function loadGames() {
+
+      totalGames = 32;
+
+      for (var i = 1; i <= totalGames; i++) {
+        var game1 = {
+          name: 'BAS',
+          url: 'https://script.google.com/macros/s/AKfycbyY_2Px6ziEs3gh6ZW_19yn8VKFqCnnRWbe4aoV2fXuMt9j6M8DsSwb4epOVd0kfFz3Sw/exec',
+          icon: 'https://lh7-us.googleusercontent.com/C9JlxCEEApf5-HghbTBzqMT__m1U-0cfzwcG8fM6xEa4nLEcJqIS2boexmLtCFMycaYPtdQSoeSMYgm8-WSw27hw1BVoPj_VHy5CvGg519jp-1zxEgtmznksVc1GzkbStp3Gm02yMBQrQSzk8lFnlG0'
+        };
+        var game2 = {
+          name: 'Suika',
+          url: 'https://script.google.com/macros/s/AKfycbwbxTgaDtRg1hmGavxOtx2ovHBKy4EINAR8QW0qt7CCForQGrBfiCDzY2VakfXTgv57Rg/exec',
+          icon: 'https://lh7-us.googleusercontent.com/Uhx-4veotwVKwv2WBvRNLBIph3RmxW4Yzv4m4vOI4loyEGj7U-eIYhQ0qDzAPGsYluG3Pp2N2narmbbFI_wSa3WKRZgU8RqkMX_Vck8q0dCKuHyiG8WmW3yZhvLsp6PlcBtjWo6lT6OURMrPckiqlds'
+        };
+        var game3 = {
+          name: 'PullFrog',
+          url: 'https://script.google.com/macros/s/AKfycbwxZvOVBBqmVRr1ww8XFhSOEfM3gASEEHIMI39zJZfdIhwUpPxkfrUqLx4Tu3UffzhNfw/exec',
+          icon: 'https://lh7-us.googleusercontent.com/o-viiXssbpz5Aohefvh-iWE3Oll87vJssAe9fLJ0Ylh8uPp9W3EFb1Jx3qS5_Li-TFCQcFCAd4Dt8BydNNX5ys3fGEiiPwxC-AGaJnsbtyEIN5z_DV5YO8v-ebGO0m8c_a8CyGCXAJxs-59rfjBufJc'
+        };
+        var game4 = {
+          name: 'Terra',
+          url: 'https://script.google.com/macros/s/AKfycbw_BdIhbE79HIIY1s43UDRge2udXAS5K_6x3I12ne5c8nWKqtgLcoxLLYj_C6AT7xVxnA/exec',
+          icon: 'https://lh7-us.googleusercontent.com/A46pY4d1TUosXhrRZNfvt-xflKSW7HymOlocpx9EAwXIxQwcnZIVC_RELWqljQLkzjvbsrWkbh0Ssg7ShnqxWySwS35_mpPFBAdwrj_DIEYPxdzcj1XyGkyI-L_lFXNqf7CW4OXBN5axieSb7BDesG4'
+        };
+        var game5 = {
+          name: 'Slipways',
+          url: 'https://script.google.com/macros/s/AKfycbyaaGehuHPok27MtRJcW9MSrcHyTi5AdV4BW29PthSy1mP9e3F50RX0-pefI1as-RK-Dw/exec',
+          icon: 'https://lh7-us.googleusercontent.com/gN0_fiJxkUh4kBnIUez1bFWp51-HzgZijp80giFfTTlasKyU3pGG-FZApo8_oJobU1fSIJhXZHRRtzpkKVabxuQZYNWpBP__cHJxhlME6yyej0i-5jchmOSIVqLT8fsYigzhrhlqTAwdtNKu9Gv08Xg'
+        };
+        var game6 = {
+          name: 'Combo Pool',
+          url: 'https://script.google.com/macros/s/AKfycbwr0-Bsr1qA3ZOZYizSZpf-4jIOXINE1l9quY9W-rvpZ6wVMZujZQxKiFNeZ6hI0O4D/exec',
+          icon: 'https://lh7-us.googleusercontent.com/LFjkaiEwja39aM8SUVipUTxwjOCTw_6vX6XWt8lBSXrak8_z6BsnH1mNArTOIffUTiykTOv2frM2Z5afgdakYKsDXyqQSq91OWwJfSAqAk8elQRtG6e5zkSATK3rFQMn9XZWISDQexRTMv05IdP6b4o'
+        };
+        var game7 = {
+          name: 'Kalikan',
+          url: 'https://script.google.com/macros/s/AKfycbzFH8nYNHrGEYpvoUpWEUx9YwphHIQyNHB41wsgyGbSthsbN0GOzoz-92IBJtFzb9ls/exec',
+          icon: 'https://lh7-us.googleusercontent.com/MdFk-54xUk1XKAXeA_yoddsMnDFa9DdBy3T8jkma58qFMSB_NgCp6GdgB2rv5-INiYDpG4UHP20qoNK0QdlzccUt7N7BBL8Jegw74Ew34m7XewUGxilQALImjPIyAsCfaybrFhUeUKsK37Mn-SWP1EU'
+        };
+        var game8 = {
+          name: 'SnakeLike',
+          url: 'https://script.google.com/macros/s/AKfycbxOBaIVNS9KT7ieg45CbIr6vxxDiLYK86iVofuijmtosGrZWscHOCGeujIPR3IxzaDp/exec',
+          icon: 'https://lh7-us.googleusercontent.com/TnmI1skgoW_Q2OKWRBnve44X6ckjv5Toqm1d_aPd2b9Wb1qq0Cjat7P48xTM687t-my1JhUFwsFIBoOt7fMkOv97vmhQG-P6vpv9-Ytxzl-0A4jrAB_lCjjPc5ZsNBG5EUbg2nJwbtpy-z900I41f5E'
+        };
+        var game9 = {
+          name: 'Celeste',
+          url: 'https://script.google.com/macros/s/AKfycbwp5IIq4s824af5BLhXcuJh0sPyfVEcDRZmtJmqjcTB_pKkDNXKLJsG3wFMbYTruvzz/exec',
+          icon: 'https://lh7-us.googleusercontent.com/CmJ4sON0sjtOHZi2UqJMSEILfUjldG_3_onIGAGFpFfH8bwEp729Jqp5-z1nKIKXBLlpF8mkdPcCVpQdODt7MrApTzivW7dW0dinqtBKQtq6MfILjtNWPDUe2GumDcI6zusaGst8ejIEglLmOFRjefA'
+        };
+        var game10 = {
+          name: 'Celeste 2',
+          url: 'https://script.google.com/macros/s/AKfycbyvNRfh4U850x7FKo4qQrrLTRhvxcPQL9R1zo1ecDolPCW2ZlUrOgL-UJAKikdzKFC5lw/exec',
+          icon: 'https://lh7-us.googleusercontent.com/Aw763bomJmSz--AWneet0of-QNfmCCFERavUvAgZrm0KjXpTNy_lX5zzilaFD5FcrIcvoUVoMZCL0ByOCDyXCZ_mHaITdLYl6wELpi1taQ5l38p7HeO374E-nkl0TpYaYw0DRtJD6oEatLjjoddKdTQ'
+        };
+        var game11 = {
+          name: 'Just One Boss',
+          url: 'https://script.google.com/macros/s/AKfycbzCAdNKJ_DoCTmgX3_ZLUW2xTKcas3kMuy3U4HcdUMMkhotMjb45lpRXsXLcrqAXkKI_A/exec',
+          icon: 'https://lh7-us.googleusercontent.com/xz2BeGRWzNYkPx0brlY31QUI9aZ0z6EYo5QI5tazOr4L9g1_S4KZrnkoXBkeIWdPkHE479wESXVPG3R5mEpy_zcwEAxYt74OvHmeurIvdD-dR65FyQcRIHIHcYqv1w5u2oAtlxdrOtMoz-WnDKSb8Y8'
+        };
+        var game12 = {
+          name: 'High Stakes',
+          url: 'https://script.google.com/macros/s/AKfycbxhL9y-u581YUCKtSGTpWxORmYGAUvtXgoYn3oliXdg4sYY1kxdNGkcWiCJMYt-lNpq/exec',
+          icon: 'https://lh7-us.googleusercontent.com/iRxaYpI0Wt-AxmA4OEbFM39qtlG-_DTbwUT6NzmdbBMaSFCR2lD6tkbSxL9wN7GDZ-FtarJFkTCqCrTpaAXk8Oj43fGzqkZe320i2jJ0o36QU-H6J1ZTzsTpYApCAFgjqx4Qo72LvtvkX6KB-g2DM3U'
+        };
+        var game13 = {
+          name: 'To a Starling',
+          url: 'https://script.google.com/macros/s/AKfycbxpecnvtihCSOTh8uiCWLWNHcFsRHs37r6gtYMQG8xNEzM6V_sMawrZfmbeTjPj8jZX/exec',
+          icon: 'https://lh7-us.googleusercontent.com/lvPJ4lBYGYOGBYBTmKQGUtc7RTsWzEMRM3cHAyN645gWvXfLf--yEnTcV0jBizfS-SIAqY1Uo1Lkgf95-F-FLygoUj11T3HqLoNpDUohKacfqs3vmbtOlPv-khCoQoh_3x8sKlLAIHAUekA96KZAFZ4'
+        };
+        var game14 = {
+          name: 'UFO Swamp Odyssey',
+          url: 'https://script.google.com/macros/s/AKfycbxgedRXj9rZu4w-h69YlaZHGxCwPd_W3kcTf37P5BYFTh1gb4c6zMKV9GnsAjyH-nI/exec',
+          icon: 'https://lh7-us.googleusercontent.com/V5-gaxIK_WFI-3GWKvfOn6la-O_8AbaIQpian9W8AKugCB_5VB5Qp2-tIpjGrOr1dAZcjvpX6txBSRiNihUIJNo8gYC4zE0juMFiM7VwEszjyj7Dq8fjQLwFmyCsMHItwNluUAQ7qCwrgont6CuZido'
+        };
+        var game15 = {
+          name: 'Mimic',
+          url: 'https://script.google.com/macros/s/AKfycbzYDW5P4q94oeYXw4kTl1qxltb9AmoqU2DqJGys8dwnrN9iu4YgLNmk6-1wzpgTC4ycEA/exec',
+          icon: 'https://lh7-us.googleusercontent.com/HExubtCFIT23TJHUGUn1YGrFJVsHokeDpnryTx-a-upuAwNfT_S_RvXJ8wNbswNTxr2T0hBPQ3AzlJ98Fu2_LrmcgIywNPf5QmEJ_w_jvIURmgaGvBqemPFKvZzwGewIVoB4zWUXMSDzTugadXu_4iI'
+        };
+        var game16 = {
+          name: 'Ascent',
+          url: 'https://script.google.com/macros/s/AKfycbyXLvXCmR_5PwV2a_8yWazEwC4CT_tVW-gLIGyA9gfuDWcChWSlCDh_Ajuu5Pa9fTy3sQ/exec',
+          icon: 'https://lh7-us.googleusercontent.com/RzmxybIqoXUfMJwejLJVuQxyvN93ijiSm1oA9hJypqoKPDDpjyfaxDczdZR0mxKj0DWnESiTuXZZyEam4QW5dlLWL14e400fzXyfJE1Ud9zTUuDrGxK-B_KK5Uiqz740GRyhRWV30D4RCDwUkFW19qU'
+        };
+        var game17 = {
+          name: 'Dank Tomb',
+          url: 'https://script.google.com/macros/s/AKfycbydi5iGlfx0Fmq_MREjXCkHonWU3c6V-72BRAJWsra1Usa7vUM732d7q9liCr2AchHa/exec',
+          icon: 'https://lh7-us.googleusercontent.com/ZNbPXXw0orAsuemVPQ4CsNwBgOuZk1fVHnOHPnqYDZAmTk7LEVbRfoo1WKzs8GgnOsRBj3fXakKV-LYcVqKg1Cs-qS9QfjM5fmM5RgcPZMkIMh8afoS82irsUyiTDSNEVh-usOHSNWQVyKrhpotlCk0'
+        };
+        var game18 = {
+          name: 'Pico Night Punkin',
+          url: 'https://script.google.com/macros/s/AKfycbxNjA6hy-G8ajjaEEXUJAEzDa2D8RiqtNaTnSaY7ryV1Plu4sT8-xrqCDW6GZ2phQWJZg/exec',
+          icon: 'https://lh7-us.googleusercontent.com/7z0epO615I9TKTS5LQeDOLx37zAbnZEJuNJmp94wurIzVlKZfi3NJwctvnlCfpg2XS3ndJgz8mKrbuRIv1EGeMXmFyeZ6mAMhkcTOQspdK7cTtZkf830aiMi7RXCoz6En9ZH6ViiDDP__ciIn7bSDU4'
+        };
+        var game19 = {
+          name: 'Pico Driller',
+          url: 'https://script.google.com/macros/s/AKfycbzg71x0Eon0BrwShubg4bKvKYWUJ2daZ9YbrNMpOMpJx_i6oK9N2c0PZvc0Pe9PJsgbww/exec',
+          icon: 'https://lh7-us.googleusercontent.com/d9wILop0XxI3zwWuXVceuwqOp2iXn8uG5zS6Gy0b3o11DmiswSSoN5razrVXMBZg3YR90PGvgpfptuo3RYFHTUK3kYN8h4EIUm2TcAvu0RapP2r_Rgc6-k3n53HQ6GkeT3rG2-ty7n63RiIwkhbpE7I'
+        };
+        var game20 = {
+          name: 'Praxis Fighter X',
+          url: 'https://script.google.com/macros/s/AKfycbyq3W5qdaNQ3CGsur4AbeDMa2U1l-dugkAdAQziMoFv6lkirHhvQfhpeyRKWznmgChR0Q/exec',
+          icon: 'https://lh7-us.googleusercontent.com/u0Z_swuYFDXQpJEj-c2NCkctAgpXdOiZxW5XW2HvS-yrJSZ15WXZouYyU9J8torxfE1TZZkwobfYbHK2BmS0tkAu2JaZ5YpyhMma1fE1tiPb8rLFVf5NeTjMTcIEjyCC0fELvNqU7y4GocE0h4Cw0Cg'
+        };
+        var game21 = {
+          name: 'Allocation',
+          url: 'https://script.google.com/macros/s/AKfycbwqhdwVdizaJ-5BD0v5xpo22UX1fQUyZLvriiug44HEQp9os7EVeeypCtBX4pASdt11/exec',
+          icon: 'https://lh7-us.googleusercontent.com/w_qS3diMvdy4ccL9mTIJIYaLq_aEhRP0BXZ6pQW3BRntXcIfAyGm_MALKHa6Xp_XZF5OcYZ4-sD8HJubVUrn1Q5I63meOYo9EJA0ytb7wceAZJ2sOFhIA0YmnOtu9qoAydkyrlWfK5Qb1TB5OYRtQBI'
+        };
+        var game22 = {
+          name: 'Curse of the Lich King',
+          url: 'https://script.google.com/macros/s/AKfycbyy2hesYpH46z2y9TlLYPn-SLMwmTutu4CkO3gJbRpecSc-AhSCml2ai-czW6gqStNd0w/exec',
+          icon: 'https://lh7-us.googleusercontent.com/WVKvlt_4qjiG4EgYjkJv7g7fltfELUN3Qmn9KssyLLmBXPRjlcsHroUNfMBx-tcToWGffD5DdPYQs2JNciIt0dQ1eo7XG9reNuFcXU32txHiCDphK_twcTYHd85-k7cDyW7EwHix0ni-xWuguoeNmc0'
+        };
+        var game23 = {
+          name: 'Dusk Child',
+          url: 'https://script.google.com/macros/s/AKfycbw_LX6qvQCfZQtYuY5n_OhDqSlqfgzlvSVRMvXhybKHnUnbtjFQ3N86enZVcxZb3kfx/exec',
+          icon: 'https://lh7-us.googleusercontent.com/47IloCl6QZI8TicgsrZ13XpJasLmNln9cVnt20NNAkSB3EeeRjIUjkBCG51t5jceRamBHoaim-JdkE00d_QM08MMQezMN_5f39lWxTp_mOSBJvTZAL8Bxu2c6O0QCobCyyRc2P8I7zMobUtLFbJbg9I'
+        };
+        var game24 = {
+          name: 'Into Ruins',
+          url: 'https://script.google.com/macros/s/AKfycbyF6ocxd68od0Szlq7kBjWYJLm7cZtczuDM9QP2nVQh4iKsLw2Y32foXMAY7MPQQijmgg/exec',
+          icon: 'https://lh7-us.googleusercontent.com/3Xh4l_FGWIxKCJgahODfNnRfMTi28huZK1G9Y_u-CLPxUXM59i92K0CaKOrgCVudm2DiGJtiyqQzngNTfQFUyFuIESW6jFNe0Jk8pVDDz-OL-D4aoBEWkD5IFNs3V1mzQ2Zhqcemo922_g-O25EmBy8'
+        };
+        var game25 = {
+          name: 'Villager',
+          url: 'https://script.google.com/macros/s/AKfycbyhdvMhmolGZ8WD0Nuib263WaknZQmOdmoBvhJ0ZZLeEUsMq5npoL2aIqxulMFk-G14IA/exec',
+          icon: 'https://lh7-us.googleusercontent.com/_nCePuIe5K1o4axbt4W-t9yMC8pPmu_8f27iZDcUyNdns4_Cnml06UuhiZVlq2XSWDWoC8-dze_aBT0ZC0e0LJSdYKxo3GScZ9CZIAMOmpkJ_yR3ljxs7euF0Pc2aiQQcYkisY7_YCcP2IesM1c7Bmo'
+        };
+        var game26 = {
+          name: 'Coffee Maker',
+          url: 'https://script.google.com/macros/s/AKfycbwEm4UHu6PFlEBkmzNhqc8OpeievG28YJ_DexUhFmRrQUA1pKBK32tJWlILkgRppeFHCw/exec',
+          icon: 'https://lh7-us.googleusercontent.com/udyGtK0JTyPAZujRLMPUFMBKYomEaYk96hbKlMBn_dexNRX-Wj9F1GEP7gnR_XZ8WDsfC4Cu_lE-BgJbNmkGMYJmD41l6EWlZfsZQ9WMCoe34pTbimhm8189e1AZ_nkS3HRImBsQ77NReOGID4r55fg'
+        };
+        var game27 = {
+          name: 'Golf Sunday',
+          url: 'https://script.google.com/macros/s/AKfycbwPouI60EGneJ-Q2X-Sykj1a8vR_WF6mnawvEsiN50O90QJRl1hlCF8-dKi9rbdhwNqFA/exec',
+          icon: 'https://lh7-us.googleusercontent.com/IaCLgXIBO7cQ4CgamejyHS5XaN942X8zAoCel4dneV2zrB0gr-z8d2HGkYJuBXgl6nDO9TnkwUahJNZocc5ZnDoNUYbF64QD3-OpkZ-GFrTd_Dks_7_3gtpbYpqG9L7J1Yv4A-yprmnHtWqUoF1b3Vw'
+        };
+        var game28 = {
+          name: 'Porter',
+          url: 'https://script.google.com/macros/s/AKfycbycChsvRWaKMwtZyhO0ccfr1AGWCNOZlwX1kRtM7wVdLQK3ocBkGk5i00ktXW5tUqPn/exec',
+          icon: 'https://lh7-us.googleusercontent.com/EMDbVRduND242ldTT92TMb88y1rWHX5L9ZsLpmjEPC0nO-pRqTUj7LkEcTrtEz9RjiDakK0_0lzoBOT5zEi4BnEaFJc-XccihqMAAwzIlX37uUjcOMtbJy9fBKgmKxcmvu5GKiBV6g0IOtZH1ji19lA'
+        };
+        var game29 = {
+          name: 'Porklike',
+          url: 'https://script.google.com/macros/s/AKfycbzDc3wIkKCITB1nMjhH5NR8dz0L6gPNg9LSMYn1ea2NCn_sEjLlWJFH11-sx5Pi4bUD/exec',
+          icon: 'https://lh7-us.googleusercontent.com/E0rVi8kloI4SE_e_qDuPDd6WWVImSN1XNGIZUjGZJiyrgcL_6FlgPIPude96Xq0PaA3vAWnhFBvKfx3mDeMRWotJTdB12dpsHFTTGwQc6UQ3GOAwL7Q9yZRu8wNpvyPf3ADyLPdRAIluYNKX54yQMo4'
+        };
+        var game30 = {
+          name: 'WitchCraft TD',
+          url: 'https://script.google.com/macros/s/AKfycbwKkKgjyym6qMbBuw9sCVLQK26RCjtbLUl8BM0-UJ4ciY_xkUdbjKmYZmo7u7a436Qu/exec',
+          icon: 'https://lh7-us.googleusercontent.com/g0NdpCZZua5Mer6OmH8SUTMZUCeb9NXKOkncOscBpwaCmW3LwvPYTulCp6erZV95kkeamiKUfhay5k7pvagxQ_qYEcJjhQGt7b5-wrWdIsWtE3cq8lXyTvnx-mccfN58zulCB3BO4el-GCzUrgocekk'
+        };
+        var game31 = {
+          name: 'ISLANDER',
+          url: 'https://script.google.com/macros/s/AKfycbyDAcpvt-KT2-i0ErByz28jBlvYDPoLpOP4KDxeyHMnGPe61ytvA6yTvDiA0NZuTm8/exec',
+          icon: 'https://lh7-us.googleusercontent.com/xSFfcQ-pGqIWU2zVMZNb1CspHZQ0KbtPCTy6y7-s_7URJjYd1DjbpNR-xZkqNrwIO5pVUM0m5vGQk2_zXOvapnmzNgIHcQwUN4eeVBgjOfXEsDzvi3MD7fAYoC3tsftRHnwcQ8b0oyHQStT1_I4w2MU'
+        };
+        var game32 = {
+          name: 'Pieces of Cake',
+          url: 'https://script.google.com/macros/s/AKfycbx7urCJGXBq7YX7KRwPXHmKsg1-gb-dxhvIwHdYzq--mUlk32Ohr5LgvTmuKrhFH92e/exec',
+          icon: 'https://lh7-us.googleusercontent.com/9Si5vzJLPfDXRTpc_qmRqpC-9qzraeWtfEBJ0PLTY9KNYuDViyFHdpZfl4AEs6rYkPr-3IrIUJG44L9VfQ5R81XCpdbWR1nSoyZ-sn8LaW66ztVNTYD6QFuoq5mH5z6OlB_An9TrJlLbpHPWhUNVqGg'
+        };
+        
+        games.push(game1);
+        games.push(game2);
+        games.push(game3);
+        games.push(game4);
+        games.push(game5);
+        games.push(game6);
+        games.push(game7);
+        games.push(game8);
+        games.push(game9);
+        games.push(game10);
+        games.push(game11);
+        games.push(game12);
+        games.push(game13);
+        games.push(game14);
+        games.push(game15);
+        games.push(game16);
+        games.push(game17);
+        games.push(game18);
+        games.push(game19);
+        games.push(game20);
+        games.push(game21);
+        games.push(game22);
+        games.push(game23);
+        games.push(game24);
+        games.push(game25);
+        games.push(game26);
+        games.push(game27);
+        games.push(game28);
+        games.push(game29);
+        games.push(game30);
+        games.push(game31);
+        games.push(game32);
+      }
+
+      showGames();
+    }
+
+    function showGames() {
+      var gamesList = document.getElementById('games-list');
+      gamesList.innerHTML = '';
+
+      var startIndex = (currentPage - 1) * gamesPerPage;
+      var endIndex = Math.min(startIndex + gamesPerPage, totalGames);
+
+      for (var i = startIndex; i < endIndex; i++) {
+        var game = games[i];
+        var iconContainer = document.createElement('div');
+        iconContainer.classList.add('game-icon-container');
+        var icon = document.createElement('img');
+        icon.src = game.icon;
+        icon.classList.add('game-icon');
+        var name = document.createElement('div');
+        name.textContent = game.name;
+        name.classList.add('game-name');
+        iconContainer.appendChild(icon);
+        iconContainer.appendChild(name);
+        iconContainer.addEventListener('click', createClickHandler(game.url));
+        gamesList.appendChild(iconContainer);
+      }
+
+      var pageCounter = document.getElementById('page-counter');
+      pageCounter.textContent = 'PAGE ' + currentPage;
+    }
+
+    function createClickHandler(url) {
+      return function() {
+        handleGameClick(url);
+      };
+    }
+
+    function prevPage() {
+      if (currentPage > 1) {
+        currentPage--;
+        showGames();
+      }
+    }
+
+    function nextPage() {
+      var totalPages = Math.ceil(totalGames / gamesPerPage);
+      if (currentPage < totalPages) {
+        currentPage++;
+        showGames();
+      }
+    }
+
+    window.onload = function() {
+      loadGames();
+    };
+  </script>
+
+
+</body></html>

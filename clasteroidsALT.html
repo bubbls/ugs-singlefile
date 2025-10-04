@@ -1,0 +1,107 @@
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+<!--This is a arcade game. Uses jsdelivr--!>
+
+<!doctype html>
+<base href="https://cdn.jsdelivr.net/gh/Stinkalistic/SWAGgames@main/asteroids/">
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="Asteroids game ported from C to WebAssembly">
+        <meta name="author" content="Robert Aboukhalil">
+        <title>Asteroids Game in WebAssembly</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+        <style>
+            body { padding-top: 5rem; }
+            .starter-template { text-align: center; }
+            canvas { display: block; margin: 0 auto; }
+        </style>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="#">Asteroids in WebAssembly</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+                <ul class="navbar-nav mr-auto"></ul>
+                <div>
+                    <a style="color:#ccc" class="nav-link" href="https://github.com/robertaboukhalil/wasm-asteroids" target="_blank">Code on GitHub</a>
+                </div>
+            </div>
+        </nav>
+
+        <div class="starter-template">
+            <p class="lead">
+                An <a href="https://github.com/flightcrank/asteroids">Asteroids game</a> ported from C to WebAssembly.<br />
+                <small>(Arrows to move; Spacebar to shoot)</small>
+            </p>
+            <p id="loading" class="lead">
+                <img src="loading.gif" alt="Loading..." height="100">
+            </p>
+        </div>
+
+        <main role="main" class="container">
+            <div class="row" style="text-align:center">
+              <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 text-center">
+                    <hr />
+                    <p>Want to learn how to port games like this one to the web? Check out my book <a href="http://levelupwasm.com" target="_blank">Level Up with WebAssembly</a>.</p>
+                </div>
+            </div>
+        </main>
+
+        <!-- Main logic -->
+        <script type='text/javascript'>
+          var spinnerElement = document.getElementById('loading');
+          var Module = {
+            preRun: [],
+            postRun: [],
+            print: function(stdout){ console.log(stdout); },
+            printErr: function(stderr) { console.error(stderr); },
+            canvas: (function() {
+              var canvas = document.getElementById('canvas');
+              canvas.addEventListener("webglcontextlost", function(e) { alert('WebGL context lost. You will need to reload the page.'); e.preventDefault(); }, false);
+              return canvas;
+            })(),
+            setStatus: function(text) {
+              if (!Module.setStatus.last) Module.setStatus.last = { time: Date.now(), text: '' };
+              if (text === Module.setStatus.last.text) return;
+              var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+              var now = Date.now();
+              if (m && now - Module.setStatus.last.time < 30) return;
+              Module.setStatus.last.time = now;
+              Module.setStatus.last.text = text;
+              if (m) {
+                text = m[1];
+                spinnerElement.hidden = false;
+              } else {
+                if (!text) spinnerElement.style.display = 'none';
+              }
+            },
+            totalDependencies: 0,
+            monitorRunDependencies: function(left) {
+              this.totalDependencies = Math.max(this.totalDependencies, left);
+              Module.setStatus(left ? 'Preparing... (' + (this.totalDependencies-left) + '/' + this.totalDependencies + ')' : 'All downloads complete.');
+            }
+          };
+          Module.setStatus('Downloading...');
+          window.onerror = function(event) {
+            Module.setStatus('Exception thrown, see JavaScript console');
+            spinnerElement.style.display = 'none';
+            Module.setStatus = function(text) {
+              if (text) Module.printErr('[post-exception status] ' + text);
+            };
+          };
+        </script>
+        <script async type="text/javascript" src="asteroids.js"></script>
+    </body>
+</html>

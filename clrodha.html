@@ -1,0 +1,30 @@
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | Rodha</title>
+  </head>
+  <body style="text-align: center">
+    <canvas id="unity-canvas" width=800 height=400 style="width: 800px; height: 400px; background: #FFFFFF"></canvas>
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@30e0248c3a4519ed2d7be571e4284696bf2df445/rod-ha/Build/d50cc3ee055c5f5e237cc0492cefedce.js"></script>
+    <script>
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@30e0248c3a4519ed2d7be571e4284696bf2df445/rod-ha/Build/7ef3b8b9f1644e77a81f596e8b0cc75b.data",
+        frameworkUrl: "https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@30e0248c3a4519ed2d7be571e4284696bf2df445/rod-ha/Build/5793d61484e6d62e0d89174f4dba923f.js",
+        codeUrl: "https://rawcdn.githack.com/bubbls/UGS-Assets/30e0248c3a4519ed2d7be571e4284696bf2df445/rod-ha/Build/4fbbfd201ecb27c6f7074aa0f3d839c5.wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "Garuda Games",
+        productName: "Rodha",
+        productVersion: "1.0",
+        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      });
+    </script>
+  </body>
+</html>

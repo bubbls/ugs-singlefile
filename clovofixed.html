@@ -1,0 +1,178 @@
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+</style><script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/ovoff.js"></script><style type="text/css">#button {
+  display:none;
+}
+.imgb_vis {
+  animation: imgb-animation 7s linear;
+}
+@keyframes imgb-animation {
+  10% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(100px);
+  }
+  90% {
+    transform: translateX(100px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}</style><style>.animated,animated.hinge,.animated.flipOutX,.animated.flipOutY,.animated.bounceIn,.animated.bounceOut,.animated.flipOutXX,.animated.flipInXX,.animated.flipInYY,.animated.flipOutYY{-webkit-animation-duration: 0.7s !important;animation-duration: 0.7s !important;}</style><script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/lzma.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/unloxck.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/websdk.js"></script><script type="text/javascript" src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/editor.js"></script><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/styleo.css"><link href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/fonts.css" rel="stylesheet" type="text/css"><link href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/fonts.css" rel="stylesheet" type="text/css"></head><body dir="ltr"><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-MENBM6GSNY"></script><script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-MENBM6GSNY');
+</script> 
+
+	<div id="fb-root"></div>
+	
+	<script>
+	// Issue a warning if trying to preview an exported project on disk.
+	(function(){
+		// Check for running exported on file protocol
+		if (window.location.protocol.substr(0, 4) === "file")
+		{
+			alert("Exported games won't work until you upload them. (When running on the file:/// protocol, browsers block many features from working for security reasons.)");
+		}
+	})();
+	</script>
+	
+	<!-- The canvas must be inside a div called c2canvasdiv -->
+	
+	
+	<!-- Pages load faster with scripts at the bottom -->
+	
+	<!-- Construct 2 exported games require jQuery. -->
+	<script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/341.js"></script>
+
+	<script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/gamean.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/tween.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/html.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/grit.js"></script>
+	<script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/howl.js"></script>
+
+	
+    <!-- The runtime script.  You can rename it, but don't forget to rename the reference here as well.
+    This file will have been minified and obfuscated if you enabled "Minify script" during export. -->
+	<script src="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/c2r.js"></script>
+
+    <script>
+		// Start the Construct 2 project running on window load.
+		jQuery(document).ready(function ()
+		{			
+			// Create new runtime using the c2canvas
+			cr_createRuntime("c2canvas");
+		});
+		
+		// Pause and resume on page becoming visible/invisible
+		function onVisibilityChanged() {
+			if (document.hidden || document.mozHidden || document.webkitHidden || document.msHidden)
+				cr_setSuspended(true);
+			else
+				cr_setSuspended(false);
+		};
+		
+		document.addEventListener("visibilitychange", onVisibilityChanged, false);
+		document.addEventListener("mozvisibilitychange", onVisibilityChanged, false);
+		document.addEventListener("webkitvisibilitychange", onVisibilityChanged, false);
+		document.addEventListener("msvisibilitychange", onVisibilityChanged, false);
+		
+		function OnRegisterSWError(e)
+		{
+			console.warn("Failed to register service worker: ", e);
+		};
+		
+		// Runtime calls this global method when ready to start caching (i.e. after startup).
+		// This registers the service worker which caches resources for offline support.
+		window.C2_RegisterSW = function C2_RegisterSW()
+		{
+			if (!navigator.serviceWorker)
+				return;		// no SW support, ignore call
+			
+			try {
+				navigator.serviceWorker.register("sw.js", { scope: "./" })
+				.then(function (reg)
+				{
+					console.log("Registered service worker on " + reg.scope);
+				})
+				.catch(OnRegisterSWError);
+			}
+			catch (e)
+			{
+				OnRegisterSWError(e);
+			}
+		};
+    </script>
+	<script src=""></script>
+ 
+
+<script>gadgets.util.runOnLoadHandlers();</script><script>window.google.csi.tickDl();
+</script><div id="banner-container" style="position: absolute; overflow: visible; transform: rotate(0deg); top: 661.966px; left: 201.003px; width: 698.019px; height: 193.253px; display: none;"></div><div id="c2canvasdiv" style="width: 449px; height: 923px; margin-left: 0px; margin-top: 0px;" class="">
+	
+		<!-- The canvas the project will render to.  If you change its ID, don't forget to change the
+		ID the runtime looks for in the jQuery events above (ready() and cr_sizeCanvas()). -->
+		<canvas height="923" id="c2canvas" width="449" ondragover="event.preventDefault();" ondrop="ovoLevelEditor.handleDrop(event)">
+			<!-- This text is displayed if the visitor's browser does not support HTML5.
+			You can change it, but it is a good idea to link to a description of a browser
+			and provide some links to download some popular HTML5-compatible browsers. -->
+			<h1>Your browser does not appear to support HTML5.  Try upgrading your browser to the latest version.  <a href="http://www.whatbrowser.org/">What is a browser?</a>
+			<br><br><a href="http://www.microsoft.com/windows/internet-explorer/default.aspx">Microsoft Internet Explorer</a><br>
+			<a href="http://www.mozilla.com/firefox/">Mozilla Firefox</a><br>
+			<a href="http://www.google.com/chrome/">Google Chrome</a><br>
+			<a href="http://www.apple.com/safari/download/">Apple Safari</a></h1>
+		</canvas>
+		
+	<div id="gritter-notice-wrapper" class="bottom-right"><div id="gritter-item-1" class="gritter-item-wrapper gritter-light" style="" role="alert"><div class="gritter-item"><a class="gritter-close" href="#" tabindex="1">Close Notification</a><div class="gritter-without-image"><span class="gritter-title">Gold earned !</span><p>5 Gold earned</p></div><div style="clear:both"></div></div><div class="gritter-bottom"></div></div><div id="gritter-item-2" class="gritter-item-wrapper gritter-light" style="" role="alert"><div class="gritter-item"><a class="gritter-close" href="#" tabindex="1">Close Notification</a><img src="" class="gritter-image"><div class="gritter-with-image"><span class="gritter-title">Achievement unlocked !</span><p>OvO: What's this?</p></div><div style="clear:both"></div></div><div class="gritter-bottom"></div></div></div></div></body></html>
+</script><style type="text/css">
+		* {
+			padding: 0;
+			margin: 0;
+		}
+		html, body {
+			background: #000;
+			color: #fff;
+			overflow: hidden;
+			touch-action: none;
+			-ms-touch-action: none;
+		}
+		canvas {
+			touch-action-delay: none;
+			touch-action: none;
+			-ms-touch-action: none;
+		}
+    </style><link href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/ani.css" rel="stylesheet" type="text/css"><link href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/trans.css" rel="stylesheet" type="text/css"><link href="https://cdn.jsdelivr.net/gh/bubbls/ruffle@03c25580ed040cf08c91a9ea1ea099d43ca74268/grit.css" rel="stylesheet" type="text/css">
+    <meta charset="UTF-8">
+	<meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+	<title>OvOfw</title>
+
+	
+	<!-- Allow fullscreen mode on iOS devices. (These are Apple specific meta tags.) -->
+	<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, minimal-ui" name="viewport">
+	<meta content="yes" name="apple-mobile-web-app-capable">
+	<meta content="black" name="apple-mobile-web-app-status-bar-style">
+	<meta content="true" name="HandheldFriendly">
+	
+	<!-- Chrome for Android web app tags -->
+	<meta content="yes" name="mobile-web-app-capable">
+
+	<!-- Google tag (gtag.js) -->
+
+
+	
+	
+    <!-- All margins and padding must be zero for the canvas to fill the screen. -->
+	
+	
+	
+	
+	
+
+<script>

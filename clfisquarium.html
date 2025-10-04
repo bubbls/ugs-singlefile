@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<html lang="en-us">
+<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@01b8c258e32fffc40924d0746ce810ea14ea91c6/fisquarium/">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | Fisquarium</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: black;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    canvas#unity-canvas {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      background: #000000;
+    }
+  </style>
+</head>
+
+<body>
+  <canvas id="unity-canvas" tabindex="-1"></canvas>
+
+  <script src="Build/Fisquarium Build.loader.js"></script>
+  <script>
+    createUnityInstance(document.querySelector("#unity-canvas"), {
+      dataUrl: "Build/4877527980c74e0be80b13a39bc72b0b.data.unityweb",
+      frameworkUrl: "Build/cb22189c4372d2f65b15e128978fe75b.js.unityweb",
+      codeUrl: "Build/c379a471020fc5bc84a8b23659b37e1a.wasm.unityweb",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "KuniGames",
+      productName: "Fisquarium",
+      productVersion: "1.0",
+    });
+  </script>
+</body>
+
+</html>

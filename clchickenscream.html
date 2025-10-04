@@ -1,0 +1,209 @@
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+<!--this is a game where you platform by making noise into the microphone. Uses jsdelivr--!>
+<!--made with genizy's cracked gamedistribution sdk https://github.com/genizy/htmlgamedistributiontesting --!>
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+	<script>
+	      window.gnMathIsGoodButNotTheBestEver = {
+        "ancestorOrigins": {},
+        "href": "https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/geometryvibes/",
+        "origin": "https://html5.gamedistribution.com",
+        "protocol": "https:",
+        "host": "https://html5.gamedistribution.com",
+        "hostname": "https://html5.gamedistribution.com",
+        "port": "",
+        "pathname": "https://html5.gamedistribution.com/015cc016b4f04be28f8593e14c70ccef/index.html",
+        "search": "?gd_sdk_referrer_url=https://gamedistribution.com/games/chicken-scream-race/",
+        "hash": ""
+      }
+
+      const originalFetch = window.fetch;
+      window.fetch = function (...args) {
+        if (args[0].includes("html5.api.gamedistribution.com/main.min.js")) {
+          args[0] = "main.min.js";
+        }
+        return originalFetch.apply(this, args);
+      };
+
+      const originalOpen = XMLHttpRequest.prototype.open;
+      XMLHttpRequest.prototype.open = function (method, url, ...rest) {
+        if (url.includes("html5.api.gamedistribution.com/main.min.js")) {
+          url = "main.min.js";
+        }
+        return originalOpen.call(this, method, url, ...rest);
+      };
+
+      const originalCreateElement = document.createElement.bind(document);
+
+      document.createElement = function(tagName) {
+        const element = originalCreateElement(tagName);
+        if (tagName.toLowerCase() === "script") {
+          let srcValue = "";
+          Object.defineProperty(element, "src", {
+            get() {
+              return srcValue;
+            },
+            set(newSrc) {
+              let newUrl = newSrc;
+              if (newSrc.includes("html5.api.gamedistribution.com/main.min.js")) {
+                newUrl = "https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/geometryvibes/main_min.js";
+              }
+              srcValue = newUrl;
+              element.setAttribute("src", newUrl);
+            },
+            configurable: true,
+            enumerable: true,
+          });
+        }
+        return element;
+      };
+	</script>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/chickenscream/style.css">
+    <style>
+        canvas:focus {
+            outline: none;
+        }
+
+        html, body {
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: rgba(0,0,0,0);
+            height: 100%;
+        }
+    </style>
+
+</head>
+<body class="dark">
+
+    <div id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas" tabindex="-1"></canvas>
+    </div>
+    <div id="loading-cover" style="display:none;">
+        <div id="unity-loading-bar">
+            <div id="unity-logo"><img src="https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/chickenscream/logo.png"></div>
+            <div id="unity-progress-bar-empty" style="display: none;">
+                <div id="unity-progress-bar-full"></div>
+            </div>
+            <div class="spinner"></div>
+        </div>
+    </div>
+
+    <script>
+        const hideFullScreenButton = "";
+        const buildUrl = "https://cdn.jsdelivr.net/gh/Stinkalistic/UGS@main/UNITY/chickenscream/Build";
+        const loaderUrl = buildUrl + "/loader.js";
+        const config = {
+            dataUrl: buildUrl + "/data.unityweb",
+            frameworkUrl: buildUrl + "/framework.js.unityweb",
+            codeUrl: buildUrl + "/wasm.unityweb",
+        streamingAssetsUrl: "StreamingAssets",
+            companyName: "Cursora Labs OÜ",
+            productName: "Chicken Scream Race",
+            productVersion: "0.1f"
+        };
+
+        const container = document.querySelector("#unity-container");
+        const canvas = document.querySelector("#unity-canvas");
+        const loadingCover = document.querySelector("#loading-cover");
+        const progressBarEmpty = document.querySelector("#unity-progress-bar-empty");
+        const progressBarFull = document.querySelector("#unity-progress-bar-full");
+        const spinner = document.querySelector('.spinner');
+
+        const canFullscreen = (function () {
+            for (const key of [
+                'exitFullscreen',
+                'webkitExitFullscreen',
+                'webkitCancelFullScreen',
+                'mozCancelFullScreen',
+                'msExitFullscreen',
+            ]) {
+                if (key in document) {
+                    return true;
+                }
+            }
+            return false;
+        }());
+
+        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+            container.className = "unity-mobile";
+            config.devicePixelRatio = 1.5;
+        } else {
+            
+        }
+
+        var backgroundUnity = "url('" + buildUrl + "/7b6df3db507e442b1977865fad1ee672.jpg') center / cover";
+        loadingCover.style.background = "url('background.jpg') center / cover";
+
+        loadingCover.style.display = "";
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        function FocusGame() {
+            window.focus();
+            canvas.focus();
+        }
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) {
+                UnityPauseGame();
+            } else {
+                UnityResumeGame();
+            }
+        });
+
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        window.addEventListener('pointerdown', () => {
+            FocusGame();
+        });
+        window.addEventListener('touchstart', () => {
+            FocusGame();
+        });
+
+        let StartUnityInstance;
+        let myGameInstance = null;
+        let ysdk = null;
+        let player = null;
+        let payments = null;
+        let initGame = false;
+        let nowFullAdOpen = false;
+
+        const script = document.createElement("script");
+        script.src = loaderUrl;
+        script.onload = () => {
+            StartUnityInstance = function () {
+                createUnityInstance(canvas, config, (progress) => {
+                    spinner.style.display = "none";
+                    progressBarEmpty.style.display = "";
+                    progressBarFull.style.width = `${100 * progress}%`;
+                }).then((unityInstance) => {
+                    myGameInstance = unityInstance;
+                    loadingCover.style.display = "none";
+                }).catch((message) => {
+                    console.error(message);
+                });
+            };
+            StartUnityInstance();
+        };
+        function UnityPauseGame() {
+            //myGameInstance.SendMessage('VisibilityManager', 'OnGameInVisible');
+        }
+
+        function UnityResumeGame() {
+            //myGameInstance.SendMessage('VisibilityManager', 'OnGameVisible');
+        }
+
+        document.body.appendChild(script);
+    </script>
+</body>
+</html>

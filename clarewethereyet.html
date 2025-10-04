@@ -1,0 +1,26 @@
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+<!--this is a racing game on a time limit. Uses jsdelivr--!>
+
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>AreWeThereYet?</title>
+    <link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/Stinkalistic/junk@main/AWTY/TemplateData/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Stinkalistic/junk@main/AWTY/TemplateData/style.css">
+    <script src="https://cdn.jsdelivr.net/gh/Stinkalistic/junk@main/AWTY/TemplateData/UnityProgress.js"></script>  
+    <script src="https://cdn.jsdelivr.net/gh/Stinkalistic/junk@main/AWTY/Build/UnityLoader.js"></script>
+    <script>
+      var gameInstance = UnityLoader.instantiate("gameContainer", "https://cdn.jsdelivr.net/gh/Stinkalistic/junk@main/AWTY/Build/AWTY_Web.json", {onProgress: UnityProgress});
+    </script>
+  </head>
+  <body>
+    <div class="webgl-content">
+      <div id="gameContainer" style="width: 960px; height: 600px"></div>
+      <div class="footer">
+      </div>
+    </div>
+  </body>
+</html>

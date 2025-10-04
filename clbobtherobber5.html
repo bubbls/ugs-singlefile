@@ -1,0 +1,9 @@
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+
+
+<html lang="en"> <head> <meta charset="utf-8" /> <meta http-equiv="x-ua-compatible" content="ie=edge"> <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui, shrink-to-fit=no" /> <meta name="apple-mobile-web-app-capable" content="yes"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/gahaden/BTR5@d01bb348de22becee8a9b32ff663637e88b6fa12/assets/css/app.css" type="text/css" /> </head> <body> <div id="content"></div> <div id="orientation"></div> <div id="loader">Loading ...</div> <a id="downloadjson" style="display:none"></a> <script type="text/javascript"> var gameName ="https://cdn.jsdelivr.net/gh/gahaden/BTR5@93b2beb96230d1762f6f90f82d0820d48b43bee5/1btr.js";  function addScript(src, buster, callback) { var s = document.createElement('script'); s.setAttribute('src', src + '?v=' + buster); if (typeof callback === 'function') { s.onload = callback; } document.body.appendChild(s); } window.addEventListener("touchmove", function(event) { event.preventDefault(); }, false); if (typeof window.devicePixelRatio !='undefined' && window.devicePixelRatio > 2) { var meta = document.getElementById("viewport"); meta.setAttribute('content', 'width=device-width, initial-scale=' + (2 / window.devicePixelRatio) + ', user-scalable=no'); } addScript('https://cdn.jsdelivr.net/gh/gahaden/BTR5@d01bb348de22becee8a9b32ff663637e88b6fa12/version.js', Date.now(), function() { addScript(gameName, version, function() { var game = Game.App.getInstance(); game.start() }); }); </script> <script src=""></script> </body> </html>

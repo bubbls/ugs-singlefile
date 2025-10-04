@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <base href="https://rawcdn.githack.com/bubbls/UGS-Assets/3a995f6832a20148623e4f1631e9911e9c53610f/leader%20strike/"
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Leader Strike</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <link rel="shortcut icon" href="style/favicon.ico">
+  <link rel="stylesheet" href="style/style.css">
+  <script src="UnityLoader.js"></script>
+  <script src="UnityProgress.js"></script>
+  <script>
+    var gameInstance = UnityLoader.instantiate("gameContainer", "build.json", {
+      onProgress: UnityProgress,
+      Module: {
+        onRuntimeInitialized: function() {
+          UnityProgress(gameInstance, "complete")
+        }
+      }
+    });
+  </script>
+</head>
+
+<body style="overflow:hidden; margin:0; padding:0;">
+  <div class="webgl-content">
+    <div id="gameContainer" style="width: 100%; height: 100%; margin: auto;"></div>
+  </div>
+</body>
+
+</html>
