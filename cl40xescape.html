@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-
-
-<!-- Ultimate Game Stash file--> 
-<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
-
-
-<html lang="en">
-<head>
+<html lang="en"><head>
   <meta charset="utf-8">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>really cool flash game</title>
+  <title>Abandoned</title>
   <style>
     html, body {
       margin: 0;
@@ -36,10 +28,10 @@
       display: block;
     }
   </style>
-  <script src="https://cdn.jsdelivr.net/npm/@ruffle-rs/ruffle@0.2.0-nightly.2025.10.2/ruffle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/somer-sheff-73/xv@main/ruffle.js"></script>
 </head>
 <body>
-  <div id="flash-container"></div>
+  <div id="flash-container" style="width: 1180px; height: 885px;"><ruffle-player style="width: 100%; height: 100%; background: black;"></ruffle-player></div>
 
   <script>
     const container = document.getElementById("flash-container");
@@ -72,11 +64,12 @@
         player.style.height = "100%";
         player.style.background = "black";
         container.appendChild(player);
-        player.load("https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@29c164fe340f983080050b5ce21c03dbcbe350c3/10Bullets.swf");
+        player.load("https://cdn.jsdelivr.net/gh/bubbls/UGS-file-encryption@0594032cc69c4906965b27eb294aabb5abffc6ea/40xescape.swf");
       } else {
         container.textContent = "Ruffle failed to load.";
       }
     });
   </script>
-</body>
-</html>
+
+
+</body></html>

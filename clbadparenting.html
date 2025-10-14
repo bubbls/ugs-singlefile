@@ -1,85 +1,149 @@
 <!DOCTYPE html>
 
 
+
 <!-- Ultimate Game Stash file--> 
 <!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
 
 
 <html lang="en-us">
-  <head>
-    <base href="https://rawcdn.githack.com/genizy/google-class/98d73056bfa9d476eb9fb3df8eaf418fba6d6f01/bad-parenting/">
-    <meta charset="utf-8">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>Unity WebGL Player | Bad Parenting 1</title>
-    <link rel="shortcut icon" href="TemplateData/favicon.ico">
-    <link rel="stylesheet" href="TemplateData/style.css">
-  </head>
-  <body>
-    <div id="unity-container" class="unity-desktop">
-      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
-      <div id="unity-loading-bar">
-        <div id="unity-logo"></div>
-        <div id="unity-progress-bar-empty">
-          <div id="unity-progress-bar-full"></div>
-        </div>
-      </div>
-      <div id="unity-footer">
-        <div id="unity-webgl-logo"></div>
-        <div id="unity-fullscreen-button"></div>
-        <div id="unity-build-title">Bad Parenting 1</div>
-      </div>
+<head>
+  <meta charset="utf-8">
+   <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/bad-parenting/">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | Bad Parenting 1</title>
+  <link rel="shortcut icon" href="TemplateData/favicon.ico">
+  <link rel="stylesheet" href="TemplateData/style.css">
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+    #unity-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+    }
+    #unity-canvas {
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+    #unity-loading-bar {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50%;
+      height: 20px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    #unity-progress-bar-full {
+      height: 100%;
+      width: 0%;
+      background: #09f;
+      transition: width 0.2s ease;
+    }
+  </style>
+</head>
+<body>
+  <div id="unity-container">
+    <canvas id="unity-canvas" tabindex="-1"></canvas>
+
+    <div id="unity-loading-bar">
+      <div id="unity-progress-bar-full"></div>
     </div>
-    <script>
+  </div>
 
-      var container = document.querySelector("#unity-container");
-      var canvas = document.querySelector("#unity-canvas");
-      var loadingBar = document.querySelector("#unity-loading-bar");
-      var progressBarFull = document.querySelector("#unity-progress-bar-full");
-      var fullscreenButton = document.querySelector("#unity-fullscreen-button");
-        function unityShowBanner(msg, type) {
-            // no need for errors
-        }
+  <script>
+    const canvas = document.querySelector("#unity-canvas");
+    const loadingBar = document.querySelector("#unity-loading-bar");
+    const progressBarFull = document.querySelector("#unity-progress-bar-full");
 
-      var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/Build.loader.js";
-      var config = {
-        dataUrl: buildUrl + "/Build.data",
-        frameworkUrl: buildUrl + "/Build.framework.js",
-        codeUrl: buildUrl + "/Build.wasm",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "twoootwo",
-        productName: "Bad Parenting 1",
-        productVersion: "1.0",
-        showBanner: unityShowBanner,
-      };
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        container.className = "unity-mobile";
-        canvas.className = "unity-mobile";
+    function unityShowBanner(msg, type) {
+      // no need for errors
+    }
+
+    const buildUrl = "Build";
+    const loaderUrl = buildUrl + "/Build.loader.js";
+
+    async function loadSplitData(baseUrl, parts) {
+      const chunks = [];
+      for (let i = 1; i <= parts; i++) {
+        const partUrl = `${baseUrl}.part${i}`;
+        const response = await fetch(partUrl);
+        if (!response.ok) throw new Error(`Failed to load ${partUrl}`);
+        const chunk = await response.arrayBuffer();
+        chunks.push(chunk);
+        progressBarFull.style.width = (i / parts) * 30 + "%";
       }
+      const mergedBlob = new Blob(chunks);
+      return URL.createObjectURL(mergedBlob);
+    }
 
-      loadingBar.style.display = "block";
+    const config = {
+      dataUrl: buildUrl + "/Build.data",
+      frameworkUrl: buildUrl + "/Build.framework.js",
+      codeUrl: buildUrl + "/Build.wasm",
+      streamingAssetsUrl: "StreamingAssets",
+      companyName: "twoootwo",
+      productName: "Bad Parenting 1",
+      productVersion: "1.0",
+      showBanner: unityShowBanner,
+    };
 
-      var script = document.createElement("script");
+    // Make the canvas dynamically fit the screen
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    loadingBar.style.display = "block";
+
+    Promise.all([
+      loadSplitData("Build/Build.wasm", 2),
+      loadSplitData("Build/Build.data", 3)
+    ])
+    .then(([wasmUrl, dataUrl]) => {
+      config.codeUrl = wasmUrl;
+      config.dataUrl = dataUrl;
+
+      const script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
-          progressBarFull.style.width = 100 * progress + "%";
-              }).then((unityInstance) => {
-                loadingBar.style.display = "none";
-                fullscreenButton.onclick = () => {
-                  unityInstance.SetFullscreen(1);
-                };
-              }).catch((message) => {
-                alert(message);
-              });
-            };
-
+          progressBarFull.style.width = 30 + (70 * progress) + "%";
+        }).then((unityInstance) => {
+          loadingBar.style.display = "none";
+          window.addEventListener("click", () => {
+            unityInstance.SetFullscreen(1);
+          });
+          URL.revokeObjectURL(wasmUrl);
+          URL.revokeObjectURL(dataUrl);
+        }).catch((message) => {
+          alert(message);
+        });
+      };
       document.body.appendChild(script);
-
-    </script>
-  </body>
+    })
+    .catch((error) => {
+      alert("Failed to load game data: " + error.message);
+    });
+  </script>
+</body>
 </html>

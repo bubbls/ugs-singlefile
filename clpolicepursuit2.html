@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href = "https://cdn.jsdelivr.net/gh/Pok12d/ta@main/policepursuit2/">
+    <meta charset="UTF-8">
+
+
+<script>function UnityProgress(gameInstance, progress) {
+  if (!gameInstance.Module)
+    return;
+  if (!gameInstance.progress) {    
+    gameInstance.progress = document.createElement("div");
+    gameInstance.progress.className = "progress";
+    
+    gameInstance.progress.background = document.createElement("div");
+    gameInstance.progress.background.className = "background";
+    gameInstance.progress.appendChild(gameInstance.progress.background);
+
+    gameInstance.progress.full = document.createElement("div");
+    gameInstance.progress.full.className = "full";
+    gameInstance.progress.appendChild(gameInstance.progress.full);
+    
+	gameInstance.progress.empty = document.createElement("div");
+    gameInstance.progress.empty.className = "empty";
+    gameInstance.progress.appendChild(gameInstance.progress.empty);
+	
+	gameInstance.container.appendChild(gameInstance.progress);
+	
+  }
+  gameInstance.progress.full.style.width = (100 * progress) + "%";
+  //gameInstance.progress.empty.style.width = (100 * (1 - progress)) + "%";
+  if (progress == 1)
+    gameInstance.progress.style.display = "none";
+}</script>
+
+
+
+ <script src="pako.js"></script>
+
+
+
+
+
+
+
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #231F20; }
+        #unity-container { width: 100%; height: 100vh; position: relative; }
+        canvas { width: 100%; height: 100%; display: block; }
+    </style>
+</head>
+<body>
+<h1 id = "loading">Loading...</h1>
+    <div id="unity-container">
+        <canvas id="unity-canvas"></canvas>
+    </div>
+
+
+<script>var jsLoader = document.createElement("script")
+jsLoader.src = "UnityLoader.js";
+document.body.appendChild(jsLoader)</script>
+    
+    
+        
+        
+        
+        <script src = "jszip.js"></script>
+	<script>    
+	
+  async function fetchAndCombineZip(binUrls) {
+    const responses = await Promise.all(binUrls.map(url => fetch(url)));
+    const buffers = await Promise.all(responses.map(res => res.arrayBuffer()));
+    let totalLength = buffers.reduce((acc, buf) => acc + buf.byteLength, 0);
+    let combined = new Uint8Array(totalLength);
+    let offset = 0;
+    for (let buf of buffers) {
+        combined.set(new Uint8Array(buf), offset);
+        offset += buf.byteLength;
+    }
+    return combined;
+}
+
+async function unzipWebpFromExternalBins(binUrls) {
+    const blobUrls = {};
+    const bytes = await fetchAndCombineZip(binUrls);
+    const zip = await JSZip.loadAsync(bytes);
+    for (const [filename, file] of Object.entries(zip.files)) {
+        
+
+        if (!file.dir) {
+            let mime = '';
+            if (filename.endsWith('.js') || filename.endsWith('.mjs')) {
+                mime = 'text/javascript';
+            } else if (filename.endsWith('.css')) {
+                mime = 'text/css';
+            } else if (filename.endsWith('.html')) {
+                mime = 'text/html';
+            } else if (filename.includes('f03e20d9219dd22f67b6f4bd33adbda5')) {
+                mime = 'application/wasm';
+            } 
+            else if (filename.includes('fedbc538846e3b0df494062af3ca437f')) {
+                mime = 'application/javascript';
+            }
+            else if (filename.endsWith('.png')) {
+                mime = 'image/png';
+            } else if (filename.endsWith('.jpg') || filename.endsWith('.jpeg')) {
+                mime = 'image/jpeg';
+            }
+			else if (filename.endsWith('.wasm') ) {
+                mime = 'application/wasm';
+            }
+            
+            else if (filename.endsWith('.data.unityweb')) {
+    mime = 'application/octet-stream';
+} else if (filename.endsWith('.asm.code.unityweb')) {
+    mime = 'application/javascript';
+} else if (filename.endsWith('.asm.memory.unityweb')) {
+    mime = 'application/octet-stream';
+} else if (filename.endsWith('.framework.unitywebe')) {
+    mime = 'application/javascript';
+} else if (filename.endsWith('wasm.code.unityweb')) {
+    mime = 'application/wasm';
+    
+    
+    
+}
+
+if (filename.endsWith('.asm.framework.unityweb')) mime = 'application/javascript';
+if (filename.endsWith('.asm.code.unityweb')) mime = 'application/javascript';
+if (filename.endsWith('.asm.memory.unityweb')) mime = 'application/octet-stream';
+
+            let rawBytes = await file.async("uint8array");
+
+
+if (rawBytes[0] === 0x1f && rawBytes[1] === 0x8b) {
+    console.log("Decompressing gzipped:", filename);
+    
+    rawBytes = pako.inflate(rawBytes);
+}
+
+const blob = new Blob([rawBytes], { type: mime });
+
+            
+            
+            console.log("Extracted:", filename, blob.size);
+            const blobUrl = URL.createObjectURL(blob);
+            console.log("Extracted:", filename);
+            blobUrls[filename] = blobUrl;
+        }
+    }
+    return blobUrls;
+}
+
+let blobUrlss = "";
+let binParts = [
+  "part_1.bin",
+  "part_2.bin",
+  "part_3.bin",
+  "part_4.bin",
+ 
+  
+];
+
+unzipWebpFromExternalBins(binParts).then(blobUrls => {
+	document.getElementById("loading").remove()
+    blobUrlss = blobUrls;
+    const ORIGINAL_CREATE_ELEMENT = document.createElement;
+    const ORIGINAL_SET_ATTRIBUTE = Element.prototype.setAttribute;
+
+    
+    document.createElement = function(tagName) {
+        const el = ORIGINAL_CREATE_ELEMENT.call(this, tagName);
+
+        if (tagName.toLowerCase() === 'script') {
+            Object.defineProperty(el, 'src', {
+                set(newSrc) {
+                    const filename = extractFilename(newSrc);
+                    const replacement = blobUrlss[filename];
+                    if (replacement) {
+                        
+                        ORIGINAL_SET_ATTRIBUTE.call(el, 'src', replacement);
+                    } else {
+                        ORIGINAL_SET_ATTRIBUTE.call(el, 'src', newSrc);
+                    }
+                },
+                get() {
+                    return el.getAttribute('src');
+                },
+                configurable: true
+            });
+        }
+
+        return el;
+    };
+
+    
+    Element.prototype.setAttribute = function(name, value) {
+        if (this.tagName === 'SCRIPT' && name === 'src') {
+            const filename = extractFilename(value);
+            const replacement = blobUrlss[filename];
+            if (replacement) {
+             
+                return ORIGINAL_SET_ATTRIBUTE.call(this, name, replacement);
+            }
+        }
+
+        return ORIGINAL_SET_ATTRIBUTE.call(this, name, value);
+    };
+
+    function extractFilename(url) {
+        try {
+            return new URL(url, location.href).pathname.split('/').pop();
+        } catch {
+            return url.split('/').pop(); 
+        }
+    }
+
+
+const imageSrcDescriptor = Object.getOwnPropertyDescriptor(Image.prototype, 'src');
+Object.defineProperty(Image.prototype, 'src', {
+  set(value) {
+    const newURL = rewriteURL(value);
+    imageSrcDescriptor.set.call(this, newURL);
+  },
+  get: imageSrcDescriptor.get,
+  configurable: true,
+  enumerable: true,
+});
+
+
+const scriptSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, 'src');
+Object.defineProperty(HTMLScriptElement.prototype, 'src', {
+  set(value) {
+    const newURL = rewriteURL(value);
+    scriptSrcDescriptor.set.call(this, newURL);
+  },
+  get: scriptSrcDescriptor.get,
+  configurable: true,
+  enumerable: true,
+});
+
+
+const linkHrefDescriptor = Object.getOwnPropertyDescriptor(HTMLLinkElement.prototype, 'href');
+Object.defineProperty(HTMLLinkElement.prototype, 'href', {
+  set(value) {
+    const newURL = rewriteURL(value);
+    linkHrefDescriptor.set.call(this, newURL);
+  },
+  get: linkHrefDescriptor.get,
+  configurable: true,
+  enumerable: true,
+});
+
+
+const mediaSrcDescriptor = Object.getOwnPropertyDescriptor(HTMLMediaElement.prototype, 'src');
+Object.defineProperty(HTMLMediaElement.prototype, 'src', {
+  set(value) {
+    const newURL = rewriteURL(value);
+    mediaSrcDescriptor.set.call(this, newURL);
+  },
+  get: mediaSrcDescriptor.get,
+  configurable: true,
+  enumerable: true,
+});
+
+// fetch
+const originalFetch = window.fetch;
+window.fetch = function(resource, init) {
+
+  if (typeof resource === "string") {
+  //console.log(resource)
+    resource = rewriteURL(resource);
+  } else if (resource instanceof Request) {
+    resource = new Request(rewriteURL(resource.url), resource);
+  }
+  return originalFetch.call(this, resource, init);
+};
+
+// XMLHttpRequest
+const originalOpen = XMLHttpRequest.prototype.open;
+XMLHttpRequest.prototype.open = function(method, url, ...rest) {
+  const newURL = rewriteURL(url);
+  return originalOpen.call(this, method, newURL, ...rest);
+};
+
+
+const OriginalAudio = window.Audio;
+window.Audio = function(src) {
+  const audio = new OriginalAudio();
+  if (src) {
+    audio.src = rewriteURL(src);
+  }
+  return audio;
+};
+window.Audio.prototype = OriginalAudio.prototype;
+
+
+function rewriteURL(original) {
+	
+  var trimmed = original.split("/").pop();
+  
+  if (original.startsWith("Build/")) return original.split("Build/")[1]
+  console.log(original)
+  if (trimmed.includes("?")) trimmed = trimmed.split("?")[0]
+  return blobUrlss[trimmed] || original;
+}
+
+
+       var buildSettings = {
+"companyName": "XformGames",
+"productName": "Police Pursuit 2",
+"dataUrl": blobUrlss["PolicePursuit2.data.unityweb"],
+"wasmCodeUrl": blobUrlss["PolicePursuit2.wasm.code.unityweb"],
+"wasmFrameworkUrl": blobUrlss["PolicePursuit2.wasm.framework.unityweb"],
+"TOTAL_MEMORY": 134217728,
+"graphicsAPI": ["WebGL 2.0", "WebGL 1.0"],
+"webglContextAttributes": {"preserveDrawingBuffer": false},
+"splashScreenStyle": "Dark",
+"backgroundColor": "#231F20"
+}
+        
+        const buildBlob = new Blob(
+  [JSON.stringify(buildSettings)],
+  { type: "application/json" }
+);
+const buildUrl = URL.createObjectURL(buildBlob);
+
+        const canvas = document.getElementById("unity-canvas");
+
+        UnityLoader.instantiate("unity-container", buildUrl, {onProgress: UnityProgress, Module: { backgroundColor: "transparent"} });
+});
+    </script>
+    
+    
+
+	<script>
+	
+	</script>
+
+</body>
+</html>
