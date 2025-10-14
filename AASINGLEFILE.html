@@ -315,9 +315,13 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            const games = fetchGameList();
-            generateAllSections(games);
+            // Wait a moment for external script to load
+            setTimeout(() => {
+                const games = fetchGameList();
+                generateAllSections(games);
+            }, 100);
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile/filelist.js"></script>
 </body>
 </html>

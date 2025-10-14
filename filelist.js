@@ -1,4 +1,4 @@
-const GAME_LIST = [
+GAME_LIST = [
 'cl1',
             'cl100skibidistillwaterthosewhoknow',
             'cl10bullets',
