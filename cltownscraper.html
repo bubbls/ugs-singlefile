@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+
+<!-- Ultimate Game Stash file--> 
+<!-- For the regularly updating doc go to https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/ -->
+
+
+<html lang="en-us">
+<base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/townscraper/">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>game</title>
+  <style>
+    html,
+    body {
+      background: #000;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      padding: 0;
+      margin: 0;
+    }
+
+    div#gameContainer {
+      background: transparent !important;
+      position: absolute;
+    }
+
+    div#gameContainer canvas {
+      position: absolute;
+    }
+
+    div#gameContainer canvas[data-pixel-art="true"] {
+      position: absolute;
+      image-rendering: optimizeSpeed;
+      image-rendering: -webkit-crisp-edges;
+      image-rendering: -moz-crisp-edges;
+      image-rendering: -o-crisp-edges;
+      image-rendering: crisp-edges;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: optimize-contrast;
+      image-rendering: pixelated;
+      -ms-interpolation-mode: nearest-neighbor;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="gameContainer">
+    <canvas id="unity-canvas" data-pixel-art=""></canvas>
+    <div id="loading-text" style="color: white; font-family: sans-serif; text-align: center; margin-top: 1em;">LOADING...</div>
+    <script src="Build/WebGL.loader.js"></script>
+<script>
+  if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+    var meta = document.createElement('meta');
+    meta.name = 'viewport';
+    meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+    document.getElementsByTagName('head')[0].appendChild(meta);
+  }
+  const loadingText = document.querySelector("#loading-text");
+  let totalBytes = 0;
+  let loadedBytes = 0;
+
+  function formatSize(bytes) {
+    if (bytes > 1024 * 1024 * 1024) {
+      return (bytes / (1024 * 1024 * 1024)).toFixed(2) + " GB";
+    } else if (bytes > 1024 * 1024) {
+      return (bytes / (1024 * 1024)).toFixed(2) + " MB";
+    } else if (bytes > 1024) {
+      return (bytes / 1024).toFixed(2) + " KB";
+    } else {
+      return bytes + " B";
+    }
+  }
+
+  async function getSize(url) {
+    try {
+      const res = await fetch(url, { method: "HEAD" });
+      return parseInt(res.headers.get("Content-Length") || "0", 10);
+    } catch {
+      return 0;
+    }
+  }
+
+  async function fetchPart(url) {
+    const response = await fetch(url);
+    if (!response.body) {
+      const ab = await response.arrayBuffer();
+      loadedBytes += ab.byteLength;
+      loadingText.textContent = `LOADING... ${formatSize(loadedBytes)} / ${formatSize(totalBytes)}`;
+      return new Uint8Array(ab);
+    }
+    const reader = response.body.getReader();
+    const chunks = [];
+    let received = 0;
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      received += value.length;
+      loadedBytes += value.length;
+      chunks.push(value);
+      const doneText = formatSize(loadedBytes);
+      const totalText = formatSize(totalBytes);
+      const percent = totalBytes > 0 ? ((loadedBytes / totalBytes) * 100).toFixed(1) : "?";
+      loadingText.textContent = `LOADING... ${doneText} / ${totalText} (${percent}%)`;
+    }
+    const full = new Uint8Array(received);
+    let offset = 0;
+    for (let chunk of chunks) {
+      full.set(chunk, offset);
+      offset += chunk.length;
+    }
+    return full;
+  }
+
+  // simplified: no brotli check
+  async function mergeParts(parts, mimeType) {
+    const buffers = await Promise.all(parts.map(fetchPart));
+    const totalLen = buffers.reduce((s, b) => s + b.length, 0);
+    const concatenated = new Uint8Array(totalLen);
+    let off = 0;
+    for (let b of buffers) {
+      concatenated.set(b, off);
+      off += b.length;
+    }
+    return URL.createObjectURL(new Blob([concatenated], { type: mimeType || undefined }));
+  }
+
+  function getParts(file, count) {
+    let parts = [];
+    for (let i = 1; i <= count; i++) {
+      parts.push(file + ".part" + i);
+    }
+    return parts;
+  }
+
+  (async () => {
+    try {
+      const dataParts = getParts("Build/WebGL.data", 2);
+      const wasmParts = getParts("Build/WebGL.wasm", 2);
+      const allParts = [...dataParts, ...wasmParts, "Build/WebGL.framework.js"];
+      const sizes = await Promise.all(allParts.map(getSize));
+      totalBytes = sizes.reduce((a, b) => a + b, 0);
+
+      const [dataUrl, wasmUrl, frameworkUrl] = await Promise.all([
+        mergeParts(dataParts),
+        mergeParts(wasmParts),
+        mergeParts(["Build/WebGL.framework.js"], 'application/javascript')
+      ]);
+
+      var canvas = document.querySelector("#unity-canvas");
+      var scaleToFit = true;
+
+      function onResize() {
+        var container = canvas.parentElement;
+        var w, h;
+        if (scaleToFit) {
+          w = window.innerWidth;
+          h = window.innerHeight;
+          var r = 540 / 960;
+          if (w * r > window.innerHeight) {
+            w = Math.min(w, Math.ceil(h / r));
+          }
+          h = Math.floor(w * r);
+        } else {
+          w = 960;
+          h = 540;
+        }
+        container.style.width = canvas.style.width = w + "px";
+        container.style.height = canvas.style.height = h + "px";
+        container.style.top = Math.floor((window.innerHeight - h) / 2) + "px";
+        container.style.left = Math.floor((window.innerWidth - w) / 2) + "px";
+        window.focus();
+      }
+      window.addEventListener('resize', onResize);
+      onResize();
+
+      await (async function waitForLoader() {
+        if (typeof createUnityInstance === 'function') return;
+        await new Promise(resolve => {
+          const check = setInterval(() => {
+            if (typeof createUnityInstance === 'function') {
+              clearInterval(check);
+              resolve();
+            }
+          }, 50);
+        });
+      })();
+
+      const config = {
+        dataUrl: dataUrl,
+        frameworkUrl: frameworkUrl,
+        codeUrl: wasmUrl,
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "",
+        productName: "",
+        productVersion: ""
+      };
+
+      createUnityInstance(canvas, config, function(progress) {
+        const percent = Math.round(progress * 100);
+        loadingText.textContent = `LOADING... ${percent}%`;
+      }).then(function(unityInstance) {
+        loadingText.remove();
+      }).catch(function(message) {
+        loadingText.textContent = 'Failed to start Unity: ' + message;
+        console.error(message);
+      });
+    } catch (err) {
+      loadingText.textContent = 'ERROR: ' + (err.message || err);
+      console.error(err);
+    }
+  })();
+</script>
+
+
+
+  </div>
+</body>
+
+</html>
