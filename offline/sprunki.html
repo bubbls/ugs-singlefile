@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <base href="https://cdn.jsdelivr.net/gh/bouggery-art/sprunki/" />
+    <base href="https://cdn.jsdelivr.net/gh/bubblfan/sprunki/" />
     <title>Sprunki</title>
     <style>
       body {
@@ -40357,12 +40357,10 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
               return [
                 ...w(this.runtime, e),
                 ...S(this.runtime, e),
-                ...this.runtime.fontManager
-                  .serializeAssets()
-                  .map((e) => ({
-                    fileName: "".concat(e.assetId, ".").concat(e.dataFormat),
-                    fileContent: e.data,
-                  })),
+                ...this.runtime.fontManager.serializeAssets().map((e) => ({
+                  fileName: "".concat(e.assetId, ".").concat(e.dataFormat),
+                  fileContent: e.data,
+                })),
               ];
             }
             _addFileDescsToZip(e, t) {
